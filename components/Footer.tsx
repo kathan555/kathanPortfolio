@@ -94,14 +94,9 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-blue-500/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="border-t border-blue-500/10 mt-10 pt-6 flex items-center justify-center">
           <p className="text-xs text-muted-foreground">
             © {currentYear} Kathan N. Patel. All rights reserved.
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Built with{" "}
-            <span className="text-blue-400">Next.js 15</span> &{" "}
-            <span className="text-teal-400">Tailwind CSS</span>
           </p>
         </div>
       </div>

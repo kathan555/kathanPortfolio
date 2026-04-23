@@ -7,43 +7,60 @@ export const metadata: Metadata = {
   description: "Live showcase of Kathan Patel's open-source GitHub repositories.",
 };
 
+// ─────────────────────────────────────────────────────────────────────────────
+// 👇 ADD repo names here (exact, case-sensitive) to hide them from the showcase
+// ─────────────────────────────────────────────────────────────────────────────
+const HIDDEN_REPOS: string[] = [
+  "kathanPortfolio",
+  "kathan",
+  // "forked-repo-i-dont-want-shown",
+];
+// ─────────────────────────────────────────────────────────────────────────────
+
 type Repo = {
-  id: number;
-  name: string;
-  description: string | null;
-  html_url: string;
-  homepage: string | null;
-  stargazers_count: number;
-  forks_count: number;
-  language: string | null;
-  topics: string[];
-  updated_at: string;
-  fork: boolean;
+  id:                number;
+  name:              string;
+  description:       string | null;
+  html_url:          string;
+  homepage:          string | null;
+  stargazers_count:  number;
+  forks_count:       number;
+  language:          string | null;
+  topics:            string[];
+  updated_at:        string;
+  fork:              boolean;
 };
 
 const langColors: Record<string, string> = {
-  "C#": "#178600",
-  TypeScript: "#3178c6",
-  JavaScript: "#f7df1e",
-  Python: "#3572A5",
-  HTML: "#e34c26",
-  CSS: "#563d7c",
-  Go: "#00ADD8",
-  Rust: "#dea584",
+  "C#":        "#178600",
+  TypeScript:  "#3178c6",
+  JavaScript:  "#f7df1e",
+  Python:      "#3572A5",
+  HTML:        "#e34c26",
+  CSS:         "#563d7c",
+  Go:          "#00ADD8",
+  Rust:        "#dea584",
+  Java:        "#b07219",
+  Kotlin:      "#A97BFF",
 };
 
 async function getRepos(): Promise<Repo[]> {
   try {
     const res = await fetch(
-      "https://api.github.com/users/kathan555/repos?sort=updated&per_page=30&type=owner",
+      "https://api.github.com/users/kathan555/repos?sort=updated&per_page=50&type=owner",
       {
         headers: { Accept: "application/vnd.github.v3+json" },
-        next: { revalidate: 3600 },
+        next: { revalidate: 3600 }, // ISR — re-fetch every hour
       }
     );
     if (!res.ok) return [];
     const data: Repo[] = await res.json();
-    return data.filter((r) => !r.fork);
+
+    return data.filter(
+      (r) =>
+        !r.fork &&                          // exclude forks
+        !HIDDEN_REPOS.includes(r.name)      // exclude manually hidden repos
+    );
   } catch {
     return [];
   }
@@ -55,19 +72,22 @@ export default async function GithubPage() {
   return (
     <div className="min-h-screen pt-28 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* Header */}
         <ScrollReveal>
           <div className="mb-14">
             <span className="font-mono text-blue-400 text-sm font-medium tracking-wider uppercase">
               Open Source
             </span>
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold mt-2 mb-4">
-              GitHub{" "}
-              <span className="gradient-text">Showcase</span>
+              GitHub <span className="gradient-text">Showcase</span>
             </h1>
             <p className="text-muted-foreground text-lg max-w-xl">
               Real repositories, pulled live from GitHub.
               {repos.length > 0 && (
-                <span className="text-blue-400 ml-1">{repos.length} public repos</span>
+                <span className="text-blue-400 ml-1 font-medium">
+                  {repos.length} public repo{repos.length !== 1 ? "s" : ""}
+                </span>
               )}
             </p>
             <a
@@ -83,6 +103,7 @@ export default async function GithubPage() {
           </div>
         </ScrollReveal>
 
+        {/* Empty / error state */}
         {repos.length === 0 ? (
           <ScrollReveal>
             <div className="glass-card rounded-2xl p-14 text-center max-w-md mx-auto">
@@ -91,8 +112,8 @@ export default async function GithubPage() {
                 Couldn&apos;t load repositories
               </h3>
               <p className="text-muted-foreground text-sm mb-6">
-                GitHub API may be rate-limited. Try refreshing in a minute, or view
-                the profile directly.
+                GitHub API may be rate-limited. Try refreshing in a minute, or view the
+                profile directly.
               </p>
               <a
                 href="https://github.com/kathan555"
@@ -110,6 +131,7 @@ export default async function GithubPage() {
             {repos.map((repo, i) => (
               <ScrollReveal key={repo.id} delay={i * 0.05}>
                 <div className="project-card glass-card rounded-2xl p-6 h-full flex flex-col border-blue-500/10 group">
+
                   {/* Header */}
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex items-center gap-2 min-w-0">
@@ -187,9 +209,9 @@ export default async function GithubPage() {
                     </span>
                     <span className="flex items-center gap-1 ml-auto">
                       <Clock className="w-3 h-3" />
-                      {new Date(repo.updated_at).toLocaleDateString("en-IN", {
+                      {new Date(repo.updated_at).toLocaleDateString("en-US", {
                         month: "short",
-                        year: "numeric",
+                        year:  "numeric",
                       })}
                     </span>
                   </div>

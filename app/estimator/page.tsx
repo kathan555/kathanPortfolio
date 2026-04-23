@@ -57,7 +57,7 @@ export default function EstimatorPage() {
               </div>
               <div>
                 <h2 className="font-display font-bold text-foreground">Cost Estimator</h2>
-                <p className="text-xs text-muted-foreground">Estimates in Indian Rupees (₹)</p>
+                <p className="text-xs text-muted-foreground">Estimates in US Dollars (USD)</p>
               </div>
             </div>
             <CostEstimator />
@@ -66,7 +66,7 @@ export default function EstimatorPage() {
 
         {/* Disclaimer */}
         <p className="text-xs text-muted-foreground text-center mt-6 leading-relaxed">
-          Estimates are indicative and in Indian Rupees (₹). They include a 20% overhead for PM,
+          Estimates are indicative and in US Dollars (USD). They include a 20% overhead for PM,
           QA, and unforeseen scope. For an accurate quote,{" "}
           <a href="/contact" className="text-blue-400 hover:underline">
             get in touch
