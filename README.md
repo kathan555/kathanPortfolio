@@ -87,11 +87,7 @@ Set `published = true` and `published_at = now()` to publish a post.
 1. [dash.cloudflare.com](https://dash.cloudflare.com) → Turnstile → Add Site
 2. `NEXT_PUBLIC_TURNSTILE_SITE_KEY` = Site Key (public)
 3. `TURNSTILE_SECRET_KEY` = Secret Key (server-only, never expose)
-{
-  These are Cloudflare's official dummy keys — they always pass the challenge and work on any localhost or domain. No Cloudflare account needed during development.
-  NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA
-  TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
-}
+
 Form works without these — just skips CAPTCHA. Add before going to production.
 
 ---
@@ -129,3 +125,20 @@ Edit `lib/data.ts` — single source of truth for all portfolio text.
 4. Deploy
 
 Update `metadataBase` in `app/layout.tsx` to your real domain.
+
+---
+
+### ⚠️ You must do before going live
+
+1. **LinkedIn URL** — update `lib/data.ts` → `personalInfo.linkedin`
+2. **Resume PDF** — drop `Kathan_Patel_Resume.pdf` in `/public/`
+3. **Real domain** — update `metadataBase` in `app/layout.tsx` and add domain in Vercel
+4. **Real testimonials** — replace placeholder quotes in `lib/data.ts` → `testimonials`
+   - Ask 2–3 past colleagues/managers for a short quote via LinkedIn or email
+   - Update `name`, `role`, `initials`, and `quote` fields
+   - Delete the yellow warning box inside `TestimonialsSection.tsx` once done
+5. **Cloudflare Turnstile** — set up free account and add real keys to Vercel env vars
+6. **Availability status** — set `availableForWork: true/false` and `availableFrom` in `lib/data.ts`
+
+### Hiding GitHub repos
+Edit `app/github/page.tsx` → add repo names to the `HIDDEN_REPOS` array.

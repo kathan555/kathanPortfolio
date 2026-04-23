@@ -8,17 +8,17 @@ import { AnimatedCounter } from "@/components/AnimatedCounter";
 
 const container = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.12, delayChildren: 0.3 } },
+  show:   { opacity: 1, transition: { staggerChildren: 0.11, delayChildren: 0.3 } },
 };
 const item = {
   hidden: { opacity: 0, y: 30 },
-  show:   { opacity: 1, y: 0,  transition: { duration: 0.7, ease: [0.25, 0.4, 0.25, 1] } },
+  show:   { opacity: 1, y: 0,  transition: { duration: 0.65, ease: [0.25, 0.4, 0.25, 1] } },
 };
 
 const stats = [
-  { value: 8,  suffix: "+", label: "Years Exp." },
-  { value: 6,  suffix: "+", label: "Key Projects" },
-  { value: 3,  suffix: "",  label: "Domains" },
+  { value: 8,  suffix: "+", label: "Years in .NET" },
+  { value: 6,  suffix: "+", label: "Projects Shipped" },
+  { value: 3,  suffix: "",  label: "Industries" },
   { value: 10, suffix: "+", label: "Technologies" },
 ];
 
@@ -32,11 +32,17 @@ export function HeroSection() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <motion.div variants={container} initial="hidden" animate="show" className="max-w-4xl">
-          {/* Status badge */}
-          <motion.div variants={item} className="mb-6">
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-teal-500/30 bg-teal-500/5 text-teal-400 text-sm font-medium">
+
+          {/* ── Point 1 & 9: Availability badge ── */}
+          <motion.div variants={item} className="mb-6 flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-teal-500/40 bg-teal-500/8 text-teal-400 text-sm font-semibold">
               <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
-              Available for senior roles &amp; consulting
+              {personalInfo.availableForWork
+                ? `Available for Freelance & Contract — ${personalInfo.availableFrom}`
+                : "Currently Engaged · Open to Discussions"}
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-400 text-xs font-medium">
+              🌏 Remote-friendly
             </span>
           </motion.div>
 
@@ -48,54 +54,73 @@ export function HeroSection() {
           </motion.h1>
 
           {/* Title */}
-          <motion.div variants={item} className="flex items-center gap-3 mb-6">
+          <motion.div variants={item} className="flex items-center gap-3 mb-4">
             <Briefcase className="w-5 h-5 text-blue-400 shrink-0" />
             <span className="font-mono text-blue-400 text-lg font-medium">
-              Technical Lead · Full Stack .NET Developer
+              Freelance .NET Developer · Technical Lead
             </span>
           </motion.div>
 
           {/* Meta */}
           <motion.div variants={item} className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-8">
-            <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4" />Ahmedabad, India</span>
+            <span className="flex items-center gap-1.5">
+              <MapPin className="w-4 h-4" />
+              Ahmedabad, India
+            </span>
             <span className="w-px h-4 bg-border" />
-            <span className="text-blue-400 font-medium">8+ Years Experience</span>
+            <span className="text-blue-400 font-semibold">8+ Years Experience</span>
             <span className="w-px h-4 bg-border" />
-            <span>.NET · Blazor · WPF</span>
+            <span>Blazor · WPF · ASP.NET Core · C#</span>
           </motion.div>
 
-          {/* Summary */}
+          {/* Summary — client-focused */}
           <motion.p variants={item} className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mb-10">
-            Results-driven Technical Lead building{" "}
-            <span className="text-foreground font-medium">scalable full-stack applications</span>{" "}
-            across fintech, healthcare, and e-commerce. Expert in{" "}
-            <span className="text-blue-400">.NET Core</span>,{" "}
-            <span className="text-teal-400">Blazor</span>, and{" "}
-            <span className="text-blue-400">WPF</span> — from architecture to production.
+            I build <span className="text-foreground font-semibold">production-grade .NET applications</span> for
+            startups and businesses — Blazor web platforms, WPF desktop tools, and robust APIs.
+            Reliable, deadline-driven, and available to start{" "}
+            <span className="text-teal-400 font-semibold">{personalInfo.availableFrom.toLowerCase()}</span>.
           </motion.p>
 
-          {/* CTAs */}
+          {/* CTAs — Hire Me is primary */}
           <motion.div variants={item} className="flex flex-wrap gap-4 mb-12">
-            <Link href="/contact" className="group inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-xl transition-all shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-0.5">
-              Get In Touch
+            <Link
+              href="/hire"
+              className="group inline-flex items-center gap-2 px-7 py-3.5 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-all shadow-xl shadow-blue-500/30 hover:shadow-blue-500/45 hover:-translate-y-0.5"
+            >
+              Hire Me
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <a href="/Kathan_Patel_Resume.pdf" download className="group inline-flex items-center gap-2 px-6 py-3 border border-blue-500/40 text-blue-400 font-medium rounded-xl hover:bg-blue-500/10 hover:border-blue-500/60 transition-all hover:-translate-y-0.5">
-              Download Resume
+            <Link
+              href="/contact"
+              className="group inline-flex items-center gap-2 px-7 py-3.5 border border-blue-500/40 text-blue-400 font-medium rounded-xl hover:bg-blue-500/10 hover:border-blue-500/60 transition-all hover:-translate-y-0.5"
+            >
+              Get In Touch
+            </Link>
+            <a
+              href="/Kathan_Patel_Resume.pdf"
+              download
+              className="group inline-flex items-center gap-2 px-5 py-3.5 border border-border text-muted-foreground font-medium rounded-xl hover:border-blue-500/30 hover:text-foreground transition-all"
+            >
               <Download className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
+              Resume
             </a>
           </motion.div>
 
           {/* Social */}
           <motion.div variants={item} className="flex items-center gap-3">
             {[
-              { href: personalInfo.github,              icon: <Github   className="w-5 h-5" />, label: "GitHub" },
-              { href: personalInfo.linkedin,            icon: <Linkedin className="w-5 h-5" />, label: "LinkedIn" },
-              { href: `mailto:${personalInfo.email}`,   icon: <Mail     className="w-5 h-5" />, label: "Email" },
+              { href: personalInfo.github,            icon: <Github   className="w-5 h-5" />, label: "GitHub" },
+              { href: personalInfo.linkedin,          icon: <Linkedin className="w-5 h-5" />, label: "LinkedIn" },
+              { href: `mailto:${personalInfo.email}`, icon: <Mail     className="w-5 h-5" />, label: "Email" },
             ].map(({ href, icon, label }) => (
-              <a key={label} href={href} target={href.startsWith("mailto") ? undefined : "_blank"} rel="noopener noreferrer"
+              <a
+                key={label}
+                href={href}
+                target={href.startsWith("mailto") ? undefined : "_blank"}
+                rel="noopener noreferrer"
                 aria-label={label}
-                className="w-10 h-10 flex items-center justify-center rounded-xl border border-border hover:border-blue-500/40 hover:bg-blue-500/10 hover:text-blue-400 text-muted-foreground transition-all">
+                className="w-10 h-10 flex items-center justify-center rounded-xl border border-border hover:border-blue-500/40 hover:bg-blue-500/10 hover:text-blue-400 text-muted-foreground transition-all"
+              >
                 {icon}
               </a>
             ))}

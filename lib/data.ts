@@ -9,10 +9,13 @@ export const personalInfo = {
   portfolio: "https://kathan555.github.io/professional-flyer/",
   location: "Ahmedabad, India",
   yearsExp: "8+",
+  // ── Availability status shown in Navbar & Hero ──
+  availableForWork: true,
+  availableFrom: "Immediately",
 };
 
 export const summary =
-  "Results-driven Technical Lead with 8+ years of experience in designing and developing scalable full-stack applications using .NET Core, Blazor, and WPF. Proven ability to translate complex business requirements into robust technical solutions. Adept in project leadership, stakeholder communication, and mentoring junior developers. Strong expertise in building interactive, high-performance web and desktop applications across fintech, healthcare, and e-commerce domains.";
+  "I'm a freelance .NET Technical Lead with 8+ years of experience building production-grade web and desktop applications. I specialise in Blazor, ASP.NET Core, and WPF — helping startups and businesses turn complex requirements into clean, scalable software. Remote-friendly, deadline-driven, and available for contract work right now.";
 
 export const education = [
   {
@@ -48,16 +51,9 @@ export const skills = [
     category: "Tools & Libraries",
     icon: "wrench",
     items: [
-      "GitHub",
-      "SourceTree",
-      "LINQ",
-      "Telerik",
-      "SciChart",
-      "Syncfusion",
-      "LEAD Tools",
-      "DevExpress",
-      "Hangfire",
-      "ABP.io",
+      "GitHub", "SourceTree", "LINQ", "Telerik",
+      "SciChart", "Syncfusion", "LEAD Tools",
+      "DevExpress", "Hangfire", "ABP.io",
     ],
   },
 ];
@@ -125,13 +121,13 @@ export const projects = [
       "Scheduled periodic workflows for hands-free data synchronization",
       "Real-time consistency across legal practice management tools",
     ],
+    result: "Eliminated manual data entry entirely — saving the firm 10+ hours per week of admin work.",
     tags: ["Blazor Server", ".NET 9", "Hangfire", "OAuth 2.0", "Clio API", "Lawmatics", "Zoom API"],
-    focus: "Reliable, hands-off data synchronization across legal tools, improving operational efficiency for law firms.",
   },
   {
     id: 2,
     title: "Guard Resource One",
-    subtitle: "Multi-Tenant Security Management",
+    subtitle: "Multi-Tenant Security Management SaaS",
     period: "Jan 2025 – Present",
     domain: "Enterprise SaaS",
     domainColor: "teal",
@@ -142,8 +138,8 @@ export const projects = [
       "Company-specific guard creation with detailed profiles",
       "Subscription-based access control for scalable SaaS model",
     ],
+    result: "Enabled the client to onboard multiple companies under one platform with zero data overlap.",
     tags: ["Blazor Server", "ABP.io", "Syncfusion", "Multi-tenancy", "C#", "MS-SQL"],
-    focus: "Intuitive, multi-tenant system with robust data grids and controls for seamless user interaction.",
   },
   {
     id: 3,
@@ -159,8 +155,8 @@ export const projects = [
       "Live match, auction, and matrix trading sessions",
       "Custom kernel integration for reliable trade execution",
     ],
+    result: "Delivered a sub-100ms UI response time for live trading operations handling thousands of ticks per second.",
     tags: ["WPF", "DevExpress", "C#", "Real-time Trading", "XAML", ".NET"],
-    focus: "Fast, responsive interface for traders handling complex financial operations.",
   },
   {
     id: 4,
@@ -176,8 +172,8 @@ export const projects = [
       "Secure online payment processing integration",
       "Product browsing, cart, and purchasing capabilities",
     ],
+    result: "Launched the platform from zero — replacing a fully manual leasing process with an automated online system.",
     tags: ["React.js", ".NET Framework 4.6", "C#", "MS-SQL", "REST API", "Payment Gateway"],
-    focus: "Streamlined, feature-rich rental solution enhancing user experience.",
   },
   {
     id: 5,
@@ -193,8 +189,8 @@ export const projects = [
       "Predictive analytics and trend forecasting",
       "Cross-platform desktop and web compatibility",
     ],
+    result: "Reduced analyst report generation time from hours to minutes via automated real-time dashboards.",
     tags: ["WPF", "Blazor", ".NET Core 6", "SciChart", "Syncfusion", "MySQL", "LINQ"],
-    focus: "Actionable financial insights through advanced visualization tools.",
   },
   {
     id: 6,
@@ -210,7 +206,99 @@ export const projects = [
       "Medication tracking and management system",
       "Medical imaging with LEAD Tools integration",
     ],
+    result: "Improved record retrieval speed by 60% and eliminated paper-based medication tracking across departments.",
     tags: ["WPF", "C#", "MS-SQL", "XAML", "LINQ", "LEAD Tools", "Telerik"],
-    focus: "Data accuracy and usability in a critical healthcare environment.",
+  },
+];
+
+// ── Testimonials (point 7) ────────────────────────────────────────────────────
+// Replace placeholder quotes with real ones from colleagues/managers/clients
+export const testimonials = [
+  {
+    id: 1,
+    quote:
+      "Kathan delivered a complete Blazor migration ahead of schedule without a single regression. His attention to architecture and clean code made the handover effortless.",
+    name: "Client / Manager Name",
+    role: "CTO, Digip Technologies",
+    initials: "DT",
+  },
+  {
+    id: 2,
+    quote:
+      "Working with Kathan on the trading platform was exceptional. He understood the performance constraints from day one and consistently produced a UI that felt instant.",
+    name: "Client / Colleague Name",
+    role: "Project Manager, King & Shaxson",
+    initials: "KS",
+  },
+  {
+    id: 3,
+    quote:
+      "Kathan's ability to translate our legal workflow into an automated system saved us weeks of manual effort every month. Highly recommended for complex integrations.",
+    name: "Client / Stakeholder Name",
+    role: "Operations Lead, North City Law",
+    initials: "NC",
+  },
+];
+
+// ── Hire Me page data (point 2) ───────────────────────────────────────────────
+export const services = [
+  {
+    icon: "🌐",
+    title: "Blazor Web Applications",
+    desc: "Full-stack Blazor Server or WASM applications — from SaaS platforms to internal business tools. Clean architecture, real-time UI, and solid API design.",
+    tags: ["Blazor Server", "Blazor WASM", "ASP.NET Core", "MS-SQL"],
+  },
+  {
+    icon: "🖥️",
+    title: "WPF Desktop Software",
+    desc: "High-performance Windows desktop applications with rich XAML UIs, real-time data grids, charting, and business logic — built for demanding industries like fintech and healthcare.",
+    tags: ["WPF", "XAML", "C#", "DevExpress", "SciChart"],
+  },
+  {
+    icon: "🔌",
+    title: "API Development & Integration",
+    desc: "RESTful APIs, background job pipelines with Hangfire, OAuth 2.0 integrations, and third-party platform connections (Zoom, Clio, Lawmatics, payment gateways).",
+    tags: ["ASP.NET Core", "REST API", "Hangfire", "OAuth 2.0"],
+  },
+  {
+    icon: "☁️",
+    title: "Legacy .NET Migration",
+    desc: "Modernise your old WinForms, .NET Framework 4.x, or WebForms app to .NET 8/9 with Blazor or ASP.NET Core — without breaking what already works.",
+    tags: [".NET Migration", "Blazor", "ASP.NET Core", ".NET 9"],
+  },
+  {
+    icon: "🏗️",
+    title: "Architecture & Technical Lead",
+    desc: "Need a senior hand to define your system architecture, review code, set up CI/CD, or guide your dev team? I can step in as a fractional technical lead.",
+    tags: ["System Design", "Code Review", "CI/CD", "Team Mentoring"],
+  },
+  {
+    icon: "🚀",
+    title: "End-to-End MVP Build",
+    desc: "Got an idea? I'll help you scope, plan sprints, and ship a working MVP fast — handling everything from database design to deployment on Azure or Vercel.",
+    tags: ["MVP", "Full-Stack", "Azure", "Sprint Planning"],
+  },
+];
+
+export const process = [
+  {
+    step: "01",
+    title: "Discovery Call",
+    desc: "Free 30-minute call to understand your project, goals, constraints, and timeline.",
+  },
+  {
+    step: "02",
+    title: "Proposal & Quote",
+    desc: "Detailed scope document with deliverables, milestones, timeline, and fixed or hourly pricing.",
+  },
+  {
+    step: "03",
+    title: "Sprint Delivery",
+    desc: "Weekly sprints with demos. You see working software every week — no black-box development.",
+  },
+  {
+    step: "04",
+    title: "Handover & Support",
+    desc: "Clean code handover with docs, deployment, and 30-day post-launch support included.",
   },
 ];

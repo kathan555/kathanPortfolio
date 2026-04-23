@@ -11,20 +11,45 @@ const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans", weight:
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono", weight: ["400","500"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kathanpatel.dev"),
-  title: { default: "Kathan N. Patel — Technical Lead, Full Stack .NET Developer", template: "%s | Kathan N. Patel" },
-  description: "Technical Lead with 8+ years of experience building scalable full-stack applications using .NET Core, Blazor, and WPF.",
-  keywords: ["Kathan Patel", ".NET Developer", "Blazor", "ASP.NET Core", "WPF", "Technical Lead", "C#"],
-  authors: [{ name: "Kathan N. Patel" }],
-  openGraph: {
-    type: "website", locale: "en_IN", url: "https://kathanpatel.dev",
-    title: "Kathan N. Patel — Technical Lead, Full Stack .NET Developer",
-    description: "Technical Lead with 8+ years building scalable .NET applications.",
-    siteName: "Kathan N. Patel Portfolio",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Kathan N. Patel Portfolio" }],
+  metadataBase: new URL("https://kathanpatel.dev"), // ← Replace with your real domain
+  title: {
+    default: "Kathan N. Patel — Freelance .NET Developer | Blazor, WPF, ASP.NET Core",
+    template: "%s | Kathan N. Patel",
   },
-  twitter: { card: "summary_large_image", title: "Kathan N. Patel — Technical Lead", images: ["/og-image.png"] },
-  robots: { index: true, follow: true },
+  description:
+    "Freelance .NET Technical Lead available for contract work. 8+ years building Blazor web apps, WPF desktop software, and ASP.NET Core APIs. Remote-friendly. Based in India, working globally.",
+  keywords: [
+    // Freelance intent
+    "freelance .NET developer", "hire .NET developer", "contract .NET developer",
+    "freelance Blazor developer", "hire Blazor developer",
+    "freelance ASP.NET Core developer", "freelance WPF developer",
+    // Skills
+    "C# developer for hire", ".NET consultant", "Blazor contractor",
+    "ASP.NET Core freelancer", "WPF developer contract",
+    // Name
+    "Kathan Patel", "Kathan N. Patel",
+    // Location + remote
+    "freelance developer India", "remote .NET developer", ".NET developer Ahmedabad",
+  ],
+  authors: [{ name: "Kathan N. Patel", url: "https://kathanpatel.dev" }],
+  creator: "Kathan N. Patel",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://kathanpatel.dev",
+    title: "Kathan N. Patel — Freelance .NET Developer | Blazor · WPF · ASP.NET Core",
+    description:
+      "Freelance .NET Technical Lead available for contract work. 8+ years. Blazor, WPF, ASP.NET Core, C#. Remote-friendly.",
+    siteName: "Kathan N. Patel",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Kathan N. Patel — Freelance .NET Developer" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kathan N. Patel — Freelance .NET Developer",
+    description: "Available for .NET contract work. Blazor · WPF · ASP.NET Core · C#. Remote-friendly.",
+    images: ["/og-image.png"],
+  },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large" } },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -40,7 +65,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Toaster
             position="bottom-right"
             toastOptions={{
-              style: { background: "hsl(222, 47%, 10%)", color: "hsl(210, 40%, 96%)", border: "1px solid hsl(217, 91%, 60%, 0.2)", fontFamily: "var(--font-dm-sans)" },
+              style: {
+                background: "hsl(222, 47%, 10%)",
+                color: "hsl(210, 40%, 96%)",
+                border: "1px solid hsl(217, 91%, 60%, 0.2)",
+                fontFamily: "var(--font-dm-sans)",
+              },
               success: { iconTheme: { primary: "#14B8A6", secondary: "#0A0F1E" } },
               error:   { iconTheme: { primary: "#EF4444", secondary: "#0A0F1E" } },
             }}
