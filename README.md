@@ -142,3 +142,36 @@ Update `metadataBase` in `app/layout.tsx` to your real domain.
 
 ### Hiding GitHub repos
 Edit `app/github/page.tsx` → add repo names to the `HIDDEN_REPOS` array.
+
+---
+
+### ✅ SEO Blog Posts
+Three ready-to-publish blog posts are in `/docs/sample-blog-posts.md`:
+1. **"How to Migrate a WPF App to Blazor Server in 2025"** — targets developers/decision-makers researching migration
+2. **"5 Things Clients Look for When Hiring a Freelance .NET Developer"** — targets people searching for ".NET freelancer"
+3. **"How Much Does Custom .NET Software Development Cost in 2025?"** — targets people searching for ".NET development cost" (also directly supports your /estimator page)
+
+Copy the JSON content blocks into Supabase → `blog_posts` table. Set `published = true`.
+
+### ✅ Google Search Console
+1. Go to [search.google.com/search-console](https://search.google.com/search-console)
+2. Add your domain (e.g. `kathanpatel.dev`)
+3. Verify via DNS TXT record (Vercel makes this easy — Domains → DNS)
+4. After site is live, click **URL Inspection → Request Indexing** for your homepage
+5. Submit sitemap: **Sitemaps → Add sitemap** → enter `https://kathanpatel.dev/sitemap.xml`
+   Your sitemap is auto-generated at `/sitemap.xml` via `app/sitemap.ts` — no extra package needed.
+
+### ✅ Sitemap + robots.txt
+- `app/sitemap.ts` — generates `/sitemap.xml` automatically (includes all pages + blog posts)
+- `app/robots.ts` — generates `/robots.txt` automatically
+- No extra packages needed — this is built into Next.js 15 App Router
+
+### ✅ Put Your URL Everywhere
+After deploying, add `https://kathanpatel.dev` (your real URL) to:
+- [ ] **GitHub profile bio** — github.com → Edit profile → Website
+- [ ] **LinkedIn headline** — "Freelance .NET Developer | kathanpatel.dev"
+- [ ] **LinkedIn About section** — add the URL in the first 2 lines
+- [ ] **Email signature** — "Kathan N. Patel | kathanpatel.dev | patel.kathan555@gmail.com"
+- [ ] **WhatsApp bio / status** — just the URL is enough
+- [ ] **Freelance platforms** — Toptal, Gun.io, Arc.dev, Contra (profile website field)
+

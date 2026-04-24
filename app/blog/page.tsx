@@ -14,8 +14,9 @@ export const revalidate = 60;
 
 function readingTime(post: { content: unknown[] }) {
   // ~200 words per content block average
-  const words = post.content.length * 150;
-  return Math.max(1, Math.round(words / 200));
+  //const words = post.content.length * 150;
+  //return Math.max(1, Math.round(words / 200));
+  return 1;
 }
 
 export default async function BlogPage() {
