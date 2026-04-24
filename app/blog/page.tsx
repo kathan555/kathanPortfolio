@@ -13,10 +13,12 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 function readingTime(post: { content: unknown[] }) {
+  // Use ?. to safely access length and ?? to default to 0 if null/undefined
+  const contentLength = post?.content?.length ?? 1;
+  
   // ~200 words per content block average
-  //const words = post.content.length * 150;
-  //return Math.max(1, Math.round(words / 200));
-  return 1;
+  const words = contentLength * 150;
+  return Math.max(1, Math.round(words / 200));
 }
 
 export default async function BlogPage() {
