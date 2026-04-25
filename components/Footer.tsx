@@ -51,7 +51,7 @@ export function Footer() {
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-blue-400 transition-colors"
                 >
                   <Mail className="w-4 h-4 shrink-0" />
-                  {personalInfo.email}
+                  <span className="break-all">{personalInfo.email}</span>
                 </a>
               </li>
               <li>

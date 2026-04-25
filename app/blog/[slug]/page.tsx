@@ -130,9 +130,11 @@ function BlockRenderer({ block }: { block: ContentBlock }) {
 
     case "code":
       return (
-        <pre>
-          <code className={`language-${block.language}`}>{block.content}</code>
-        </pre>
+        <div className="overflow-x-auto max-w-full my-6 rounded-xl border border-border">
+          <pre className="!my-0 !rounded-xl">
+            <code className={`language-${block.language}`}>{block.content}</code>
+          </pre>
+        </div>
       );
 
     case "quote":

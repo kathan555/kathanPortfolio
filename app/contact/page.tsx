@@ -56,7 +56,7 @@ export default function ContactPage() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-5 gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 items-start">
 
           {/* ── Left column: contact info ── */}
           <div className="lg:col-span-2 space-y-4">
@@ -73,7 +73,7 @@ export default function ContactPage() {
                   {href ? (
                     <a
                       href={href}
-                      className="text-sm font-medium text-foreground hover:text-blue-400 transition-colors break-all"
+                      className="text-sm font-medium text-foreground hover:text-blue-400 transition-colors break-all leading-snug"
                     >
                       {value}
                     </a>

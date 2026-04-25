@@ -18,10 +18,11 @@ const navLinks = [
     label: "More",
     href: "#",
     children: [
-      { label: "GitHub Showcase", href: "/github" },
-      { label: "Blog",            href: "/blog" },
-      { label: "Cost Estimator",  href: "/estimator" },
-      { label: "Education",       href: "/education" },
+      { label: "GitHub Showcase",    href: "/github" },
+      { label: "Blog",               href: "/blog" },
+      { label: "Cost Estimator",     href: "/estimator" },
+      { label: "AI Integration",     href: "/ai-integration" },
+      { label: "Education",          href: "/education" },
     ],
   },
   { label: "Contact", href: "/contact" },
@@ -70,7 +71,7 @@ export function Navbar() {
               </span>
               {/* ── Point 9: Available for work indicator ── */}
               {personalInfo.availableForWork && (
-                <span className="flex items-center gap-1 text-[10px] text-teal-400 font-medium leading-tight">
+                <span className="hidden xs:flex items-center gap-1 text-[10px] text-teal-400 font-medium leading-tight">
                   <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse inline-block" />
                   Available for work
                 </span>

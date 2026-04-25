@@ -175,3 +175,32 @@ After deploying, add `https://kathanpatel.dev` (your real URL) to:
 - [ ] **WhatsApp bio / status** — just the URL is enough
 - [ ] **Freelance platforms** — Toptal, Gun.io, Arc.dev, Contra (profile website field)
 
+---
+
+## AI Integration Page (/ai-integration)
+
+### What's on this page
+- Hero explaining .NET + AI opportunity
+- **Live AI demo widget** — real chat powered by Claude API (not a mockup)
+- Architecture SVG diagram (Blazor → ChatService → Semantic Kernel → Azure OpenAI)
+- 4 real C# code blocks: Semantic Kernel setup, ChatService, Blazor component, RAG pattern
+- 6 use case cards: AI chat, data extraction, report generation, code review, automation, semantic search
+- Tech stack breakdown: Semantic Kernel, Azure OpenAI, Qdrant, Blazor, Hangfire
+- CTA linking to /contact and /estimator
+
+### Setting up the live demo (ANTHROPIC_API_KEY)
+
+1. Go to [console.anthropic.com](https://console.anthropic.com) → API Keys → Create Key
+2. Add to `.env.local`:
+   ```
+   ANTHROPIC_API_KEY=sk-ant-your-key-here
+   ```
+3. Add the same key in Vercel → Project → Settings → Environment Variables
+
+The demo uses `claude-haiku-4-5` (cheapest model) and is rate-limited to 10 requests/min per IP.
+Without the key, the demo widget still renders but the send button returns a 502 error.
+
+### Content positioning strategy
+The page is written as a **knowledge resource + service showcase** — not a fake case study.
+It demonstrates architectural knowledge and pattern understanding, which is honest and credible.
+The live demo is the key differentiator — visitors can interact with working AI, not read about it.

@@ -3,6 +3,7 @@ import { Syne, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider }      from "@/components/ThemeProvider";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
+import { ScrollRestorer }    from "@/components/ScrollRestorer";
 import { Navbar }             from "@/components/Navbar";
 import { Footer }             from "@/components/Footer";
 import { Toaster }            from "react-hot-toast";
@@ -53,6 +54,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={`${syne.variable} ${dmSans.variable} ${jetbrainsMono.variable} bg-background text-foreground antialiased min-h-screen`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange={false}>
+
+          {/* ── Scroll-to-top on every route change / refresh ── */}
+          <ScrollRestorer />
 
           {/* ── 3D animated canvas — sits behind everything ── */}
           <AnimatedBackground />

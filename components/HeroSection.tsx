@@ -35,7 +35,7 @@ export function HeroSection() {
 
           {/* ── Point 1 & 9: Availability badge ── */}
           <motion.div variants={item} className="mb-6 flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-teal-500/40 bg-teal-500/8 text-teal-400 text-sm font-semibold">
+            <span className="inline-flex items-center gap-2 px-3 py-2 sm:px-4 rounded-full border border-teal-500/40 bg-teal-500/8 text-teal-400 text-xs sm:text-sm font-semibold">
               <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
               {personalInfo.availableForWork
                 ? `Available for Freelance & Contract — ${personalInfo.availableFrom}`
@@ -132,7 +132,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2, duration: 0.7 }}
-          className="mt-20 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl"
+          className="mt-16 sm:mt-20 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-3xl w-full"
         >
           {stats.map((stat) => (
             <div

@@ -241,7 +241,7 @@ export function CostEstimator() {
             </p>
 
             {/* Animated range */}
-            <div className="font-display text-4xl sm:text-5xl font-extrabold gradient-text mb-1 leading-tight">
+            <div className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold gradient-text mb-1 leading-tight flex flex-wrap items-center justify-center gap-x-1">
               $<AnimatedCounter target={shortVal(low)}  suffix={shortSuffix(low)}  duration={1400} />
               {" – "}
               $<AnimatedCounter target={shortVal(high)} suffix={shortSuffix(high)} duration={1700} />

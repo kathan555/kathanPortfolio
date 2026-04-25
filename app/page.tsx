@@ -3,7 +3,7 @@ import { TestimonialsSection } from "@/components/TestimonialsSection";
 import Link from "next/link";
 import {
   ArrowRight, Briefcase, Code2, FolderOpen, GraduationCap,
-  Github, PenLine, Calculator, Handshake,
+  Github, PenLine, Calculator, Handshake, Brain,
 } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { experiences, projects, skills } from "@/lib/data";
@@ -17,6 +17,7 @@ const sections = [
   { icon: <Github     className="w-6 h-6 text-green-400" />,  title: "GitHub Showcase", desc: "Live open-source repositories pulled straight from GitHub.",                                      href: "/github",     color: "green"  },
   { icon: <PenLine    className="w-6 h-6 text-pink-400" />,   title: "Blog",            desc: "Thoughts on .NET, architecture, leadership, and software engineering.",                           href: "/blog",       color: "pink"   },
   { icon: <Calculator className="w-6 h-6 text-yellow-400" />, title: "Cost Estimator",  desc: "Estimate your project cost in 7 questions — no sign-up required.",                               href: "/estimator",  color: "yellow" },
+  { icon: <Brain        className="w-6 h-6 text-indigo-400" />, title: "AI Integration", desc: "How to add Azure OpenAI & Semantic Kernel to .NET apps — architecture, C# code, and a live demo.", href: "/ai-integration", color: "indigo" },
   { icon: <GraduationCap className="w-6 h-6 text-blue-400" />, title: "Education",    desc: "B.Sc. Computer Science, Silver Oak College of Engineering & Technology (2013–2017).",              href: "/education",  color: "blue"   },
 ];
 
@@ -28,6 +29,7 @@ const colorMap: Record<string, string> = {
   green:  "border-green-500/20  hover:border-green-500/40  hover:bg-green-500/5",
   pink:   "border-pink-500/20   hover:border-pink-500/40   hover:bg-pink-500/5",
   yellow: "border-yellow-500/20 hover:border-yellow-500/40 hover:bg-yellow-500/5",
+  indigo: "border-indigo-500/20 hover:border-indigo-500/40 hover:bg-indigo-500/5",
 };
 
 export default function Home() {
@@ -49,7 +51,7 @@ export default function Home() {
             </div>
           </ScrollReveal>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {sections.map((s, i) => (
               <ScrollReveal key={s.href} delay={i * 0.05}>
                 <Link
