@@ -1,54 +1,171 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Code2, ChevronDown } from "lucide-react";
+import {
+  Menu, X, Code2, ChevronDown,
+  Briefcase, Code, GraduationCap,
+  FolderOpen, Github, PenLine, Calculator, Brain,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { personalInfo } from "@/lib/data";
 
+// ── Nav structure ─────────────────────────────────────────────────────────────
 const navLinks = [
-  { label: "About",      href: "/about" },
-  { label: "Skills",     href: "/skills" },
-  { label: "Experience", href: "/experience" },
-  { label: "Projects",   href: "/projects" },
   {
-    label: "More",
-    href: "#",
+    label:    "About",
+    href:     "/about",
+    children: null,
+  },
+  {
+    label: "Professional Details",
+    href:  "#",
     children: [
-      { label: "GitHub Showcase",    href: "/github" },
-      { label: "Blog",               href: "/blog" },
-      { label: "Cost Estimator",     href: "/estimator" },
-      { label: "AI Integration",     href: "/ai-integration" },
-      { label: "Education",          href: "/education" },
+      { label: "Skills",     href: "/skills",     icon: <Code          className="w-4 h-4" />, desc: "Tech stack & libraries"      },
+      { label: "Experience", href: "/experience", icon: <Briefcase     className="w-4 h-4" />, desc: "Career history & roles"       },
+      { label: "Education",  href: "/education",  icon: <GraduationCap className="w-4 h-4" />, desc: "Academic background"          },
+      { label: "Projects",   href: "/projects",   icon: <FolderOpen    className="w-4 h-4" />, desc: "Production work & outcomes"   },
     ],
   },
-  { label: "Contact", href: "/contact" },
+  {
+    label: "More",
+    href:  "#",
+    children: [
+      { label: "GitHub Showcase", href: "/github",         icon: <Github     className="w-4 h-4" />, desc: "Open-source repositories"   },
+      { label: "Blog",            href: "/blog",           icon: <PenLine    className="w-4 h-4" />, desc: "Thoughts & tutorials"        },
+      { label: "Cost Estimator",  href: "/estimator",      icon: <Calculator className="w-4 h-4" />, desc: "Project cost calculator"     },
+      { label: "AI Integration",  href: "/ai-integration", icon: <Brain      className="w-4 h-4" />, desc: ".NET + AI showcase & demo"   },
+    ],
+  },
+  {
+    label:    "Contact",
+    href:     "/contact",
+    children: null,
+  },
 ];
 
-export function Navbar() {
-  const [scrolled,     setScrolled]     = useState(false);
-  const [mobileOpen,   setMobileOpen]   = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+type NavChild = { label: string; href: string; icon: React.ReactNode; desc: string };
+
+// ── Dropdown panel component ───────────────────────────────────────────────────
+function DropdownPanel({
+  items,
+  align = "left",
+}: {
+  items: NavChild[];
+  align?: "left" | "right";
+}) {
   const pathname = usePathname();
 
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8,  scale: 0.97 }}
+      animate={{ opacity: 1, y: 0,  scale: 1    }}
+      exit={{    opacity: 0, y: 8,  scale: 0.97 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
+      className={cn(
+        "absolute top-full mt-2 w-64 glass-card rounded-2xl overflow-hidden",
+        "shadow-2xl shadow-blue-500/10 border border-blue-500/15",
+        align === "right" ? "right-0" : "left-0"
+      )}
+    >
+      <div className="p-1.5 flex flex-col gap-0.5">
+        {items.map((child) => {
+          const active = pathname.startsWith(child.href);
+          return (
+            <Link
+              key={child.href}
+              href={child.href}
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 group",
+                active
+                  ? "bg-blue-500/12 text-blue-400"
+                  : "text-muted-foreground hover:bg-blue-500/8 hover:text-foreground"
+              )}
+            >
+              {/* Icon box */}
+              <span className={cn(
+                "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors",
+                active
+                  ? "bg-blue-500/20 text-blue-400"
+                  : "bg-muted/60 text-muted-foreground group-hover:bg-blue-500/10 group-hover:text-blue-400"
+              )}>
+                {child.icon}
+              </span>
+
+              {/* Text */}
+              <div className="min-w-0">
+                <p className={cn(
+                  "text-sm font-semibold leading-tight",
+                  active ? "text-blue-400" : "text-foreground"
+                )}>
+                  {child.label}
+                </p>
+                <p className="text-xs text-muted-foreground leading-tight mt-0.5 truncate">
+                  {child.desc}
+                </p>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </motion.div>
+  );
+}
+
+// ── Main Navbar ───────────────────────────────────────────────────────────────
+export function Navbar() {
+  const [scrolled,       setScrolled]       = useState(false);
+  const [mobileOpen,     setMobileOpen]     = useState(false);
+  const [openDropdown,   setOpenDropdown]   = useState<string | null>(null);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+
+  const pathname = usePathname();
+  const navRef   = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    function handleOutside(e: MouseEvent) {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setOpenDropdown(null);
+      }
+    }
+    document.addEventListener("mousedown", handleOutside);
+    return () => document.removeEventListener("mousedown", handleOutside);
   }, []);
 
+  // Scroll shadow
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Reset everything on route change
   useEffect(() => {
     setMobileOpen(false);
-    setDropdownOpen(false);
+    setOpenDropdown(null);
+    setMobileExpanded(null);
   }, [pathname]);
+
+  function toggleDesktopDropdown(label: string) {
+    setOpenDropdown((prev) => (prev === label ? null : label));
+  }
+
+  function toggleMobileSection(label: string) {
+    setMobileExpanded((prev) => (prev === label ? null : label));
+  }
+
+  function anyChildActive(children: NavChild[]) {
+    return children.some((c) => pathname.startsWith(c.href));
+  }
 
   return (
     <motion.header
       initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0,  opacity: 1 }}
+      animate={{ y: 0,   opacity: 1  }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
@@ -57,11 +174,11 @@ export function Navbar() {
           : "bg-transparent"
       )}
     >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav ref={navRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
 
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-4 group">
+          {/* ── Logo ── */}
+          <Link href="/" className="flex items-center gap-2.5 group shrink-0">
             <motion.div 
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95, y: 1 }}
@@ -111,115 +228,96 @@ export function Navbar() {
                 <motion.div 
                   animate={{ opacity: [1, 0, 1] }}
                   transition={{ repeat: Infinity, duration: 1.5 }}
-                  className="w-1.5 h-4 bg-blue-500 rounded-full"
+                  className="w-1.5 h-4 bg-amber-500 rounded-full"
                 />
               </div>
-              
-              {personalInfo.availableForWork && (
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-teal-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
-                  </span>
-                  <span className="text-[10px] uppercase tracking-[0.2em] font-black text-slate-500 dark:text-slate-400">
-                    Available
-                  </span>
-                </div>
-              )}
             </div>
           </Link>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) =>
-              link.children ? (
-                <div key={link.label} className="relative">
-                  <button
-                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                    onBlur={() => setTimeout(() => setDropdownOpen(false), 150)}
+          {/* ── Desktop Nav ── */}
+          <div className="hidden md:flex items-center gap-0.5">
+            {navLinks.map((link) => {
+              // Plain link (About, Contact)
+              if (!link.children) {
+                return (
+                  <Link
+                    key={link.label}
+                    href={link.href}
                     className={cn(
-                      "nav-link flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors duration-200",
-                      link.children.some((c) => pathname.startsWith(c.href))
-                        ? "text-blue-400"
-                        : "text-muted-foreground hover:text-foreground"
+                      "px-3.5 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
+                      pathname === link.href
+                        ? "text-blue-400 bg-blue-500/8"
+                        : "text-muted-foreground hover:text-foreground hover:bg-blue-500/5"
                     )}
                   >
                     {link.label}
-                    <ChevronDown className={cn("w-3.5 h-3.5 transition-transform duration-200", dropdownOpen && "rotate-180")} />
+                  </Link>
+                );
+              }
+
+              // Dropdown
+              const isOpen   = openDropdown === link.label;
+              const isActive = anyChildActive(link.children);
+
+              return (
+                <div key={link.label} className="relative">
+                  <button
+                    onClick={() => toggleDesktopDropdown(link.label)}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
+                      isOpen || isActive
+                        ? "text-blue-400 bg-blue-500/8"
+                        : "text-muted-foreground hover:text-foreground hover:bg-blue-500/5"
+                    )}
+                  >
+                    {link.label}
+                    <ChevronDown className={cn(
+                      "w-3.5 h-3.5 transition-transform duration-200 opacity-70",
+                      isOpen && "rotate-180"
+                    )} />
                   </button>
+
                   <AnimatePresence>
-                    {dropdownOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{   opacity: 0, y: 6 }}
-                        transition={{ duration: 0.15 }}
-                        className="absolute top-full right-0 mt-2 w-48 glass-card rounded-xl overflow-hidden shadow-xl"
-                      >
-                        {link.children.map((child) => (
-                          <Link
-                            key={child.href}
-                            href={child.href}
-                            className={cn(
-                              "block px-4 py-2.5 text-sm transition-colors hover:bg-blue-500/10 hover:text-blue-400",
-                              pathname.startsWith(child.href) ? "text-blue-400" : "text-muted-foreground"
-                            )}
-                          >
-                            {child.label}
-                          </Link>
-                        ))}
-                      </motion.div>
+                    {isOpen && (
+                      <DropdownPanel
+                        items={link.children}
+                        align={link.label === "More" ? "right" : "left"}
+                      />
                     )}
                   </AnimatePresence>
                 </div>
-              ) : (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className={cn(
-                    "nav-link px-4 py-2 text-sm font-medium transition-colors duration-200",
-                    pathname === link.href
-                      ? "text-blue-400"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  {link.label}
-                </Link>
-              )
-            )}
+              );
+            })}
 
-            <div className="flex items-center gap-2 ml-2">
+            {/* ── Right-side actions ── */}
+            <div className="flex items-center gap-2 ml-3 pl-3 border-l border-border/60">
               <ThemeToggle />
-
-              {/* Resume */}
               <a
                 href="/Kathan_Patel_Resume.pdf"
                 download
-                className="px-3 py-2 text-sm font-medium bg-muted/60 border border-border text-muted-foreground rounded-lg hover:border-blue-500/30 hover:text-foreground transition-all flex items-center gap-1.5"
+                className="px-3 py-2 text-sm font-medium border border-border text-muted-foreground rounded-lg hover:border-blue-500/30 hover:text-foreground transition-all flex items-center gap-1.5"
               >
                 Resume
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <svg className="w-3 h-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
               </a>
-
-              {/* ── Point 1: Hire Me CTA ── */}
               <Link
                 href="/hire"
-                className="px-4 py-2 text-sm font-semibold bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all shadow-md shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-px"
+                className="px-4 py-2 text-sm font-semibold bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all shadow-md shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-px whitespace-nowrap"
               >
                 Hire Me
               </Link>
             </div>
           </div>
 
-          {/* Mobile: theme + hamburger */}
+          {/* ── Mobile: theme + burger ── */}
           <div className="md:hidden flex items-center gap-2">
             <ThemeToggle />
             <button
-              className="w-10 h-10 flex items-center justify-center rounded-lg border border-border hover:border-blue-500/30 hover:bg-blue-500/5 transition-all"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Toggle menu"
+              className="w-10 h-10 flex items-center justify-center rounded-lg border border-border hover:border-blue-500/30 hover:bg-blue-500/5 transition-all"
             >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -227,78 +325,129 @@ export function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* ── Mobile menu ── */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
-            exit={{   opacity: 0, height: 0 }}
+            exit={{    opacity: 0, height: 0    }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="md:hidden bg-background/95 backdrop-blur-xl border-b border-blue-500/10"
+            className="md:hidden bg-background/97 backdrop-blur-xl border-b border-blue-500/10 overflow-hidden"
           >
-            <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
+            <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-1">
 
-              {/* Availability badge on mobile */}
+              {/* Availability */}
               {personalInfo.availableForWork && (
-                <div className="flex items-center gap-2 px-4 py-2 mb-1">
-                  <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+                <div className="flex items-center gap-2 px-3 py-2 mb-1">
+                  <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse shrink-0" />
                   <span className="text-xs text-teal-400 font-medium">
                     Available for freelance / contract work
                   </span>
                 </div>
               )}
 
-              {/* Hire Me — top of mobile menu */}
+              {/* Hire Me */}
               <Link
                 href="/hire"
-                className="block px-4 py-3 text-sm font-bold text-white bg-blue-500 hover:bg-blue-600 rounded-xl transition-colors text-center mb-1"
+                className="flex items-center justify-center px-4 py-3 text-sm font-bold text-white bg-blue-500 hover:bg-blue-600 rounded-xl transition-colors mb-1"
               >
                 Hire Me →
               </Link>
 
-              {navLinks.map((link, i) =>
-                link.children ? (
-                  <div key={link.label}>
-                    <p className="px-4 py-2 text-xs text-muted-foreground uppercase tracking-wider font-medium mt-1">
-                      {link.label}
-                    </p>
-                    {link.children.map((child) => (
-                      <Link
-                        key={child.href}
-                        href={child.href}
-                        className="block px-6 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-blue-500/5 rounded-lg transition-colors"
-                      >
-                        {child.label}
-                      </Link>
-                    ))}
-                  </div>
-                ) : (
-                  <motion.div
-                    key={link.label}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.04 }}
-                  >
+              {/* Nav items */}
+              {navLinks.map((link) => {
+                // Plain link
+                if (!link.children) {
+                  return (
                     <Link
+                      key={link.label}
                       href={link.href}
                       className={cn(
-                        "block px-4 py-3 text-sm font-medium rounded-lg transition-colors",
+                        "block px-4 py-3 text-sm font-medium rounded-xl transition-colors",
                         pathname === link.href
-                          ? "text-blue-400 bg-blue-500/5"
+                          ? "text-blue-400 bg-blue-500/8"
                           : "text-muted-foreground hover:text-foreground hover:bg-blue-500/5"
                       )}
                     >
                       {link.label}
                     </Link>
-                  </motion.div>
-                )
-              )}
+                  );
+                }
 
+                // Expandable section
+                const isExpanded = mobileExpanded === link.label;
+                const isActive   = anyChildActive(link.children);
+
+                return (
+                  <div key={link.label}>
+                    <button
+                      onClick={() => toggleMobileSection(link.label)}
+                      className={cn(
+                        "w-full flex items-center justify-between px-4 py-3 text-sm font-semibold rounded-xl transition-colors",
+                        isActive || isExpanded
+                          ? "text-blue-400 bg-blue-500/8"
+                          : "text-muted-foreground hover:text-foreground hover:bg-blue-500/5"
+                      )}
+                    >
+                      <span>{link.label}</span>
+                      <ChevronDown className={cn(
+                        "w-4 h-4 transition-transform duration-200 opacity-70",
+                        isExpanded && "rotate-180"
+                      )} />
+                    </button>
+
+                    <AnimatePresence initial={false}>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{    height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="pl-3 pr-1 pb-1 pt-0.5 flex flex-col gap-0.5">
+                            {link.children.map((child) => {
+                              const childActive = pathname.startsWith(child.href);
+                              return (
+                                <Link
+                                  key={child.href}
+                                  href={child.href}
+                                  className={cn(
+                                    "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors",
+                                    childActive
+                                      ? "text-blue-400 bg-blue-500/10"
+                                      : "text-muted-foreground hover:text-foreground hover:bg-blue-500/5"
+                                  )}
+                                >
+                                  <span className={cn(
+                                    "w-7 h-7 rounded-lg flex items-center justify-center shrink-0",
+                                    childActive
+                                      ? "bg-blue-500/20 text-blue-400"
+                                      : "bg-muted/60 text-muted-foreground"
+                                  )}>
+                                    {child.icon}
+                                  </span>
+                                  <div>
+                                    <p className="text-sm font-medium leading-tight">{child.label}</p>
+                                    <p className="text-xs text-muted-foreground leading-tight">{child.desc}</p>
+                                  </div>
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+
+              {/* Resume download */}
               <a
                 href="/Kathan_Patel_Resume.pdf"
                 download
-                className="block px-4 py-3 text-sm font-medium text-muted-foreground hover:bg-blue-500/5 rounded-lg transition-colors mt-1"
+                className="block px-4 py-3 text-sm font-medium text-muted-foreground hover:bg-blue-500/5 rounded-xl transition-colors mt-1 border border-border hover:border-blue-500/20"
               >
                 Download Resume ↓
               </a>
