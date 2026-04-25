@@ -61,20 +61,70 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16 md:h-20">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/20 group-hover:border-blue-500/40 transition-all">
-              <Code2 className="w-5 h-5 text-blue-400" />
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className="font-display font-bold text-base text-foreground leading-tight">
-                Kathan<span className="text-blue-400">.</span>
-              </span>
-              {/* ── Point 9: Available for work indicator ── */}
-              {personalInfo.availableForWork && (
-                <span className="hidden xs:flex items-center gap-1 text-[10px] text-teal-400 font-medium leading-tight">
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse inline-block" />
-                  Available for work
+          <Link href="/" className="flex items-center gap-4 group">
+            <motion.div 
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95, y: 1 }}
+              className="relative cursor-pointer"
+            >
+              {/* LIGHT MODE: Soft Drop Shadow | DARK MODE: Blue Glow */}
+              <div className="absolute inset-0 bg-blue-500/30 blur-2xl rounded-full opacity-0 group-hover:opacity-100 dark:group-hover:bg-blue-400/40 transition-all duration-500" />
+              
+              {/* The Main 3D Container */}
+              <div className="relative w-12 h-12 flex items-center justify-center rounded-2xl 
+                /* Light Mode: White clay look */
+                bg-white shadow-[0_10px_20px_rgba(0,0,0,0.05),inset_0_-2px_6px_rgba(0,0,0,0.1)] 
+                /* Dark Mode: Glass look */
+                dark:bg-slate-900 dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.5)]
+                dark:backdrop-blur-xl border border-slate-200 dark:border-white/10
+                transition-colors duration-300 overflow-hidden"
+              >
+                {/* Constant Floating Particle Animation (Always moving) */}
+                <motion.div 
+                  animate={{ 
+                    y: [0, -20, 0],
+                    opacity: [0, 1, 0] 
+                  }}
+                  transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                  className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-blue-500/20 to-transparent"
+                />
+
+                {/* High-Gloss Shine (Triggers on Hover) */}
+                <motion.div 
+                  initial={{ x: '-100%', skewX: -20 }}
+                  whileHover={{ x: '200%' }}
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 dark:via-white/10 to-transparent z-10"
+                />
+                
+                <span className="relative z-20 text-2xl font-display font-black text-slate-900 dark:text-white">
+                  K<span className="text-blue-600 dark:text-blue-400">.</span>
                 </span>
+              </div>
+            </motion.div>
+
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1">
+                <span className="font-display font-black text-xl tracking-tighter text-slate-900 dark:text-white leading-none">
+                  KATHAN
+                </span>
+                <motion.div 
+                  animate={{ opacity: [1, 0, 1] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                  className="w-1.5 h-4 bg-blue-500 rounded-full"
+                />
+              </div>
+              
+              {personalInfo.availableForWork && (
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-teal-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+                  </span>
+                  <span className="text-[10px] uppercase tracking-[0.2em] font-black text-slate-500 dark:text-slate-400">
+                    Available
+                  </span>
+                </div>
               )}
             </div>
           </Link>
