@@ -6,7 +6,31 @@ import {
   Shield, Layers,
 } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { AIDemoWidget } from "@/components/AIDemoWidget";
+import dynamic from "next/dynamic";
+
+const AIDemoWidget = dynamic(
+  () => import("@/components/AIDemoWidget").then((m) => ({ default: m.AIDemoWidget })),
+  {
+    loading: () => (
+      <div className="glass-card rounded-2xl overflow-hidden border-blue-500/20 animate-pulse">
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-border/60 bg-blue-500/5">
+          <div className="w-9 h-9 bg-muted/60 rounded-xl" />
+          <div className="flex flex-col gap-1.5">
+            <div className="h-4 w-40 bg-muted/60 rounded" />
+            <div className="h-3 w-32 bg-muted/40 rounded" />
+          </div>
+        </div>
+        <div className="p-4 min-h-[280px] flex items-center justify-center">
+          <div className="text-sm text-muted-foreground">Loading AI demo…</div>
+        </div>
+        <div className="border-t border-border/60 p-3 flex gap-2">
+          <div className="flex-1 h-10 bg-muted/40 rounded-xl" />
+          <div className="w-10 h-10 bg-muted/40 rounded-xl" />
+        </div>
+      </div>
+    ),
+  }
+);
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -363,7 +387,7 @@ export default function AIIntegrationPage() {
                     </div>
                   </div>
                   <div className="overflow-x-auto">
-                  <pre className="p-4 sm:p-6 text-xs sm:text-sm font-mono text-foreground dark:text-blue-100 leading-relaxed bg-muted/60 m-0 rounded-none overflow-x-auto">
+                    <pre className="p-4 sm:p-6 text-xs sm:text-sm font-mono text-foreground dark:text-blue-100 leading-relaxed bg-muted/60 m-0 rounded-none overflow-x-auto">
                       <code>{block.code}</code>
                     </pre>
                   </div>

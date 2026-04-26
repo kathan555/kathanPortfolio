@@ -78,6 +78,7 @@ function DropdownPanel({
             <Link
               key={child.href}
               href={child.href}
+              prefetch={true}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 group",
                 active
@@ -236,6 +237,7 @@ export function Navbar() {
 
           {/* ── Desktop Nav ── */}
           <div className="hidden md:flex items-center gap-0.5">
+
             {navLinks.map((link) => {
               // Plain link (About, Contact)
               if (!link.children) {
@@ -243,6 +245,7 @@ export function Navbar() {
                   <Link
                     key={link.label}
                     href={link.href}
+                    prefetch={true}
                     className={cn(
                       "px-3.5 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
                       pathname === link.href
@@ -304,6 +307,7 @@ export function Navbar() {
               </a>
               <Link
                 href="/hire"
+                prefetch={true}
                 className="px-4 py-2 text-sm font-semibold bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all shadow-md shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-px whitespace-nowrap"
               >
                 Hire Me
@@ -350,6 +354,7 @@ export function Navbar() {
               {/* Hire Me */}
               <Link
                 href="/hire"
+                prefetch={true}
                 className="flex items-center justify-center px-4 py-3 text-sm font-bold text-white bg-blue-500 hover:bg-blue-600 rounded-xl transition-colors mb-1"
               >
                 Hire Me →
@@ -363,6 +368,7 @@ export function Navbar() {
                     <Link
                       key={link.label}
                       href={link.href}
+                      prefetch={true}
                       className={cn(
                         "block px-4 py-3 text-sm font-medium rounded-xl transition-colors",
                         pathname === link.href
@@ -413,6 +419,7 @@ export function Navbar() {
                                 <Link
                                   key={child.href}
                                   href={child.href}
+                                  prefetch={true}
                                   className={cn(
                                     "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors",
                                     childActive

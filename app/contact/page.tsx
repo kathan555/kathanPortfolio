@@ -1,5 +1,22 @@
 import type { Metadata } from "next";
-import { ContactForm } from "@/components/ContactForm";
+import dynamic from "next/dynamic";
+
+const ContactForm = dynamic(
+  () => import("@/components/ContactForm").then((m) => ({ default: m.ContactForm })),
+  {
+    loading: () => (
+      <div className="flex flex-col gap-5 animate-pulse">
+        <div className="grid sm:grid-cols-2 gap-5">
+          <div className="h-11 bg-muted/60 rounded-xl" />
+          <div className="h-11 bg-muted/60 rounded-xl" />
+        </div>
+        <div className="h-11 bg-muted/60 rounded-xl" />
+        <div className="h-40 bg-muted/60 rounded-xl" />
+        <div className="h-12 bg-blue-500/30 rounded-xl" />
+      </div>
+    ),
+  }
+);
 import { personalInfo } from "@/lib/data";
 import { Mail, Phone, MapPin, Clock, Github, Linkedin } from "lucide-react";
 

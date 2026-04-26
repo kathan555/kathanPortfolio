@@ -56,6 +56,7 @@ export default function Home() {
               <ScrollReveal key={s.href} delay={i * 0.05}>
                 <Link
                   href={s.href}
+                  prefetch={true}
                   className={`group glass-card rounded-2xl p-6 flex flex-col h-full border transition-all duration-300 ${colorMap[s.color] ?? colorMap.blue}`}
                 >
                   <div className="mb-4">{s.icon}</div>
@@ -112,6 +113,7 @@ export default function Home() {
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/hire"
+              prefetch={true}
               className="group inline-flex items-center gap-2 px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-lg rounded-xl transition-all shadow-xl shadow-blue-500/25 hover:-translate-y-0.5"
             >
               Hire Me
