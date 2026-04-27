@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Syne, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider }      from "@/components/ThemeProvider";
@@ -54,6 +55,106 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${syne.variable} ${dmSans.variable} ${jetbrainsMono.variable} bg-background text-foreground antialiased min-h-screen`}>
+
+        {/* ── Schema Markup — Person + ProfessionalService + WebSite ── */}
+        <Script
+          id="schema-person"
+          type="application/ld+json"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Person",
+                  "@id": "https://kathanpatel.dev/#person",
+                  "name": "Kathan N. Patel",
+                  "alternateName": "Kathan Patel",
+                  "jobTitle": "Freelance .NET Technical Lead",
+                  "description": "Freelance .NET Technical Lead with 8+ years building Blazor web apps, WPF desktop software, and ASP.NET Core APIs. Remote-friendly. Available for contract and freelance work globally.",
+                  "url": "https://kathanpatel.dev",
+                  "email": "patel.kathan555@gmail.com",
+                  "telephone": "+917600410895",
+                  "image": "https://kathanpatel.dev/og-image.png",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Ahmedabad",
+                    "addressRegion": "Gujarat",
+                    "addressCountry": "IN"
+                  },
+                  "knowsAbout": [
+                    "ASP.NET Core", "Blazor Server", "Blazor WebAssembly",
+                    "WPF", "C#", ".NET", "MS-SQL", "Entity Framework",
+                    "Semantic Kernel", "Azure OpenAI", "REST API Development",
+                    "Software Architecture", "Technical Leadership"
+                  ],
+                  "hasOccupation": {
+                    "@type": "Occupation",
+                    "name": "Freelance Software Developer",
+                    "occupationLocation": {
+                      "@type": "Country",
+                      "name": "Remote / Worldwide"
+                    },
+                    "estimatedSalary": {
+                      "@type": "MonetaryAmountDistribution",
+                      "name": "Hourly Rate",
+                      "currency": "USD",
+                      "duration": "PT1H",
+                      "percentile10": 35,
+                      "percentile25": 45,
+                      "median": 55,
+                      "percentile75": 70,
+                      "percentile90": 85
+                    }
+                  },
+                  "sameAs": [
+                    "https://github.com/kathan555",
+                    "https://www.linkedin.com/in/kathan-patel",
+                    "https://kathanpatel.dev"
+                  ]
+                },
+                {
+                  "@type": "ProfessionalService",
+                  "@id": "https://kathanpatel.dev/#service",
+                  "name": "Kathan Patel — Freelance .NET Development",
+                  "description": "Custom .NET software development services — Blazor web apps, WPF desktop tools, ASP.NET Core APIs, AI integrations, and legacy .NET migrations. Remote-friendly, available worldwide.",
+                  "url": "https://kathanpatel.dev/hire",
+                  "provider": { "@id": "https://kathanpatel.dev/#person" },
+                  "areaServed": ["US", "GB", "AE", "SA", "IN", "Worldwide"],
+                  "availableLanguage": ["English"],
+                  "serviceType": [
+                    "Blazor Web Application Development",
+                    "WPF Desktop Application Development",
+                    "ASP.NET Core API Development",
+                    "AI Integration with Semantic Kernel",
+                    ".NET Legacy Migration",
+                    "Technical Lead / Fractional CTO"
+                  ],
+                  "priceRange": "$35–$85/hr",
+                  "currenciesAccepted": "USD, GBP, AED",
+                  "paymentAccepted": "Bank Transfer, PayPal, Wise"
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": "https://kathanpatel.dev/#website",
+                  "name": "Kathan N. Patel — Freelance .NET Developer",
+                  "url": "https://kathanpatel.dev",
+                  "author": { "@id": "https://kathanpatel.dev/#person" },
+                  "description": "Portfolio and hiring page for Kathan N. Patel, freelance .NET Technical Lead.",
+                  "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": {
+                      "@type": "EntryPoint",
+                      "urlTemplate": "https://kathanpatel.dev/blog?q={search_term_string}"
+                    },
+                    "query-input": "required name=search_term_string"
+                  }
+                }
+              ]
+            })
+          }}
+        />
+
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange={false}>
 
           {/* ── Instant navigation progress bar — above all layers ── */}
