@@ -1,5 +1,5 @@
 import { HeroSection } from "@/components/HeroSection";
-import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { TrustSection } from "@/components/TrustSection";
 import Link from "next/link";
 import {
   ArrowRight, Briefcase, Code2, FolderOpen, GraduationCap,
@@ -94,7 +94,7 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <TestimonialsSection />
+      <TrustSection />
 
       {/* Final CTA */}
       <section className="py-28 relative overflow-hidden">
