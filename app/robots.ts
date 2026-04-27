@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const BASE = "https://kathanpatel.dev"; // ← Replace with your real domain
+const BASE = "https://kathanpatel.vercel.app"; // ← Replace with your real domain
 
 export default function robots(): MetadataRoute.Robots {
   return {

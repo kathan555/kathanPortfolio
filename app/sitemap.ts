@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const BASE = "https://kathanpatel.dev"; // ← Replace with your real domain
+const BASE = "https://kathanpatel.vercel.app"; // ← Replace with your real domain
 
 // Attempt to load blog slugs; gracefully return [] if Supabase isn't configured
 async function getBlogSlugs(): Promise<string[]> {

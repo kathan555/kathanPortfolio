@@ -15,7 +15,7 @@ const dmSans        = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans", 
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono", weight: ["400","500"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kathanpatel.dev"), // ← Replace with your real domain
+  metadataBase: new URL("https://kathanpatel.vercel.app"), // ← Replace with your real domain
   title: {
     default:  "Kathan N. Patel — Freelance .NET Developer | Blazor, WPF, ASP.NET Core",
     template: "%s | Kathan N. Patel",
