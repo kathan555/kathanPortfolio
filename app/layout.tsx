@@ -15,7 +15,7 @@ const dmSans        = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans", 
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono", weight: ["400","500"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kathanpatel.vercel.app"), // ← Replace with your real domain
+  metadataBase: new URL("https://kathanpatel.vercel.app"),
   title: {
     default:  "Kathan N. Patel — Freelance .NET Developer | Blazor, WPF, ASP.NET Core",
     template: "%s | Kathan N. Patel",
@@ -34,12 +34,12 @@ export const metadata: Metadata = {
     "Kathan Patel", "Kathan N. Patel",
     "freelance developer India", "remote .NET developer", ".NET developer Ahmedabad",
   ],
-  authors: [{ name: "Kathan N. Patel", url: "https://kathanpatel.dev" }],
+  authors: [{ name: "Kathan N. Patel", url: "https://kathanpatel.vercel.app" }],
   creator: "Kathan N. Patel",
   openGraph: {
     type:        "website",
     locale:      "en_US",
-    url:         "https://kathanpatel.dev",
+    url:         "https://kathanpatel.vercel.app",
     title:       "Kathan N. Patel — Freelance .NET Developer | Blazor · WPF · ASP.NET Core",
     description: "Freelance .NET Technical Lead available for contract work. 8+ years. Blazor, WPF, ASP.NET Core, C#. Remote-friendly.",
     siteName:    "Kathan N. Patel",
@@ -70,15 +70,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@graph": [
                 {
                   "@type": "Person",
-                  "@id": "https://kathanpatel.dev/#person",
+                  "@id": "https://kathanpatel.vercel.app/#person",
                   "name": "Kathan N. Patel",
                   "alternateName": "Kathan Patel",
                   "jobTitle": "Freelance .NET Technical Lead",
                   "description": "Freelance .NET Technical Lead with 8+ years building Blazor web apps, WPF desktop software, and ASP.NET Core APIs. Remote-friendly. Available for contract and freelance work globally.",
-                  "url": "https://kathanpatel.dev",
+                  "url": "https://kathanpatel.vercel.app",
                   "email": "patel.kathan555@gmail.com",
                   "telephone": "+917600410895",
-                  "image": "https://kathanpatel.dev/og-image.png",
+                  "image": "https://kathanpatel.vercel.app/og-image.png",
                   "address": {
                     "@type": "PostalAddress",
                     "addressLocality": "Ahmedabad",
@@ -113,16 +113,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   "sameAs": [
                     "https://github.com/kathan555",
                     "https://www.linkedin.com/in/kathan-patel",
-                    "https://kathanpatel.dev"
+                    "https://kathanpatel.vercel.app"
                   ]
                 },
                 {
                   "@type": "ProfessionalService",
-                  "@id": "https://kathanpatel.dev/#service",
+                  "@id": "https://kathanpatel.vercel.app/#service",
                   "name": "Kathan Patel — Freelance .NET Development",
                   "description": "Custom .NET software development services — Blazor web apps, WPF desktop tools, ASP.NET Core APIs, AI integrations, and legacy .NET migrations. Remote-friendly, available worldwide.",
-                  "url": "https://kathanpatel.dev/hire",
-                  "provider": { "@id": "https://kathanpatel.dev/#person" },
+                  "url": "https://kathanpatel.vercel.app/hire",
+                  "provider": { "@id": "https://kathanpatel.vercel.app/#person" },
                   "areaServed": ["US", "GB", "AE", "SA", "IN", "Worldwide"],
                   "availableLanguage": ["English"],
                   "serviceType": [
@@ -139,16 +139,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 },
                 {
                   "@type": "WebSite",
-                  "@id": "https://kathanpatel.dev/#website",
+                  "@id": "https://kathanpatel.vercel.app/#website",
                   "name": "Kathan N. Patel — Freelance .NET Developer",
-                  "url": "https://kathanpatel.dev",
-                  "author": { "@id": "https://kathanpatel.dev/#person" },
+                  "url": "https://kathanpatel.vercel.app",
+                  "author": { "@id": "https://kathanpatel.vercel.app/#person" },
                   "description": "Portfolio and hiring page for Kathan N. Patel, freelance .NET Technical Lead.",
                   "potentialAction": {
                     "@type": "SearchAction",
                     "target": {
                       "@type": "EntryPoint",
-                      "urlTemplate": "https://kathanpatel.dev/blog?q={search_term_string}"
+                      "urlTemplate": "https://kathanpatel.vercel.app/blog?q={search_term_string}"
                     },
                     "query-input": "required name=search_term_string"
                   }
