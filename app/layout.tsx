@@ -22,6 +22,9 @@ export const metadata: Metadata = {
   },
   description:
     "Freelance .NET Technical Lead available for contract work. 8+ years building Blazor web apps, WPF desktop software, and ASP.NET Core APIs. Remote-friendly. Based in India, working globally.",
+  verification: {
+    google: "vJ2WYAxQQtEna5rl9S17hYQDcx9oIRFc7S9hrMqKHLQ",
+  },  
   keywords: [
     "freelance .NET developer", "hire .NET developer", "contract .NET developer",
     "freelance Blazor developer", "hire Blazor developer",
