@@ -6,6 +6,7 @@ import { ThemeProvider }      from "@/components/ThemeProvider";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
 import { ScrollRestorer }       from "@/components/ScrollRestorer";
 import { NavigationProgress }   from "@/components/NavigationProgress";
+import { WhatsAppButton }        from "@/components/WhatsAppButton";
 import { Navbar }             from "@/components/Navbar";
 import { Footer }             from "@/components/Footer";
 import { Toaster }            from "react-hot-toast";
@@ -165,6 +166,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
           {/* ── Scroll-to-top on every route change / refresh ── */}
           <ScrollRestorer />
+
+          {/* ── WhatsApp floating button ── */}
+          <WhatsAppButton />
 
           {/* ── 3D animated canvas — sits behind everything ── */}
           <AnimatedBackground />
