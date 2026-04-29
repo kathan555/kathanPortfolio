@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Calendar, Tag, Clock } from "lucide-react";
+import { ShareButtons } from "@/components/ShareButtons";
 import { getAllSlugs, getPostBySlug, type ContentBlock } from "@/lib/blog";
 
 export const revalidate = 60;
@@ -236,6 +237,13 @@ export default async function BlogPostPage({ params }: Props) {
             <BlockRenderer key={i} block={block} />
           ))}
         </article>
+
+        {/* ── Share buttons ── */}
+        <ShareButtons
+          title={post.title}
+          url={`https://kathanpatel.vercel.app/blog/${post.slug}`}
+          tags={post.tags}
+        />
 
         {/* Post footer */}
         <div className="mt-16 pt-8 border-t border-border flex flex-wrap items-center justify-between gap-4">
