@@ -6,7 +6,7 @@ const RATE_LIMIT = 10; // requests per window
 const RATE_WINDOW = 60_000; // 1 minute
 
 function checkRate(ip: string): boolean {
-  const now   = Date.now();
+  const now = Date.now();
   const entry = rateMap.get(ip);
   if (!entry || now > entry.resetAt) {
     rateMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
@@ -59,39 +59,55 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Message too long (max 500 chars)." }, { status: 400 });
     }
 
-    const messages = [
-      ...(history ?? []).slice(-6), // keep last 3 exchanges for context
-      { role: "user" as const, content: message.trim() },
+    // Transform history to Gemini format
+    const contents = [
+      // System prompt as first user message (Gemini doesn't have a top-level system prompt)
+      {
+        role: "user",
+        parts: [{ text: `System instructions: ${SYSTEM_PROMPT}` }]
+      },
+      // Add conversation history
+      ...(history ?? []).slice(-6).flatMap((msg) => [
+        {
+          role: msg.role === "user" ? "user" : "model",
+          parts: [{ text: msg.content }]
+        }
+      ]),
+      // Current message
+      {
+        role: "user",
+        parts: [{ text: message.trim() }]
+      }
     ];
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type":      "application/json",
-        "x-api-key":         process.env.ANTHROPIC_API_KEY ?? "",
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model:      "claude-haiku-4-5-20251001",
-        max_tokens: 400,
-        system:     SYSTEM_PROMPT,
-        messages,
-      }),
-    });
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contents,
+          generationConfig: {
+            maxOutputTokens: 400,
+            temperature: 0.7,
+          },
+        }),
+      }
+    );
 
     if (!response.ok) {
       const err = await response.json().catch(() => ({}));
-      console.error("Anthropic error:", err);
+      console.error("Gemini error:", err);
       return NextResponse.json(
         { error: "AI service unavailable. Please try again." },
         { status: 502 }
       );
     }
 
-    const data = await response.json() as {
-      content: Array<{ type: string; text: string }>;
-    };
-    const reply = data.content.find((b) => b.type === "text")?.text ?? "";
+    const data = await response.json() as any;
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
 
     return NextResponse.json({ reply }, { status: 200 });
 
