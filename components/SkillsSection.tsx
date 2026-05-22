@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { ScrollReveal, StaggerChildren, staggerItem } from "@/components/ScrollReveal";
 import { skills } from "@/lib/data";
 import { Code2, Layers, Database, Monitor, Wrench, Zap } from "lucide-react";
@@ -46,7 +46,7 @@ const SKILL_META: Record<string, SkillMeta> = {
   /* Tools */
   "Git":           { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg",                   glow: "#F05029" },
   "Docker":        { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg",             glow: "#2496ED" },
-  "GitHub":        { glow: "#ffffff"},
+  "GitHub":        { src: "https://cdn.simpleicons.org/github/ffffff", glow: "#ffffff" },
   "Azure":         { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/azure/azure-original.svg",               glow: "#0089D6" },
   "VS Code":       { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg",             glow: "#007ACC" },
   "Postman":       { src: "https://cdn.simpleicons.org/postman/FF6C37",                                                       glow: "#FF6C37" },
@@ -56,6 +56,23 @@ const SKILL_META: Record<string, SkillMeta> = {
   "JWT":           { glow: "#fb923c" },
   "Linq":          { glow: "#512BD4" },
   "EF Core":       { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dotnetcore/dotnetcore-original.svg",     glow: "#512BD4" },
+  /* Aliases from lib/data.ts */
+  "jQuery":        { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jquery/jquery-original.svg",             glow: "#0769AD" },
+  "Blazor Server": { src: "https://cdn.simpleicons.org/blazor/512BD4",                                                        glow: "#512BD4" },
+  ".NET Core 6/9": { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dotnetcore/dotnetcore-original.svg",     glow: "#512BD4" },
+  "MS-SQL":        { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/microsoftsqlserver/microsoftsqlserver-original.svg", glow: "#CC2935" },
+  "HTML/CSS":      { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg",               glow: "#E34F26" },
+  "XAML":          { glow: "#0078D7" },
+  "React.js":      { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",               glow: "#00D8FF" },
+  "Razor Pages":   { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dotnetcore/dotnetcore-original.svg",     glow: "#512BD4" },
+  "LINQ":          { glow: "#512BD4" },
+  "SourceTree":    { glow: "#205081" },
+  "Telerik":       { glow: "#5ce500" },
+  "SciChart":      { glow: "#60a5fa" },
+  "Syncfusion":    { glow: "#F4511E" },
+  "LEAD Tools":    { glow: "#60a5fa" },
+  "DevExpress":    { glow: "#FF5722" },
+  "ABP.io":        { glow: "#512BD4" },
 };
 
 /* ─── Featured hero skills ─────────────────────────────────────────────── */
@@ -72,8 +89,9 @@ const FEATURED = [
   { name: "PostgreSQL",   level: 4, label: "Advanced" },
   { name: "Docker",       level: 3, label: "Proficient" },
   { name: "Git",          level: 5, label: "Expert" },
-  ,
 ];
+
+type FeaturedSkill = (typeof FEATURED)[number];
 
 const LEVEL_COLOR: Record<string, string> = {
   Expert:     "text-blue-400   border-blue-400/30   bg-blue-400/10",
@@ -94,7 +112,7 @@ const SKILL_BARS = [
 
 /* ─── Category icon map ────────────────────────────────────────────────── */
 
-const iconMap: Record<string, React.ReactNode> = {
+const iconMap: Record<string, ReactNode> = {
   code:     <Code2    className="w-5 h-5" />,
   layers:   <Layers   className="w-5 h-5" />,
   database: <Database className="w-5 h-5" />,
@@ -122,7 +140,7 @@ function SkillLogo({ name, size = 28 }: { name: string; size?: number }) {
 
 /* ─── FeaturedCard ──────────────────────────────────────────────────────── */
 
-function FeaturedCard({ skill, index }: { skill: typeof FEATURED[0]; index: number }) {
+function FeaturedCard({ skill }: { skill: FeaturedSkill }) {
   const meta = SKILL_META[skill.name];
   const glow = meta?.glow ?? "#60a5fa";
 
@@ -132,7 +150,7 @@ function FeaturedCard({ skill, index }: { skill: typeof FEATURED[0]; index: numb
       whileHover={{ y: -4, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       className="group relative glass-card rounded-2xl p-5 flex flex-col items-center gap-3 cursor-default overflow-hidden"
-      style={{ "--skill-glow": glow } as React.CSSProperties}
+      style={{ "--skill-glow": glow } as CSSProperties}
     >
       {/* Glow backdrop on hover */}
       <div
@@ -332,8 +350,8 @@ export function SkillsSection() {
             <div className="flex-1 h-px bg-blue-500/15" />
           </div>
           <StaggerChildren className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 mb-20">
-            {FEATURED.map((skill, i) => (
-              <FeaturedCard key={skill.name} skill={skill} index={i} />
+            {FEATURED.map((skill) => (
+              <FeaturedCard key={skill.name} skill={skill} />
             ))}
           </StaggerChildren>
         </ScrollReveal>
@@ -424,7 +442,7 @@ export function SkillsSection() {
               ].map((s) => (
                 <ScrollReveal key={s.label} delay={0.15}>
                   <div className="glass-card rounded-xl p-4 text-center group hover:border-opacity-40 transition-all duration-300"
-                    style={{ "--s-color": s.color } as React.CSSProperties}
+                    style={{ "--s-color": s.color } as CSSProperties}
                   >
                     <p className="font-display text-2xl font-bold" style={{ color: s.color }}>{s.value}</p>
                     <p className="text-xs text-muted-foreground mt-0.5 font-medium">{s.label}</p>
