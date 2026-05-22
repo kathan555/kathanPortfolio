@@ -27,15 +27,15 @@ const whyMe = [
 // ── Hourly rate tiers ─────────────────────────────────────────────────────────
 const hourlyTiers = [
   {
-    range:    "$20–$25 / hr",
-    label:    "Standard",
+    range:    "$35–$45 / hr",
+    label:    "Standard/Maintenance",
     color:    "border-blue-500/25 bg-blue-500/5",
     badgeCol: "bg-blue-500/15 border-blue-500/30 text-blue-400",
     best:     "Ongoing retainers, maintenance, bug fixes, feature additions on existing codebases",
     tasks:    ["Blazor / ASP.NET Core maintenance", "WPF updates & enhancements", "API additions & fixes", "Code review & refactoring"],
   },
   {
-    range:    "$23–$27 / hr",
+    range:    "$45-$55 / hr",
     label:    "Complex",
     color:    "border-blue-500/40 bg-blue-500/8 shadow-lg shadow-blue-500/8",
     badgeCol: "bg-blue-500/20 border-blue-500/40 text-blue-400",
@@ -44,7 +44,7 @@ const hourlyTiers = [
     tasks:    ["New Blazor web applications", "WPF desktop development", "Third-party API integrations", "Full-stack module builds"],
   },
   {
-    range:    "$30–$35 / hr",
+    range:    "$65-$70 / hr",
     label:    "Specialist",
     color:    "border-teal-500/25 bg-teal-500/5",
     badgeCol: "bg-teal-500/15 border-teal-500/30 text-teal-400",

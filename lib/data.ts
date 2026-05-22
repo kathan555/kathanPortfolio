@@ -12,6 +12,7 @@ export const personalInfo = {
   // ── Availability status shown in Navbar & Hero ──
   availableForWork: true,
   availableFrom: "Immediately",
+  photo: "/SelfImage.jpg"
 };
 
 export const summary =

@@ -6,12 +6,12 @@ export default function NotFound() {
     <div className="min-h-screen flex items-center justify-center px-4">
       {/* Background orb */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[500px] h-[500px] rounded-full bg-blue-500/5 blur-3xl" />
+        <div className="w-[700px] h-[500px] rounded-full bg-blue-500/5 blur-3xl" />
       </div>
 
       <div className="relative text-center max-w-md">
         {/* 404 number */}
-        <div className="font-display text-[10rem] leading-none font-extrabold gradient-text select-none mb-2">
+        <div className="font-display text-[8rem] leading-none font-extrabold gradient-text select-none mb-2">
           404
         </div>
 
