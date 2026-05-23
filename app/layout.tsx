@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { Syne, DM_Sans, JetBrains_Mono } from "next/font/google";
+import { GoogleAnalytics } from '@next/third-parties/google'
 import "./globals.css";
 import { ThemeProvider }      from "@/components/ThemeProvider";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
@@ -199,6 +200,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         </ThemeProvider>
       </body>
+
+      <GoogleAnalytics gaId="G-0QF4XVTJEM" />
     </html>
   );
 }
