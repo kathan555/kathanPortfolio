@@ -18,7 +18,6 @@ const moreLinks = [
 
 const quickLinks = [
   { label: "Home",    href: "/"        },
-  { label: "About",   href: "/about"   },
   { label: "Hire Me", href: "/hire"    },
   { label: "Contact", href: "/contact" },
 ];

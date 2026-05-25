@@ -1,22 +1,20 @@
 import { HeroSection } from "@/components/HeroSection";
-import { TrustSection } from "@/components/TrustSection";
+import { HomeAboutSection } from "@/components/HomeAboutSection";
 import Link from "next/link";
 import {
   ArrowRight, Briefcase, Code2, FolderOpen, GraduationCap,
   Github, PenLine, Calculator, Handshake, Brain,
 } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { experiences, projects, skills } from "@/lib/data";
 
 const sections = [
   { icon: <Handshake  className="w-6 h-6 text-teal-400" />,   title: "Hire Me",         desc: "Services, pricing models, process, and how to get started on your project.",                     href: "/hire",       color: "teal"   },
-  { icon: <Briefcase  className="w-6 h-6 text-blue-400" />,   title: "About Me",        desc: "8+ years of .NET development, tech leadership, and cross-domain expertise.",                      href: "/about",      color: "blue"   },
   { icon: <Code2      className="w-6 h-6 text-blue-400" />,   title: "Skills",          desc: "C#, Blazor, WPF, ASP.NET Core, React, MS-SQL and a full toolkit of productivity libraries.",     href: "/skills",     color: "blue"   },
   { icon: <Briefcase  className="w-6 h-6 text-purple-400" />, title: "Experience",      desc: "Technical Lead at Digip Technologies. Formerly at Parkar Digital.",                              href: "/experience", color: "purple" },
   { icon: <FolderOpen className="w-6 h-6 text-orange-400" />, title: "Projects",        desc: "Legal automation, fintech trading platforms, healthcare records, e-commerce.",                    href: "/projects",   color: "orange" },
   { icon: <Github     className="w-6 h-6 text-green-400" />,  title: "GitHub Showcase", desc: "Live open-source repositories pulled straight from GitHub.",                                      href: "/github",     color: "green"  },
   { icon: <PenLine    className="w-6 h-6 text-pink-400" />,   title: "Blog",            desc: "Thoughts on .NET, architecture, leadership, and software engineering.",                           href: "/blog",       color: "pink"   },
-  { icon: <Calculator className="w-6 h-6 text-yellow-400" />, title: "Cost Estimator",  desc: "Estimate your project cost in 7 questions — no sign-up required.",                               href: "/estimator",  color: "yellow" },
+  { icon: <Calculator className="w-6 h-6 text-yellow-400" />, title: "Cost Estimator",  desc: "Estimate your project cost in 7 questions — receive a PDF by email.",                            href: "/estimator",  color: "yellow" },
   { icon: <Brain        className="w-6 h-6 text-indigo-400" />, title: "AI Integration", desc: "How to add Azure OpenAI & Semantic Kernel to .NET apps — architecture, C# code, and a live demo.", href: "/ai-integration", color: "indigo" },
   { icon: <GraduationCap className="w-6 h-6 text-blue-400" />, title: "Education",    desc: "B.Sc. Computer Science, Silver Oak College of Engineering & Technology (2013–2017).",              href: "/education",  color: "blue"   },
 ];
@@ -36,8 +34,8 @@ export default function Home() {
   return (
     <>
       <HeroSection />
+      <HomeAboutSection />
 
-      {/* Quick-navigation grid */}
       <section className="py-24 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
@@ -74,29 +72,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats strip */}
-      <section className="py-10 border-y border-blue-500/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap justify-center gap-x-12 gap-y-4 text-sm text-muted-foreground">
-            {[
-              { v: experiences.length,                               l: "Work Experiences" },
-              { v: projects.length,                                  l: "Key Projects" },
-              { v: skills.reduce((a, s) => a + s.items.length, 0),  l: "Technologies" },
-              { v: 8,                                                l: "Years in .NET" },
-            ].map(({ v, l }) => (
-              <span key={l} className="flex items-center gap-2">
-                <span className="font-display font-bold text-2xl gradient-text">{v}+</span>
-                <span>{l}</span>
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <TrustSection />
-
-      {/* Final CTA */}
       <section className="py-28 relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="w-[600px] h-[600px] rounded-full bg-blue-500/5 blur-3xl" />

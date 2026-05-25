@@ -16,11 +16,6 @@ import { personalInfo } from "@/lib/data";
 // ── Nav structure ─────────────────────────────────────────────────────────────
 const navLinks = [
   {
-    label:    "About",
-    href:     "/about",
-    children: null,
-  },
-  {
     label: "Professional Details",
     href:  "#",
     children: [

@@ -18,6 +18,7 @@ const ContactForm = dynamic(
   }
 );
 import { personalInfo } from "@/lib/data";
+import { CalendarBooking } from "@/components/CalendarBooking";
 import { Mail, Phone, MapPin, Clock, Github, Linkedin } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -84,6 +85,10 @@ export default function ContactPage() {
             </svg>
             Prefer WhatsApp? Message me directly
           </a>
+        </div>
+
+        <div className="mb-16">
+          <CalendarBooking />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 items-start">

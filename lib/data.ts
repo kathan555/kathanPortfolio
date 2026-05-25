@@ -12,7 +12,9 @@ export const personalInfo = {
   // ── Availability status shown in Navbar & Hero ──
   availableForWork: true,
   availableFrom: "Immediately",
-  photo: "/SelfImage.jpg"
+  photo: "/SelfImage.jpg",
+  /** Cal.com, Calendly, or Google Appointment schedule URL — override via NEXT_PUBLIC_CALENDAR_BOOKING_URL */
+  calendarBookingUrl: "https://cal.com/kathanpatel9/30min",
 };
 
 export const summary =
