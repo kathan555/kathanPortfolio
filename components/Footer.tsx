@@ -2,13 +2,6 @@ import Link from "next/link";
 import { Github, Linkedin, Mail, Phone } from "lucide-react";
 import { personalInfo } from "@/lib/data";
 
-const professionalLinks = [
-  { label: "Skills",     href: "/skills"     },
-  { label: "Experience", href: "/experience" },
-  { label: "Education",  href: "/education"  },
-  { label: "Projects",   href: "/projects"   },
-];
-
 const moreLinks = [
   { label: "GitHub Showcase", href: "/github"         },
   { label: "Blog",            href: "/blog"           },
@@ -29,11 +22,11 @@ export function Footer() {
     <footer className="border-t border-blue-500/10 bg-background/50 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-10">
 
           {/* ── Brand ── */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <Link href="/" className="inline-flex items-center gap-2 mb-4 group">
+          <div>
+            <Link href="/" className="inline-flex items-center gap-2 mb-6 group">
               <h3 className="font-display text-xl font-bold">
                 Kathan<span className="text-blue-400">.</span>
               </h3>
@@ -79,8 +72,8 @@ export function Footer() {
           </div>
 
           {/* ── Quick Links ── */}
-          <div>
-            <h4 className="font-display font-semibold text-xs uppercase tracking-widest text-muted-foreground mb-4">
+          <div className="text-center">
+            <h4 className="font-display font-semibold text-xs uppercase tracking-widest text-muted-foreground mb-4 pb-2 border-b border-blue-500/10">
               Quick Links
             </h4>
             <ul className="space-y-2.5">
@@ -97,28 +90,9 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* ── Professional Details ── */}
-          <div>
-            <h4 className="font-display font-semibold text-xs uppercase tracking-widest text-muted-foreground mb-4">
-              Professional Details
-            </h4>
-            <ul className="space-y-2.5">
-              {professionalLinks.map(({ label, href }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className="text-sm text-muted-foreground hover:text-blue-400 transition-colors"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
           {/* ── More & Contact ── */}
-          <div>
-            <h4 className="font-display font-semibold text-xs uppercase tracking-widest text-muted-foreground mb-4">
+          <div className="text-center">
+            <h4 className="font-display font-semibold text-xs uppercase tracking-widest text-muted-foreground mb-4 pb-2 border-b border-blue-500/10">
               More
             </h4>
             <ul className="space-y-2.5 mb-6">
@@ -133,9 +107,11 @@ export function Footer() {
                 </li>
               ))}
             </ul>
+          </div>
 
-            {/* Contact info */}
-            <h4 className="font-display font-semibold text-xs uppercase tracking-widest text-muted-foreground mb-3">
+          {/* ── Contact info  ── */}
+          <div>
+            <h4 className="font-display font-semibold text-xs uppercase tracking-widest text-muted-foreground mb-4 pb-2 border-b border-blue-500/10">
               Contact
             </h4>
             <ul className="space-y-2">

@@ -5,26 +5,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Menu, X, Code2, ChevronDown,
-  Briefcase, Code, GraduationCap,
-  FolderOpen, Github, PenLine, Calculator, Brain,
+  Menu, X, ChevronDown,
+  Github, PenLine, Calculator, Brain,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { personalInfo } from "@/lib/data";
 
 // ── Nav structure ─────────────────────────────────────────────────────────────
+// Skills / Experience / Education / Projects now scroll to homepage anchors.
+// The 4 standalone route files can be safely deleted.
 const navLinks = [
-  {
-    label: "Professional Details",
-    href:  "#",
-    children: [
-      { label: "Skills",     href: "/skills",     icon: <Code          className="w-4 h-4" />, desc: "Tech stack & libraries"      },
-      { label: "Experience", href: "/experience", icon: <Briefcase     className="w-4 h-4" />, desc: "Career history & roles"       },
-      { label: "Education",  href: "/education",  icon: <GraduationCap className="w-4 h-4" />, desc: "Academic background"          },
-      { label: "Projects",   href: "/projects",   icon: <FolderOpen    className="w-4 h-4" />, desc: "Production work & outcomes"   },
-    ],
-  },
   {
     label: "More",
     href:  "#",
@@ -68,12 +59,18 @@ function DropdownPanel({
     >
       <div className="p-1.5 flex flex-col gap-0.5">
         {items.map((child) => {
-          const active = pathname.startsWith(child.href);
+          // Anchor links (/#section) are "active" when we're on the home page.
+          // Regular routes are active when pathname starts with that href.
+          const isAnchor = child.href.startsWith("/#");
+          const active   = isAnchor
+            ? pathname === "/"
+            : pathname.startsWith(child.href);
+
           return (
             <Link
               key={child.href}
               href={child.href}
-              prefetch={true}
+              prefetch={!isAnchor}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 group",
                 active
@@ -155,7 +152,10 @@ export function Navbar() {
   }
 
   function anyChildActive(children: NavChild[]) {
-    return children.some((c) => pathname.startsWith(c.href));
+    return children.some((c) => {
+      if (c.href.startsWith("/#")) return pathname === "/";
+      return pathname.startsWith(c.href);
+    });
   }
 
   return (
@@ -180,36 +180,25 @@ export function Navbar() {
               whileTap={{ scale: 0.95, y: 1 }}
               className="relative cursor-pointer"
             >
-              {/* LIGHT MODE: Soft Drop Shadow | DARK MODE: Blue Glow */}
               <div className="absolute inset-0 bg-blue-500/30 blur-2xl rounded-full opacity-0 group-hover:opacity-100 dark:group-hover:bg-blue-400/40 transition-all duration-500" />
               
-              {/* The Main 3D Container */}
               <div className="relative w-12 h-12 flex items-center justify-center rounded-2xl 
-                /* Light Mode: White clay look */
                 bg-white shadow-[0_10px_20px_rgba(0,0,0,0.05),inset_0_-2px_6px_rgba(0,0,0,0.1)] 
-                /* Dark Mode: Glass look */
                 dark:bg-slate-900 dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.5)]
                 dark:backdrop-blur-xl border border-slate-200 dark:border-white/10
                 transition-colors duration-300 overflow-hidden"
               >
-                {/* Constant Floating Particle Animation (Always moving) */}
                 <motion.div 
-                  animate={{ 
-                    y: [0, -20, 0],
-                    opacity: [0, 1, 0] 
-                  }}
+                  animate={{ y: [0, -20, 0], opacity: [0, 1, 0] }}
                   transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
                   className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-blue-500/20 to-transparent"
                 />
-
-                {/* High-Gloss Shine (Triggers on Hover) */}
                 <motion.div 
                   initial={{ x: '-100%', skewX: -20 }}
                   whileHover={{ x: '200%' }}
                   transition={{ duration: 0.8, ease: "easeInOut" }}
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 dark:via-white/10 to-transparent z-10"
                 />
-                
                 <span className="relative z-20 text-2xl font-display font-black text-slate-900 dark:text-white">
                   K<span className="text-blue-600 dark:text-blue-400">.</span>
                 </span>
@@ -234,7 +223,6 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-0.5">
 
             {navLinks.map((link) => {
-              // Plain link (About, Contact)
               if (!link.children) {
                 return (
                   <Link
@@ -253,7 +241,6 @@ export function Navbar() {
                 );
               }
 
-              // Dropdown
               const isOpen   = openDropdown === link.label;
               const isActive = anyChildActive(link.children);
 
@@ -336,7 +323,6 @@ export function Navbar() {
           >
             <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-1">
 
-              {/* Availability */}
               {personalInfo.availableForWork && (
                 <div className="flex items-center gap-2 px-3 py-2 mb-1">
                   <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse shrink-0" />
@@ -346,7 +332,6 @@ export function Navbar() {
                 </div>
               )}
 
-              {/* Hire Me */}
               <Link
                 href="/hire"
                 prefetch={true}
@@ -355,9 +340,7 @@ export function Navbar() {
                 Hire Me →
               </Link>
 
-              {/* Nav items */}
               {navLinks.map((link) => {
-                // Plain link
                 if (!link.children) {
                   return (
                     <Link
@@ -376,7 +359,6 @@ export function Navbar() {
                   );
                 }
 
-                // Expandable section
                 const isExpanded = mobileExpanded === link.label;
                 const isActive   = anyChildActive(link.children);
 
@@ -409,12 +391,15 @@ export function Navbar() {
                         >
                           <div className="pl-3 pr-1 pb-1 pt-0.5 flex flex-col gap-0.5">
                             {link.children.map((child) => {
-                              const childActive = pathname.startsWith(child.href);
+                              const isAnchor    = child.href.startsWith("/#");
+                              const childActive = isAnchor
+                                ? pathname === "/"
+                                : pathname.startsWith(child.href);
                               return (
                                 <Link
                                   key={child.href}
                                   href={child.href}
-                                  prefetch={true}
+                                  prefetch={!isAnchor}
                                   className={cn(
                                     "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors",
                                     childActive
@@ -445,7 +430,6 @@ export function Navbar() {
                 );
               })}
 
-              {/* Resume download */}
               <a
                 href="/Kathan_Patel_Resume.pdf"
                 download

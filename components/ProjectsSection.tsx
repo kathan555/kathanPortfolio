@@ -135,7 +135,7 @@ export function ProjectsSection() {
           className="mb-14"
         >
           <span className="font-mono text-blue-400 text-sm font-medium tracking-wider uppercase">
-            04. Projects
+            Projects
           </span>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mt-2">
             Key Work
