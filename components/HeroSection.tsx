@@ -194,7 +194,7 @@ export function HeroSection() {
               <span className="inline-flex items-center gap-2 px-3 py-2 sm:px-4 rounded-full border border-teal-500/40 bg-teal-500/8 text-teal-400 text-xs sm:text-sm font-semibold">
                 <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
                 {personalInfo.availableForWork
-                  ? `Available for Contract · From $25/hr · ${personalInfo.availableFrom}`
+                  ? `Available for Contract · ${personalInfo.availableFrom}`
                   : "Currently Engaged · Open to Discussions"}
               </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-400 text-xs font-medium">
