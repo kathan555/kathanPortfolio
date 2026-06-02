@@ -24,7 +24,25 @@ import { Mail, Phone, MapPin, Clock, Github, Linkedin } from "lucide-react";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Get in touch with Kathan N. Patel for .NET development projects, technical leadership roles, or consulting.",
+    "Contact Kathan N. Patel for .NET development projects and consulting across the USA, UK, Russia, and Europe.",
+  alternates: {
+    canonical: "/contact",
+    languages: {
+      "en-US": "/contact",
+      "en-GB": "/contact",
+      "ru-RU": "/contact",
+      "x-default": "/contact",
+    },
+  },
+  openGraph: {
+    title: "Contact | Kathan N. Patel",
+    description:
+      "Start a .NET project conversation for US, UK, Russian, and European teams. Typical response time: within 24 hours.",
+    url: "https://kathanpatel.vercel.app/contact",
+    type: "website",
+    locale: "en_US",
+    alternateLocale: ["en_GB", "ru_RU"],
+  },
 };
 
 const contactDetails = [

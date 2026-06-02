@@ -9,6 +9,28 @@ export const revalidate = 60;
 
 type Props = { params: Promise<{ slug: string }> };
 
+function readingTime(post: { content?: unknown[]; excerpt?: string | null; title?: string }) {
+  const blocks = Array.isArray(post.content) ? post.content : [];
+
+  const text = blocks
+    .map((block) => {
+      if (!block || typeof block !== "object") return "";
+
+      const candidate = block as { content?: unknown; title?: unknown; caption?: unknown };
+      return [candidate.content, candidate.title, candidate.caption]
+        .filter((value): value is string => typeof value === "string")
+        .join(" ");
+    })
+    .join(" ")
+    .trim();
+
+  const fallbackText = [post.title ?? "", post.excerpt ?? ""].join(" ").trim();
+  const sourceText = text.length > 0 ? text : fallbackText;
+  const wordCount = sourceText.length > 0 ? sourceText.split(/\s+/).length : 0;
+
+  return Math.max(1, Math.ceil(wordCount / 200));
+}
+
 export async function generateStaticParams() {
   const slugs = await getAllSlugs();
   return slugs.map((slug) => ({ slug }));
@@ -18,13 +40,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post) return { title: "Post Not Found" };
+  const canonicalPath = `/blog/${post.slug}`;
+
   return {
     title: post.title,
     description: post.excerpt ?? undefined,
+    alternates: {
+      canonical: canonicalPath,
+      languages: {
+        "en-US": canonicalPath,
+        "en-GB": canonicalPath,
+        "ru-RU": canonicalPath,
+        "x-default": canonicalPath,
+      },
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt ?? undefined,
+      url: `https://kathanpatel.vercel.app${canonicalPath}`,
+      type: "article",
+      locale: "en_US",
       images: post.cover_image ? [{ url: post.cover_image }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt ?? undefined,
+      images: post.cover_image ? [post.cover_image] : undefined,
     },
   };
 }
@@ -164,8 +206,7 @@ export default async function BlogPostPage({ params }: Props) {
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  const wordCount = post.content.length * 150;
-  const readTime  = Math.max(1, Math.round(wordCount / 200));
+  const readTime = readingTime(post);
 
   return (
     <div className="min-h-screen pt-28 pb-20">

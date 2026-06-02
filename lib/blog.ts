@@ -46,7 +46,7 @@ export async function getAllPosts(): Promise<BlogPost[]> {
   const supabase = getSupabase();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("id, title, slug, excerpt, cover_image, tags, published_at, created_at, published")
+    .select("id, title, slug, excerpt, cover_image, content, tags, published_at, created_at, published")
     .eq("published", true)
     .order("published_at", { ascending: false });
 

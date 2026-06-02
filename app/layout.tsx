@@ -18,6 +18,15 @@ const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jet
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://kathanpatel.vercel.app"),
+  alternates: {
+    canonical: "/",
+    languages: {
+      "en-US": "/",
+      "en-GB": "/",
+      "ru-RU": "/",
+      "x-default": "/",
+    },
+  },
   title: {
     default:  "Kathan N. Patel — Freelance .NET Developer | Blazor, WPF, ASP.NET Core",
     template: "%s | Kathan N. Patel",
@@ -35,12 +44,15 @@ export const metadata: Metadata = {
     "ASP.NET Core freelancer", "WPF developer contract",
     "Kathan Patel", "Kathan N. Patel",
     "freelance developer India", "remote .NET developer", ".NET developer Ahmedabad",
+    ".NET developer USA", ".NET developer UK", ".NET developer Europe", ".NET developer Russia",
+    "C# contractor USA", "Blazor developer UK", "ASP.NET Core developer Europe", "WPF consultant Russia",
   ],
   authors: [{ name: "Kathan N. Patel", url: "https://kathanpatel.vercel.app" }],
   creator: "Kathan N. Patel",
   openGraph: {
     type:        "website",
     locale:      "en_US",
+    alternateLocale: ["en_GB", "ru_RU"],
     url:         "https://kathanpatel.vercel.app",
     title:       "Kathan N. Patel — Freelance .NET Developer | Blazor · WPF · ASP.NET Core",
     description: "Freelance .NET Technical Lead available for contract work. 8+ years. Blazor, WPF, ASP.NET Core, C#. Remote-friendly.",
@@ -125,7 +137,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   "description": "Custom .NET software development services — Blazor web apps, WPF desktop tools, ASP.NET Core APIs, AI integrations, and legacy .NET migrations. Remote-friendly, available worldwide.",
                   "url": "https://kathanpatel.vercel.app/hire",
                   "provider": { "@id": "https://kathanpatel.vercel.app/#person" },
-                  "areaServed": ["US", "GB", "AE", "SA", "IN", "Worldwide"],
+                  "areaServed": [
+                    "US",
+                    "GB",
+                    "RU",
+                    "DE",
+                    "FR",
+                    "NL",
+                    "SE",
+                    "NO",
+                    "DK",
+                    "CH",
+                    "IE",
+                    "ES",
+                    "IT",
+                    "PL",
+                    "AE",
+                    "SA",
+                    "IN",
+                    "Worldwide"
+                  ],
                   "availableLanguage": ["English"],
                   "serviceType": [
                     "Blazor Web Application Development",

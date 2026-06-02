@@ -11,7 +11,33 @@ import { services, process, personalInfo } from "@/lib/data";
 export const metadata: Metadata = {
   title: "Hire Me — Freelance .NET Developer | Rates & Pricing",
   description:
-    "Hire Kathan N. Patel for freelance .NET development. Transparent hourly rates ($35–$85/hr), project minimums, engagement models, and everything included — no surprises.",
+    "Hire Kathan N. Patel for freelance .NET development in the USA, UK, Russia, and Europe. Transparent hourly rates ($35–$85/hr), project minimums, and engagement models.",
+  alternates: {
+    canonical: "/hire",
+    languages: {
+      "en-US": "/hire",
+      "en-GB": "/hire",
+      "ru-RU": "/hire",
+      "x-default": "/hire",
+    },
+  },
+  keywords: [
+    "hire .NET developer USA",
+    "hire Blazor developer UK",
+    "ASP.NET Core freelancer Europe",
+    "WPF developer Russia",
+    "remote .NET contractor",
+    "freelance C# technical lead",
+  ],
+  openGraph: {
+    title: "Hire .NET Freelancer | Kathan N. Patel",
+    description:
+      "Freelance .NET Technical Lead for US, UK, Russian, and European teams. Blazor, ASP.NET Core, WPF, and architecture support.",
+    url: "https://kathanpatel.vercel.app/hire",
+    type: "website",
+    locale: "en_US",
+    alternateLocale: ["en_GB", "ru_RU"],
+  },
 };
 
 // ── Why Me ───────────────────────────────────────────────────────────────────

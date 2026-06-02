@@ -7,18 +7,64 @@ import { getAllPosts } from "@/lib/blog";
 export const metadata: Metadata = {
   title: "Blog",
   description:
-    "Kathan Patel's blog — thoughts on .NET, architecture, engineering leadership, and modern software development.",
+    "Kathan Patel's blog on .NET, architecture, and engineering leadership for teams in the USA, UK, Russia, and Europe.",
+  alternates: {
+    canonical: "/blog",
+    languages: {
+      "en-US": "/blog",
+      "en-GB": "/blog",
+      "ru-RU": "/blog",
+      "x-default": "/blog",
+    },
+  },
+  keywords: [
+    ".NET blog",
+    "Blazor architecture",
+    "ASP.NET Core best practices",
+    "software engineering leadership",
+    ".NET development USA",
+    ".NET development UK",
+    ".NET development Europe",
+    ".NET development Russia",
+  ],
+  openGraph: {
+    title: "Blog | Kathan N. Patel",
+    description:
+      "Insights on .NET, Blazor, ASP.NET Core, and software architecture for global engineering teams.",
+    url: "https://kathanpatel.vercel.app/blog",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog | Kathan N. Patel",
+    description:
+      "Insights on .NET, Blazor, ASP.NET Core, and software architecture for global engineering teams.",
+  },
 };
 
 export const revalidate = 60;
 
-function readingTime(post: { content: unknown[] }) {
-  // Use ?. to safely access length and ?? to default to 0 if null/undefined
-  const contentLength = post?.content?.length ?? 1;
-  
-  // ~200 words per content block average
-  const words = contentLength * 150;
-  return Math.max(1, Math.round(words / 200));
+function readingTime(post: { content?: unknown[]; excerpt?: string | null; title?: string }) {
+  const blocks = Array.isArray(post.content) ? post.content : [];
+
+  const text = blocks
+    .map((block) => {
+      if (!block || typeof block !== "object") return "";
+
+      const candidate = block as { content?: unknown; title?: unknown; caption?: unknown };
+      return [candidate.content, candidate.title, candidate.caption]
+        .filter((value): value is string => typeof value === "string")
+        .join(" ");
+    })
+    .join(" ")
+    .trim();
+
+  const fallbackText = [post.title ?? "", post.excerpt ?? ""].join(" ").trim();
+  const sourceText = text.length > 0 ? text : fallbackText;
+  const wordCount = sourceText.length > 0 ? sourceText.split(/\s+/).length : 0;
+
+  return Math.max(1, Math.ceil(wordCount / 200));
 }
 
 export default async function BlogPage() {
