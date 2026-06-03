@@ -22,26 +22,70 @@ import { CalendarBooking } from "@/components/CalendarBooking";
 import { Mail, Phone, MapPin, Clock, Github, Linkedin } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: "Hire a Freelance .NET Developer — Contact Kathan N. Patel",
   description:
-    "Contact Kathan N. Patel for .NET development projects and consulting across the USA, UK, Russia, and Europe.",
+    "Get in touch with Kathan N. Patel for freelance .NET contract work. Book a free 30-minute discovery call or send a message. Available for projects in the USA, UK, Australia, and Russia. Responds within 24 hours.",
+  keywords: [
+    "hire freelance .NET developer",
+    "contact .NET developer",
+    "hire Blazor developer",
+    "hire ASP.NET Core developer",
+    "freelance C# developer contact",
+    "book .NET developer consultation",
+    "hire .NET developer USA",
+    "hire .NET developer UK",
+    "hire .NET developer Australia",
+    "hire .NET developer Russia",
+    "contract .NET developer contact",
+    "remote .NET developer for hire",
+    "Kathan Patel contact",
+    "Kathan N. Patel",
+  ],
+  authors: [{ name: "Kathan N. Patel" }],
+  creator: "Kathan N. Patel",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   alternates: {
-    canonical: "/contact",
+    canonical: "https://kathanpatel.vercel.app/contact",
     languages: {
-      "en-US": "/contact",
-      "en-GB": "/contact",
-      "ru-RU": "/contact",
-      "x-default": "/contact",
+      "en-US": "https://kathanpatel.vercel.app/contact",
+      "en-GB": "https://kathanpatel.vercel.app/contact",
+      "ru-RU": "https://kathanpatel.vercel.app/contact",
+      "x-default": "https://kathanpatel.vercel.app/contact",
     },
   },
   openGraph: {
-    title: "Contact | Kathan N. Patel",
+    title: "Hire a Freelance .NET Developer — Contact Kathan N. Patel",
     description:
-      "Start a .NET project conversation for US, UK, Russian, and European teams. Typical response time: within 24 hours.",
+      "Book a free 30-minute discovery call or send a message. Freelance .NET developer available for contract work in the USA, UK, Australia, and Russia. Responds within 24 hours.",
     url: "https://kathanpatel.vercel.app/contact",
+    siteName: "Kathan N. Patel",
     type: "website",
     locale: "en_US",
     alternateLocale: ["en_GB", "ru_RU"],
+    images: [
+      {
+        url: "https://kathanpatel.vercel.app/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Contact Kathan N. Patel — Freelance .NET Developer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hire a Freelance .NET Developer — Contact Kathan N. Patel",
+    description:
+      "Book a free 30-min call or send a message. Available for .NET contract work in the USA, UK, Australia & Russia. Responds within 24 hours.",
+    images: ["https://kathanpatel.vercel.app/og-image.png"],
   },
 };
 

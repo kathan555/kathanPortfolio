@@ -9,34 +9,99 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 import { services, process, personalInfo } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Hire Me — Freelance .NET Developer | Rates & Pricing",
+  title: "Hire a Freelance .NET Developer — Rates & Availability | Kathan N. Patel",
   description:
-    "Hire Kathan N. Patel for freelance .NET development in the USA, UK, Russia, and Europe. Transparent hourly rates ($35–$85/hr), project minimums, and engagement models.",
-  alternates: {
-    canonical: "/hire",
-    languages: {
-      "en-US": "/hire",
-      "en-GB": "/hire",
-      "ru-RU": "/hire",
-      "x-default": "/hire",
+    "Hire a freelance .NET Technical Lead with transparent rates ($35–$85/hr), fixed-price and retainer options. Blazor, ASP.NET Core, WPF, and AI integration. Available for US, UK, Australian, and Russian clients.",
+  keywords: [
+    // Core hire intent
+    "hire freelance .NET developer",
+    "hire .NET Technical Lead",
+    "hire Blazor developer",
+    "hire ASP.NET Core developer",
+    "hire WPF developer",
+    "hire C# developer",
+    "contract .NET developer",
+    "freelance C# technical lead",
+    "remote .NET contractor",
+    ".NET developer rates",
+    "freelance .NET developer pricing",
+    "hire .NET developer hourly rate",
+    // AI + integration
+    "hire .NET AI developer",
+    "Azure OpenAI .NET developer",
+    "Semantic Kernel developer for hire",
+    "C# AI integration developer",
+    // Geographic — USA
+    "hire .NET developer USA",
+    "freelance .NET developer USA",
+    "hire Blazor developer USA",
+    "contract C# developer USA",
+    "remote .NET developer USA",
+    // Geographic — UK
+    "hire .NET developer UK",
+    "freelance .NET developer UK",
+    "hire Blazor developer UK",
+    "ASP.NET Core freelancer UK",
+    // Geographic — Australia
+    "hire .NET developer Australia",
+    "freelance .NET developer Australia",
+    "contract .NET developer Australia",
+    "C# developer Australia",
+    // Geographic — Russia
+    "hire .NET developer Russia",
+    "WPF developer Russia",
+    "freelance C# developer Russia",
+    // General
+    "Kathan Patel",
+    "Kathan N. Patel",
+    "remote .NET developer for hire",
+    "ASP.NET Core freelancer Europe",
+  ],
+  authors: [{ name: "Kathan N. Patel" }],
+  creator: "Kathan N. Patel",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
-  keywords: [
-    "hire .NET developer USA",
-    "hire Blazor developer UK",
-    "ASP.NET Core freelancer Europe",
-    "WPF developer Russia",
-    "remote .NET contractor",
-    "freelance C# technical lead",
-  ],
+  alternates: {
+    canonical: "https://kathanpatel.vercel.app/hire",
+    languages: {
+      "en-US": "https://kathanpatel.vercel.app/hire",
+      "en-GB": "https://kathanpatel.vercel.app/hire",
+      "ru-RU": "https://kathanpatel.vercel.app/hire",
+      "x-default": "https://kathanpatel.vercel.app/hire",
+    },
+  },
   openGraph: {
-    title: "Hire .NET Freelancer | Kathan N. Patel",
+    title: "Hire a Freelance .NET Developer — Rates & Availability | Kathan N. Patel",
     description:
-      "Freelance .NET Technical Lead for US, UK, Russian, and European teams. Blazor, ASP.NET Core, WPF, and architecture support.",
+      "Transparent rates ($35–$85/hr), fixed-price and retainer options. Blazor, ASP.NET Core, WPF, and AI integration. Serving US, UK, Australian, and Russian clients.",
     url: "https://kathanpatel.vercel.app/hire",
+    siteName: "Kathan N. Patel",
     type: "website",
     locale: "en_US",
     alternateLocale: ["en_GB", "ru_RU"],
+    images: [
+      {
+        url: "https://kathanpatel.vercel.app/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Hire a Freelance .NET Developer — Kathan N. Patel",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hire a Freelance .NET Developer — Rates & Availability | Kathan N. Patel",
+    description:
+      "Transparent rates ($35–$85/hr), fixed-price and retainer options. Blazor, ASP.NET Core, WPF & AI integration. US, UK, Australian & Russian clients.",
+    images: ["https://kathanpatel.vercel.app/og-image.png"],
   },
 };
 

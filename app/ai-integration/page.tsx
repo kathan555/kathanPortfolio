@@ -34,9 +34,92 @@ const AIDemoWidget = dynamic(
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "AI Integration for .NET Apps — Azure OpenAI & Semantic Kernel",
+  title: "AI Integration for .NET Apps — Hire a .NET AI Developer | Kathan N. Patel",
   description:
-    "How to integrate Azure OpenAI and Semantic Kernel into your .NET application. Architecture patterns, C# code examples, and a live AI demo — by a freelance .NET Technical Lead.",
+    "Hire a specialist .NET developer for Azure OpenAI, Semantic Kernel & RAG integration in Blazor and ASP.NET Core. Real C# code, live AI demo, production architecture. Serving US, UK, Australian, and Russian clients.",
+  keywords: [
+    "hire .NET AI developer",
+    ".NET AI integration developer",
+    "Azure OpenAI .NET developer",
+    "Semantic Kernel developer",
+    "C# AI developer for hire",
+    "Blazor AI integration",
+    "ASP.NET Core AI integration",
+    "RAG pipeline .NET developer",
+    "LLM integration C# developer",
+    "GPT-4o .NET integration",
+    "Microsoft Agent Framework developer",
+    "Azure AI Foundry .NET",
+    "AI chatbot Blazor developer",
+    "generative AI .NET developer",
+    "AI document extraction .NET",
+    "hire .NET AI developer USA",
+    "hire .NET AI developer UK",
+    ".NET AI developer Australia",
+    "Azure OpenAI developer USA",
+    "Semantic Kernel consultant UK",
+    "C# AI developer Australia",
+    "AI integration developer Russia",
+    "freelance AI integration developer",
+    "contract .NET AI consultant",
+    "freelance .NET developer",
+    "hire .NET developer",
+    "contract .NET developer",
+    "Blazor developer",
+    "ASP.NET Core freelancer",
+    ".NET consultant",
+    "Kathan Patel",
+    "Kathan N. Patel",
+    "remote .NET developer",
+    ".NET developer USA",
+    ".NET developer UK",
+    ".NET developer Russia",
+    "C# contractor USA",
+    "Blazor developer UK",
+    "ASP.NET Core developer Europe",
+  ],
+  authors: [{ name: "Kathan N. Patel" }],
+  creator: "Kathan N. Patel",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: "https://kathanpatel.vercel.app/ai-integration",
+    languages: {
+      "ru-RU": "https://kathanpatel.vercel.app/ai-integration",
+    },
+  },
+  openGraph: {
+    title: "AI Integration for .NET — Hire a .NET AI Developer | Kathan N. Patel",
+    description:
+      "Specialist .NET developer for Azure OpenAI, Semantic Kernel & RAG in Blazor and ASP.NET Core. Live AI demo. Real C# code. US, UK, Australian & Russian clients.",
+    url: "https://kathanpatel.vercel.app/ai-integration",
+    siteName: "Kathan N. Patel",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "https://kathanpatel.vercel.app/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "AI Integration for .NET — Kathan N. Patel",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hire a .NET AI Developer — Azure OpenAI & Semantic Kernel | Kathan N. Patel",
+    description:
+      "Specialist .NET developer for AI integration in Blazor & ASP.NET Core. Azure OpenAI, RAG pipelines, Semantic Kernel. Live demo. US, UK & Australian clients.",
+    images: ["https://kathanpatel.vercel.app/og-image.png"],
+  },
 };
 
 // ── Code snippets (shown as static blocks) ────────────────────────────────────

@@ -330,19 +330,13 @@ export default function EstimatorPage() {
   return (
     // FIX 1: bg-background is theme-aware (works in both dark + light)
     // FIX 3: pt-28 clears the fixed navbar — same as every other page
-    <div className="min-h-screen pt-28 pb-20">
+    <div className="min-h-screen pt-20 ">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── Page header ── */}
-        <div className="text-center mb-8">
-          <span className="inline-flex items-center gap-1.5 text-xs bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-1 rounded-full mb-4 font-mono tracking-wide">
-            ✦ AI-POWERED
-          </span>
-          <h1 className="font-display text-3xl font-bold text-foreground tracking-tight mb-2">
-            Free Project Cost Estimator
-          </h1>
+        <div className="text-center mb-8">          
           <p className="text-muted-foreground text-sm">
-            Answer a few questions — your PDF estimate is emailed to you instantly
+            Answer a few questions and your PDF estimate is emailed to you instantly
           </p>
         </div>
 
