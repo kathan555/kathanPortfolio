@@ -34,7 +34,7 @@ const AIDemoWidget = dynamic(
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "AI Integration for .NET Apps — Hire a .NET AI Developer | Kathan N. Patel",
+  title: "AI Integration for .NET Apps - Hire a .NET AI Developer.",
   description:
     "Hire a specialist .NET developer for Azure OpenAI, Semantic Kernel & RAG integration in Blazor and ASP.NET Core. Real C# code, live AI demo, production architecture. Serving US, UK, Australian, and Russian clients.",
   keywords: [

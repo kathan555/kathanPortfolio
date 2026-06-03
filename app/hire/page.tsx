@@ -9,7 +9,7 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 import { services, process, personalInfo } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Hire a Freelance .NET Developer — Rates & Availability | Kathan N. Patel",
+  title: "Hire a Freelance .NET Developer - Rates & Availability.",
   description:
     "Hire a freelance .NET Technical Lead with transparent rates ($35–$85/hr), fixed-price and retainer options. Blazor, ASP.NET Core, WPF, and AI integration. Available for US, UK, Australian, and Russian clients.",
   keywords: [

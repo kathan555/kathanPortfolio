@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import EstimatorClient from '@/components/EstimatorClient';
 
 export const metadata: Metadata = {
-  title: "Free AI Project Cost Estimator — .NET & Blazor Development | Kathan N. Patel",
+  title: "Free AI Project Cost Estimator — .NET & Blazor Development.",
   description:
     "Get a free AI-powered cost estimate for your .NET, Blazor, or web development project in seconds. Answer 7 questions, receive a detailed budget breakdown. No sign-up required.",
   keywords: [

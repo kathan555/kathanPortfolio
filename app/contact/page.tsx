@@ -22,7 +22,7 @@ import { CalendarBooking } from "@/components/CalendarBooking";
 import { Mail, Phone, MapPin, Clock, Github, Linkedin } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Hire a Freelance .NET Developer — Contact Kathan N. Patel",
+  title: "Hire a Freelance .NET Developer - Contact Me.",
   description:
     "Get in touch with Kathan N. Patel for freelance .NET contract work. Book a free 30-minute discovery call or send a message. Available for projects in the USA, UK, Australia, and Russia. Responds within 24 hours.",
   keywords: [
