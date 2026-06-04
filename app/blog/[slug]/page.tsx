@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Calendar, Tag, Clock } from "lucide-react";
 import { ShareButtons } from "@/components/ShareButtons";
+import { LeadCapturePopup } from "@/components/LeadCapturePopup";
 import { getAllSlugs, getPostBySlug, type ContentBlock } from "@/lib/blog";
 
 export const revalidate = 60;
@@ -303,6 +304,9 @@ export default async function BlogPostPage({ params }: Props) {
           </Link>
         </div>
       </div>
+
+      {/* ── Lead capture popup — fires after 2.5 min of reading ── */}
+      <LeadCapturePopup postTitle={post.title} postSlug={post.slug} />
     </div>
   );
 }

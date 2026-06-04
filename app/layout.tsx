@@ -140,6 +140,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   "areaServed": [
                     "US",
                     "GB",
+                    "AU",
                     "RU",
                     "DE",
                     "FR",
