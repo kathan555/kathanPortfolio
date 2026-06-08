@@ -78,3 +78,16 @@ export async function getAllSlugs(): Promise<string[]> {
     .eq("published", true);
   return (data ?? []).map((r: { slug: string }) => r.slug);
 }
+
+export async function getAllPostsMeta(): Promise<{ slug: string; publishedAt: string | null }[]> {
+  const { data } = await getSupabase()
+    .from("blog_posts")
+    .select("slug, published_at")
+    .eq("published", true)
+    .order("published_at", { ascending: false });
+
+  return (data ?? []).map((p) => ({
+    slug:        p.slug,
+    publishedAt: p.published_at,
+  }));
+}
