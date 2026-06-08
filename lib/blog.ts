@@ -15,6 +15,7 @@ export type VideoBlock    = { type: "video";    url: string; platform: "youtube"
 export type LinkBlock     = { type: "link";     url: string; title: string; description?: string };
 export type CodeBlock     = { type: "code";     language: string; content: string };
 export type QuoteBlock    = { type: "quote";    content: string; author?: string };
+export type SvgBlock      = { type: "svg";      content: string; alt?: string };
 export type DividerBlock  = { type: "divider" };
 
 export type ContentBlock =
@@ -25,6 +26,7 @@ export type ContentBlock =
   | LinkBlock
   | CodeBlock
   | QuoteBlock
+  | SvgBlock
   | DividerBlock;
 
 // ─── Blog Post Type ───────────────────────────────────────────────────────────

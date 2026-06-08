@@ -196,6 +196,24 @@ function BlockRenderer({ block }: { block: ContentBlock }) {
     case "divider":
       return <hr />;
 
+    case "svg":
+      return (
+        <figure className="my-6">
+          <div
+            className="w-full overflow-x-auto rounded-xl"
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: block.content }}
+            role="img"
+            aria-label={block.alt}
+          />
+          {block.alt && (
+            <figcaption className="text-center text-xs text-muted-foreground mt-2 italic">
+              {block.alt}
+            </figcaption>
+          )}
+        </figure>
+      );  
+
     default:
       return null;
   }
