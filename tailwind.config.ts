@@ -11,11 +11,11 @@ const config: Config = {
     extend: {
       // ── Task 1: Font size scale bumped +1–2px across all sizes ──
       fontSize: {
-        xs:   ["0.8125rem",  { lineHeight: "1.25rem"  }], // 13px  (was 12)
-        sm:   ["0.9375rem",  { lineHeight: "1.5rem"   }], // 15px  (was 14)
-        base: ["1.0625rem",  { lineHeight: "1.75rem"  }], // 17px  (was 16)
-        lg:   ["1.1875rem",  { lineHeight: "1.875rem" }], // 19px  (was 18)
-        xl:   ["1.3125rem",  { lineHeight: "1.875rem" }], // 21px  (was 20)
+        xs:   ["0.875rem",   { lineHeight: "1.375rem" }], // 14px
+        sm:   ["1rem",       { lineHeight: "1.625rem" }], // 16px
+        base: ["1.1875rem",  { lineHeight: "1.875rem" }], // 19px
+        lg:   ["1.3125rem",  { lineHeight: "2rem"     }], // 21px
+        xl:   ["1.4375rem",  { lineHeight: "2rem"     }], // 23px
         "2xl":["1.5625rem",  { lineHeight: "2rem"     }], // 25px  (was 24)
         "3xl":["1.9375rem",  { lineHeight: "2.25rem"  }], // 31px  (was 30)
         "4xl":["2.25rem",    { lineHeight: "2.5rem"   }], // 36px  (unchanged)
@@ -37,8 +37,8 @@ const config: Config = {
         ring:   "hsl(var(--ring))",
       },
       fontFamily: {
-        display: ["var(--font-syne)", "sans-serif"],
-        body:    ["var(--font-dm-sans)", "sans-serif"],
+        display: ["var(--font-playfair)", "Georgia", "serif"],
+        body:    ["var(--font-lato)", "sans-serif"],
         mono:    ["var(--font-jetbrains-mono)", "monospace"],
       },
       animation: {

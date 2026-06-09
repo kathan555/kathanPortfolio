@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Syne, DM_Sans, JetBrains_Mono } from "next/font/google";
+import { Playfair_Display, Lato, JetBrains_Mono } from "next/font/google";
 import { GoogleAnalytics } from '@next/third-parties/google'
 import "./globals.css";
 import { ThemeProvider }      from "@/components/ThemeProvider";
-import { AnimatedBackground } from "@/components/AnimatedBackground";
 import { ScrollRestorer }       from "@/components/ScrollRestorer";
 import { NavigationProgress }   from "@/components/NavigationProgress";
 import { WhatsAppButton }        from "@/components/WhatsAppButton";
@@ -12,8 +11,8 @@ import { Navbar }             from "@/components/Navbar";
 import { Footer }             from "@/components/Footer";
 import { Toaster }            from "react-hot-toast";
 
-const syne          = Syne({ subsets: ["latin"], variable: "--font-syne",          weight: ["400","500","600","700","800"] });
-const dmSans        = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans",   weight: ["300","400","500","600"], style: ["normal","italic"] });
+const playfair      = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair", weight: ["400","500","600","700","800","900"], style: ["normal","italic"] });
+const lato          = Lato({ subsets: ["latin"], variable: "--font-lato", weight: ["300","400","700","900"], style: ["normal","italic"] });
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono", weight: ["400","500"] });
 
 export const metadata: Metadata = {
@@ -71,7 +70,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${syne.variable} ${dmSans.variable} ${jetbrainsMono.variable} bg-background text-foreground antialiased min-h-screen`}>
+      <body className={`${playfair.variable} ${lato.variable} ${jetbrainsMono.variable} bg-background text-foreground min-h-screen font-body`}>
 
         {/* ── Schema Markup — Person + ProfessionalService + WebSite ── */}
         <Script
@@ -192,7 +191,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
 
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange={false}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange={false}>
 
           {/* ── Instant navigation progress bar — above all layers ── */}
           <NavigationProgress />
@@ -203,14 +202,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* ── WhatsApp floating button ── */}
           <WhatsAppButton />
 
-          {/* ── 3D animated canvas — sits behind everything ── */}
-          <AnimatedBackground />
-
-          {/* ── Grid lines overlay ── */}
-          <div className="fixed inset-0 grid-bg pointer-events-none" style={{ zIndex: 2 }} />
-
-          {/* ── Main content — above canvas + grid ── */}
-          <div className="relative min-h-screen" style={{ zIndex: 10 }}>
+          <div className="relative min-h-screen">
             <Navbar />
             <main>{children}</main>
             <Footer />
@@ -221,13 +213,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             containerStyle={{ zIndex: 9999 }}
             toastOptions={{
               style: {
-                background:  "hsl(222, 47%, 10%)",
-                color:       "hsl(210, 40%, 96%)",
-                border:      "1px solid hsl(217, 91%, 60%, 0.2)",
-                fontFamily:  "var(--font-dm-sans)",
+                background:  "hsl(0, 0%, 100%)",
+                color:       "hsl(0, 0%, 0%)",
+                border:      "1px solid hsl(0, 0%, 88%)",
+                fontFamily:  "var(--font-lato)",
               },
-              success: { iconTheme: { primary: "#14B8A6", secondary: "#0A0F1E" } },
-              error:   { iconTheme: { primary: "#EF4444", secondary: "#0A0F1E" } },
+              success: { iconTheme: { primary: "#16A34A", secondary: "#FFFFFF" } },
+              error:   { iconTheme: { primary: "#DC2626", secondary: "#FFFFFF" } },
             }}
           />
         </ThemeProvider>

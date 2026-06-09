@@ -207,13 +207,13 @@ export function Navbar() {
 
             <div className="flex flex-col">
               <div className="flex items-center gap-1">
-                <span className="font-display font-black text-xl tracking-tighter text-slate-900 dark:text-white leading-none">
+                <span className="font-display font-black text-3xl text-slate-950 dark:text-white leading-none">
                   KATHAN
                 </span>
                 <motion.div 
                   animate={{ opacity: [1, 0, 1] }}
                   transition={{ repeat: Infinity, duration: 1.5 }}
-                  className="w-1.5 h-4 bg-amber-500 rounded-full"
+                  className="w-2 h-6 bg-amber-500 rounded-full"
                 />
               </div>
             </div>
@@ -230,10 +230,10 @@ export function Navbar() {
                     href={link.href}
                     prefetch={true}
                     className={cn(
-                      "px-3.5 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
+                      "px-3.5 py-2 text-sm font-semibold rounded-lg transition-all duration-200 border border-transparent",
                       pathname === link.href
-                        ? "text-blue-400 bg-blue-500/8"
-                        : "text-muted-foreground hover:text-foreground hover:bg-blue-500/5"
+                        ? "text-blue-600 bg-blue-500/10 border-blue-500/20"
+                        : "text-foreground hover:text-blue-600 hover:bg-blue-50 hover:border-blue-200/60"
                     )}
                   >
                     {link.label}
@@ -249,10 +249,10 @@ export function Navbar() {
                   <button
                     onClick={() => toggleDesktopDropdown(link.label)}
                     className={cn(
-                      "flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
+                      "flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-lg transition-all duration-200",
                       isOpen || isActive
-                        ? "text-blue-400 bg-blue-500/8"
-                        : "text-muted-foreground hover:text-foreground hover:bg-blue-500/5"
+                        ? "text-blue-600 bg-blue-500/10 border-blue-500/20"
+                        : "text-foreground hover:text-blue-600 hover:bg-blue-50 hover:border-blue-200/60"
                     )}
                   >
                     {link.label}

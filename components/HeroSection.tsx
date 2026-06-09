@@ -174,9 +174,9 @@ function PortraitFrame() {
         </span>
       </div>
 
-      <p className="sr-only">Hover or click the portrait for a 3D effect</p>
+      
       <p className="mt-5 text-center text-[11px] text-muted-foreground/70 font-mono hidden sm:block pointer-events-none">
-        Hover · Click for 3D
+        
       </p>
     </div>
   );
@@ -202,16 +202,14 @@ export function HeroSection() {
               </span>
             </motion.div>
 
-            <motion.h1 variants={item} className="font-display text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-4 leading-[0.95]">
-              <span className="text-foreground">Kathan</span>
-              <br />
-              <span className="gradient-text">N. Patel</span>
+            <motion.h1 variants={item} className="font-display text-6xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-4 leading-[0.95]">
+              <span className="text-foreground">Kathan N. Patel</span>
             </motion.h1>
 
             <motion.h2 variants={item} className="flex items-center gap-3 mb-4">
               <Briefcase className="w-5 h-5 text-blue-400 shrink-0" />
               <span className="font-mono text-blue-400 text-lg font-medium">
-                Blazor & WPF Specialist · .NET Contract Developer
+                Blazor & WPF Specialist | .NET Contract Developer
               </span>
             </motion.h2>
 
@@ -228,7 +226,7 @@ export function HeroSection() {
 
             <motion.p variants={item} className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl mb-10">
               I build <span className="text-foreground font-semibold">production-grade Blazor and WPF applications</span> for
-              teams in legal tech, healthcare, and enterprise — available to start{" "}
+              teams in legal tech, healthcare, and enterprise | available to start{" "}
               <span className="text-teal-400 font-semibold">{personalInfo.availableFrom.toLowerCase()}</span>.
             </motion.p>
 
@@ -272,19 +270,7 @@ export function HeroSection() {
         </div>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.8 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
-      >
-        <span className="text-xs text-muted-foreground font-mono">scroll</span>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-          className="w-px h-8 bg-gradient-to-b from-blue-400/60 to-transparent"
-        />
-      </motion.div>
+      
     </section>
   );
 }
