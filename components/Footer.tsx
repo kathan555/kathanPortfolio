@@ -5,7 +5,7 @@ import { personalInfo } from "@/lib/data";
 const moreLinks = [
   { label: "GitHub Showcase", href: "/github"         },
   { label: "Blog",            href: "/blog"           },
-  { label: "Cost Estimator",  href: "/estimator"      },
+  { label: "Cost Estimator",  href: "/free-project-cost-estimator"      },
   { label: "AI Integration",  href: "/ai-integration" },
 ];
 

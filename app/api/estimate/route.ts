@@ -4,20 +4,39 @@ import { NextRequest, NextResponse } from 'next/server';
 
 type Answers = Record<string, string>;
 
-// ─── Simple in-memory rate limiter ───────────────────────────────────────────
-// Resets on cold start — sufficient for a portfolio estimator tool
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const RATE_LIMIT       = 5;
+const RATE_WINDOW      = 60_000;    // 1 minute
+const MAP_PRUNE_SIZE   = 10_000;    // prune expired entries when map exceeds this
+const DESC_MAX_LENGTH  = 800;       // mirrors client-side maxLength
+const TOTAL_MAX_LENGTH = 5_000;
+
+// Fix 6: whitelist — rejects any value not in this list before it reaches the prompt
+const ALLOWED_USER_TYPES = ['technical', 'non-technical'] as const;
+
+// ─── Rate limiter ─────────────────────────────────────────────────────────────
+// In-memory, resets on cold start — acceptable for a portfolio estimator tool.
+// Not shared across Vercel serverless instances by design.
 
 const rateMap = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT  = 5;          // max requests per window per IP
-const RATE_WINDOW = 60_000;     // 1 minute window
 
 function isRateLimited(ip: string): boolean {
   const now   = Date.now();
   const entry = rateMap.get(ip);
+
   if (!entry || now > entry.resetAt) {
     rateMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
+
+    // Fix 9: prune expired entries to prevent unbounded memory growth
+    if (rateMap.size > MAP_PRUNE_SIZE) {
+      for (const [key, val] of rateMap) {
+        if (now > val.resetAt) rateMap.delete(key);
+      }
+    }
     return false;
   }
+
   if (entry.count >= RATE_LIMIT) return true;
   entry.count++;
   return false;
@@ -25,22 +44,27 @@ function isRateLimited(ip: string): boolean {
 
 // ─── Input validation ────────────────────────────────────────────────────────
 
-// FIX 4: validate that the required fields are present before calling Gemini
 function validateAnswers(answers: unknown): answers is Answers {
   if (!answers || typeof answers !== 'object' || Array.isArray(answers)) return false;
 
   const a = answers as Record<string, unknown>;
 
-  // Every conversation must have at least these two fields
-  if (typeof a.userType !== 'string' || !a.userType.trim()) return false;
-  if (typeof a.description !== 'string' || a.description.trim().length < 10) return false;
+  // Fix 6: whitelist userType — blocks prompt injection via this field
+  if (
+    typeof a.userType !== 'string' ||
+    !ALLOWED_USER_TYPES.includes(a.userType as (typeof ALLOWED_USER_TYPES)[number])
+  ) return false;
 
-  // Prevent absurdly large payloads
+  // Fix 7: per-field description cap — mirrors DESC_MAX on the client
+  if (typeof a.description !== 'string' || a.description.trim().length < 10) return false;
+  if (a.description.trim().length > DESC_MAX_LENGTH) return false;
+
+  // Total payload cap — blocks unusually large requests
   const totalLength = Object.values(a)
     .filter((v): v is string => typeof v === 'string')
     .reduce((sum, v) => sum + v.length, 0);
 
-  if (totalLength > 5000) return false;
+  if (totalLength > TOTAL_MAX_LENGTH) return false;
 
   return true;
 }
@@ -51,44 +75,51 @@ function buildPrompt(answers: Answers): string {
   const details   = Object.entries(answers).map(([k, v]) => `${k}: ${v}`).join('\n');
   const isNonTech = answers.userType === 'non-technical';
 
-  // FIX 1: rates now match the /hire page ($35–$85/hr)
-  // FIX 2: overhead % matches what the UI displays to the user (20%)
-  return `Estimate a software project cost as a senior .NET developer.
-    PROJECT DETAILS:
-    ${details}
+  // Fix 3: rates now correctly reflect /hire page tiers ($35–$85/hr)
+  // Fix 3: overhead is 20% (was 25% in the old prompt, contradicting the FIX 2 comment)
+  return `You are a senior .NET contractor with 10+ years of experience estimating solo development projects. Generate a well-reasoned and realistic cost estimate based on the project details below.
 
-    GUIDELINES:
-    - Rates: Standard ($18-23), Complex ($20-25), Specialist ($25-30).
-    - Range High: Base total + 25% overhead.
-    - Range Low: Base total.
-    - Content: Risks must be project-specific. ${isNonTech ? 'Use zero technical jargon in the summary.' : ''}
+PROJECT DETAILS:
+${details}
 
-    OUTPUT FORMAT:
-    Return a JSON object with this exact structure:
-    {
-      "range_low": number,
-      "range_high": number,
-      "summary": "string",
-      "breakdown": [
-        { "phase": "Discovery & Planning", "hours": number, "rate": number, "cost": number },
-        { "phase": "UI/UX Design", "hours": number, "rate": number, "cost": number },
-        { "phase": "Core Development", "hours": number, "rate": number, "cost": number },
-        { "phase": "Integrations & APIs", "hours": number, "rate": number, "cost": number },
-        { "phase": "Testing & QA", "hours": number, "rate": number, "cost": number },
-        { "phase": "Deployment & Handover", "hours": number, "rate": number, "cost": number }
-      ],
-      "risks": ["string", "string", "string"],
-      "recommended_stack": "string"
-    }`;
+ESTIMATION GUIDELINES:
+- All monetary values in USD.
+- Hourly rates: Standard tasks ($35–45/hr), Complex/architecture work ($45–65/hr), Specialist work such as legal tech integrations or AI features ($65–85/hr).
+- Each phase: cost MUST equal hours × rate exactly. No rounding.
+- range_low MUST equal the exact sum of all breakdown[].cost values.
+- range_high = range_low + 20% overhead for scope creep and revisions.
+- Set hours: 0 and cost: 0 for any phase not applicable to this project type.
+- risks: exactly 3 items, each specific to THIS project — no generic placeholder text.
+- summary: exactly 2–3 sentences.${isNonTech ? ' Use zero technical jargon — plain business language only.' : ''}
+- recommended_stack: comma-separated technologies only, one line.
+
+OUTPUT:
+Return ONLY a valid JSON object. No markdown fences, no preamble, no trailing text.
+
+{
+  "range_low": number,
+  "range_high": number,
+  "summary": "string",
+  "breakdown": [
+    { "phase": "Discovery & Planning",  "hours": number, "rate": number, "cost": number },
+    { "phase": "UI/UX Design",          "hours": number, "rate": number, "cost": number },
+    { "phase": "Core Development",      "hours": number, "rate": number, "cost": number },
+    { "phase": "Integrations & APIs",   "hours": number, "rate": number, "cost": number },
+    { "phase": "Testing & QA",          "hours": number, "rate": number, "cost": number },
+    { "phase": "Deployment & Handover", "hours": number, "rate": number, "cost": number }
+  ],
+  "risks": ["string", "string", "string"],
+  "recommended_stack": "string"
+}`;
 }
 
 // ─── Route Handler ────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
 
-  // Rate limiting
+  // Fix 5: split x-forwarded-for — take first IP only to prevent header-spoofing bypass
   const ip = req.headers.get('cf-connecting-ip')
-           ?? req.headers.get('x-forwarded-for')
+           ?? req.headers.get('x-forwarded-for')?.split(',')[0].trim()
            ?? 'unknown';
 
   if (isRateLimited(ip)) {
@@ -98,7 +129,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // API key check
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
@@ -107,7 +137,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Parse body
   let body: unknown;
   try {
     body = await req.json();
@@ -115,8 +144,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid request body.' }, { status: 400 });
   }
 
-  // FIX 3: removed console.info(answers) — was logging sensitive user data
-  // FIX 4: validate before calling Gemini
   if (!validateAnswers(body)) {
     return NextResponse.json(
       { error: 'Incomplete project details. Please answer all questions.' },
@@ -126,71 +153,85 @@ export async function POST(req: NextRequest) {
 
   const answers = body;
 
-  const geminiUrl =
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  // Fix 1+2: build prompt once — used only in the fetch body, never logged
+  const prompt = buildPrompt(answers);
 
-  // FIX 5: AbortController timeout — 25 seconds max
-  // Prevents infinite hanging if Gemini is slow to respond
+  // Fix 8: API key in x-goog-api-key header — keeps it out of URL-level server logs
+  const geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+
   const controller = new AbortController();
   const timeout    = setTimeout(() => controller.abort(), 25_000);
 
   let geminiRes: Response;
   try {
-    console.info(buildPrompt(answers));
     geminiRes = await fetch(geminiUrl, {
       method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
       signal:  controller.signal,
+      headers: {
+        'Content-Type':   'application/json',
+        'x-goog-api-key': apiKey,             // Fix 8
+      },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: buildPrompt(answers) }] }],
-        generationConfig: { temperature: 0.2, maxOutputTokens: 5000, responseMimeType: "application/json" },
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature:      0.2,
+          maxOutputTokens:  7_000,
+          responseMimeType: 'application/json', // Gemini JSON mode — returns clean JSON without fences
+        },
       }),
     });
   } catch (e: unknown) {
     clearTimeout(timeout);
-    // FIX 5: distinguish timeout from other network errors
     if (e instanceof Error && e.name === 'AbortError') {
       return NextResponse.json(
         { error: 'The AI took too long to respond. Please try again.' },
         { status: 504 },
       );
     }
-    const msg = e instanceof Error ? e.message : 'Network error reaching AI service';
-    return NextResponse.json({ error: msg }, { status: 502 });
+    return NextResponse.json(
+      { error: 'Network error reaching AI service. Please try again.' },
+      { status: 502 },
+    );
   } finally {
     clearTimeout(timeout);
   }
 
   if (!geminiRes.ok) {
+    // Fix 11: log internally, return a sanitised message — never expose Gemini internals
     const err = await geminiRes.json().catch(() => ({}));
-    const msg = (err as { error?: { message?: string } }).error?.message
-             ?? `AI service returned HTTP ${geminiRes.status}`;
-    return NextResponse.json({ error: msg }, { status: 502 });
+    console.error('[/api/estimate] Gemini error — status:', geminiRes.status, '| message:', (err as any).error?.message);
+    return NextResponse.json(
+      { error: 'AI service is temporarily unavailable. Please try again.' },
+      { status: 502 },
+    );
   }
 
   const data = await geminiRes.json();
-  const raw = (data.candidates?.[0]?.content?.parts?.[0]?.text ?? '') as string;
+  const raw  = (data.candidates?.[0]?.content?.parts?.[0]?.text ?? '') as string;
 
-  // 1. Find the first occurrence of '{' and the last occurrence of '}'
+  // responseMimeType: 'application/json' means Gemini returns clean JSON with no fences.
+  // Bracket-slicing below is a safety-net for unexpected edge-case responses only.
   const firstBracket = raw.indexOf('{');
-  const lastBracket = raw.lastIndexOf('}');
+  const lastBracket  = raw.lastIndexOf('}');
 
   if (firstBracket === -1 || lastBracket === -1) {
-    console.error('No JSON object found in raw string:', raw);
-    return NextResponse.json({ error: 'AI did not return a valid object' }, { status: 500 });
+    console.error('[/api/estimate] No JSON object found in response');
+    return NextResponse.json(
+      { error: 'AI did not return a valid estimate. Please try again.' },
+      { status: 500 },
+    );
   }
 
-  // 2. Slice exactly from the first { to the last }
-  // This ignores markdown fences (```json) and any preamble/postscript text automatically
   const jsonStr = raw.slice(firstBracket, lastBracket + 1);
 
   try {
-    // 3. Optional: Clean up potential problematic whitespace/newlines within the string
     const result = JSON.parse(jsonStr);
     return NextResponse.json(result);
-  } catch (parseErr: unknown) {
-    // If it still fails, the AI likely returned an unescaped character inside a string field
-    console.error('JSON Parse Error. Content:', jsonStr);
-    return NextResponse.json({ error: 'Invalid JSON format' }, { status: 500 });
+  } catch {
+    console.error('[/api/estimate] JSON parse failed');
+    return NextResponse.json(
+      { error: 'Failed to parse AI response. Please try again.' },
+      { status: 500 },
+    );
   }
 }

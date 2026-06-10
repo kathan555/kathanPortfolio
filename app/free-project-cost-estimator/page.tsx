@@ -2,9 +2,8 @@ import { Metadata } from 'next';
 import EstimatorClient from '@/components/EstimatorClient';
 
 export const metadata: Metadata = {
-  title: "Free AI Project Cost Estimator — .NET & Blazor Development.",
-  description:
-    "Get a free AI-powered cost estimate for your .NET, Blazor, or web development project in seconds. Answer 7 questions, receive a detailed budget breakdown. No sign-up required.",
+  title: "Remote Dev Hiring Cost Calculator Contractor vs Full-Time | Kathan N. Patel",
+  description: "Calculate the true cost of hiring a .NET developer in the US, UK, Canada, or Australia. Compare contractor vs full-time employee costs with region-specific taxes and overhead.",
   keywords: [
     // Tool-seeking intent
     "free software project cost estimator",
@@ -15,6 +14,17 @@ export const metadata: Metadata = {
     "project cost calculator free",
     "AI cost calculator software development",
     "free software cost estimator online",
+    "contractor vs employee cost calculator",
+    "hire .NET developer cost US",
+    "hire .NET developer cost UK",
+    "remote developer true cost calculator",
+    "contractor vs full time developer",
+    "employer cost calculator UK",
+    "employer NI cost calculator",
+    "Canada contractor cost calculator",
+    "Australia superannuation cost calculator",
+    "US FICA employer cost",
+    "freelance vs full time developer cost",
     // .NET / Blazor specific
     ".NET development cost estimator",
     "Blazor development cost",
@@ -56,19 +66,19 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://kathanpatel.vercel.app/estimator",
+    canonical: "https://kathanpatel.vercel.app/free-project-cost-estimator",
     languages: {
-      "en-US": "https://kathanpatel.vercel.app/estimator",
-      "en-GB": "https://kathanpatel.vercel.app/estimator",
-      "ru-RU": "https://kathanpatel.vercel.app/estimator",
-      "x-default": "https://kathanpatel.vercel.app/estimator",
+      "en-US": "https://kathanpatel.vercel.app/free-project-cost-estimator",
+      "en-GB": "https://kathanpatel.vercel.app/free-project-cost-estimator",
+      "ru-RU": "https://kathanpatel.vercel.app/free-project-cost-estimator",
+      "x-default": "https://kathanpatel.vercel.app/free-project-cost-estimator",
     },
   },
   openGraph: {
     title: "Free AI Project Cost Estimator — .NET & Blazor Development | Kathan N. Patel",
     description:
       "Instant AI-powered budget estimate for your .NET, Blazor, or web project. Answer 7 questions, get a full cost breakdown in seconds. Completely free, no sign-up.",
-    url: "https://kathanpatel.vercel.app/estimator",
+    url: "https://kathanpatel.vercel.app/free-project-cost-estimator",
     siteName: "Kathan N. Patel",
     type: "website",
     locale: "en_US",
@@ -93,7 +103,7 @@ export const metadata: Metadata = {
 
 export default function EstimatorPage() {
   return (
-    <div className="min-h-screen pt-28 ">
+    <div className="min-h-screen pt-28 pb-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ✅ Static — server-rendered, fully visible to Google */}
@@ -102,11 +112,11 @@ export default function EstimatorPage() {
             ✦ FREE AI-POWERED
           </span>
           <h1 className="font-display text-4xl sm:text-5xl font-bold mt-3 mb-4">
-            Free Project Cost Estimator
+            Remote Dev Hiring Cost Calculator
           </h1>
           <h2 className="text-muted-foreground text-lg leading-relaxed mb-4">
-            Not sure what your .NET or Blazor project will cost? Answer few short questions and get an AI-powered budget breakdown instantly - covering
-            development hours, architecture complexity, and engagement type - completely free in your inbox.
+            Hiring a .NET developer? See the true employer cost including taxes,
+			benefits, and overhead compared region by region. Free, instant, no sign-up.
           </h2>
           <p className="text-muted-foreground text-sm leading-relaxed mb-4">
             This free .NET project cost estimator uses AI to generate a realistic

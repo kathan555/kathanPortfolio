@@ -65,12 +65,66 @@ export const metadata: Metadata = {
     images:      ["/og-image.png"],
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large" } },
+  manifest: "/site.webmanifest",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon-32x32.png", type: "image/png", sizes: "32x32" },
+      { url: "/icon-192x192.png", type: "image/png", sizes: "192x192" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+};
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Kathan N. Patel",
+  "jobTitle": "Freelance .NET Technical Lead",
+  "description": "Freelance .NET developer with 8+ years experience in Blazor, WPF, and ASP.NET Core. Available for remote contract work.",
+  "url": "https://kathanpatel.vercel.app",
+  "email": "patel.kathan555@gmail.com",
+  "knowsAbout": ["Blazor", "ASP.NET Core", "WPF", "C#", ".NET", "Legal Tech", "Clio API", "Lawmatics"],
+  "sameAs": [
+    "https://www.linkedin.com/in/kathan555",
+    "https://github.com/kathan555"
+  ]
+};
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Kathan N. Patel — Freelance .NET Development",
+  "provider": { "@type": "Person", "name": "Kathan N. Patel" },
+  "serviceType": "Freelance Software Development",
+  "areaServed": ["US", "GB", "AU", "CA"],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Services",
+    "itemListElement": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Blazor Web Application Development" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "WPF Desktop Application Development" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "ASP.NET Core API Development" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Clio, Box, Zoom & Lawmatics Integration" } }
+    ]
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${playfair.variable} ${lato.variable} ${jetbrainsMono.variable} bg-background text-foreground min-h-screen font-body`}>
+
+		<script
+		  type="application/ld+json"
+		  dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+		/>
+		<script
+		  type="application/ld+json"
+		  dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+		/>
 
         {/* ── Schema Markup — Person + ProfessionalService + WebSite ── */}
         <Script

@@ -22,7 +22,7 @@ const navLinks = [
     children: [
       { label: "GitHub Showcase", href: "/github",         icon: <Github     className="w-4 h-4" />, desc: "Open-source repositories"   },
       { label: "Blog",            href: "/blog",           icon: <PenLine    className="w-4 h-4" />, desc: "Thoughts & tutorials"        },
-      { label: "Cost Estimator",  href: "/estimator",      icon: <Calculator className="w-4 h-4" />, desc: "Project cost calculator"     },
+      { label: "Cost Estimator",  href: "/free-project-cost-estimator",      icon: <Calculator className="w-4 h-4" />, desc: "Project cost calculator"     },
       { label: "AI Integration",  href: "/ai-integration", icon: <Brain      className="w-4 h-4" />, desc: ".NET + AI showcase & demo"   },
     ],
   },
