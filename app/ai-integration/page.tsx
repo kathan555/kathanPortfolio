@@ -558,7 +558,7 @@ export default function AIIntegrationPage() {
                   Discuss Your Project
                 </Link>
                 <Link
-                  href="/estimator"
+                  href="/free-project-cost-estimator"
                   className="inline-flex items-center gap-2 px-8 py-4 border border-blue-500/40 text-blue-400 hover:bg-blue-500/10 font-semibold text-lg rounded-xl transition-all hover:-translate-y-0.5"
                 >
                   Estimate AI Project Cost

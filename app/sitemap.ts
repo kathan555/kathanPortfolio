@@ -19,7 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/hire`,           lastModified: new Date("2025-04-01"), changeFrequency: "monthly", priority: 0.95 },
     { url: `${BASE}/contact`,        lastModified: new Date("2025-04-01"), changeFrequency: "monthly", priority: 0.9  },
     { url: `${BASE}/ai-integration`, lastModified: new Date("2025-04-01"), changeFrequency: "monthly", priority: 0.85 },
-    { url: `${BASE}/estimator`,      lastModified: new Date("2025-04-01"), changeFrequency: "monthly", priority: 0.75 },
+    { url: `${BASE}/free-project-cost-estimator`, lastModified: new Date("2026-06-11"), changeFrequency: "monthly", priority: 0.85 },
     { url: `${BASE}/blog`,           lastModified: new Date(),             changeFrequency: "weekly",  priority: 0.8  },  
     { url: `${BASE}/github`,         lastModified: new Date("2025-03-01"), changeFrequency: "weekly",  priority: 0.7  },  
   ];

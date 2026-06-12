@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/about", destination: "/#about", permanent: true },
+      { source: "/estimator", destination: "/free-project-cost-estimator", permanent: true },
     ];
   },
   // Skip ESLint errors during production build — warnings only

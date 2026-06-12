@@ -236,7 +236,7 @@ export default function HirePage() {
                 Start a Conversation
               </a>
               <Link
-                href="/estimator"
+                href="/free-project-cost-estimator"
                 className="group inline-flex items-center gap-2 px-7 py-3.5 border border-blue-500/40 text-blue-400 font-medium rounded-xl hover:bg-blue-500/10 hover:border-blue-500/60 transition-all hover:-translate-y-0.5"
               >
                 Estimate My Project Cost

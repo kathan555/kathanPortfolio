@@ -40,6 +40,11 @@ with SOC 2-aligned architecture.
 - Email: patel.kathan555@gmail.com
 - LinkedIn: https://linkedin.com/in/kathan555
 
+## Free Tools
+- Free AI Project Cost Estimator: https://kathanpatel.vercel.app/free-project-cost-estimator
+  Describe your project in one step and get an instant AI-generated software
+  project cost estimate with a six-phase breakdown — tuned for .NET, Blazor, and web apps.
+
 ## Areas of Expertise
 - Blazor Server, ASP.NET Core, WPF, C#, SQL Server, PostgreSQL
 - Clio API, Lawmatics API, OAuth 2.0 / PKCE integrations

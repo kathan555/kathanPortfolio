@@ -2,18 +2,21 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Answers = Record<string, string>;
+interface EstimateRequest {
+  description: string;
+  techStack?:  string;
+  budget?:     string;
+}
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const RATE_LIMIT       = 5;
 const RATE_WINDOW      = 60_000;    // 1 minute
 const MAP_PRUNE_SIZE   = 10_000;    // prune expired entries when map exceeds this
-const DESC_MAX_LENGTH  = 800;       // mirrors client-side maxLength
+const DESC_MIN_LENGTH  = 30;        // mirrors client-side DESC_MIN
+const DESC_MAX_LENGTH  = 2_000;     // mirrors client-side maxLength
+const FIELD_MAX_LENGTH = 200;       // techStack / budget caps, mirrors client
 const TOTAL_MAX_LENGTH = 5_000;
-
-// Fix 6: whitelist — rejects any value not in this list before it reaches the prompt
-const ALLOWED_USER_TYPES = ['technical', 'non-technical'] as const;
 
 // ─── Rate limiter ─────────────────────────────────────────────────────────────
 // In-memory, resets on cold start — acceptable for a portfolio estimator tool.
@@ -28,7 +31,7 @@ function isRateLimited(ip: string): boolean {
   if (!entry || now > entry.resetAt) {
     rateMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
 
-    // Fix 9: prune expired entries to prevent unbounded memory growth
+    // Prune expired entries to prevent unbounded memory growth
     if (rateMap.size > MAP_PRUNE_SIZE) {
       for (const [key, val] of rateMap) {
         if (now > val.resetAt) rateMap.delete(key);
@@ -44,20 +47,22 @@ function isRateLimited(ip: string): boolean {
 
 // ─── Input validation ────────────────────────────────────────────────────────
 
-function validateAnswers(answers: unknown): answers is Answers {
-  if (!answers || typeof answers !== 'object' || Array.isArray(answers)) return false;
+function validateRequest(body: unknown): body is EstimateRequest {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return false;
 
-  const a = answers as Record<string, unknown>;
+  const a = body as Record<string, unknown>;
 
-  // Fix 6: whitelist userType — blocks prompt injection via this field
-  if (
-    typeof a.userType !== 'string' ||
-    !ALLOWED_USER_TYPES.includes(a.userType as (typeof ALLOWED_USER_TYPES)[number])
-  ) return false;
+  // Single free-form brief — required, with length caps mirroring the client
+  if (typeof a.description !== 'string') return false;
+  const desc = a.description.trim();
+  if (desc.length < DESC_MIN_LENGTH || desc.length > DESC_MAX_LENGTH) return false;
 
-  // Fix 7: per-field description cap — mirrors DESC_MAX on the client
-  if (typeof a.description !== 'string' || a.description.trim().length < 10) return false;
-  if (a.description.trim().length > DESC_MAX_LENGTH) return false;
+  // Optional short fields
+  for (const key of ['techStack', 'budget'] as const) {
+    if (a[key] === undefined) continue;
+    if (typeof a[key] !== 'string') return false;
+    if ((a[key] as string).length > FIELD_MAX_LENGTH) return false;
+  }
 
   // Total payload cap — blocks unusually large requests
   const totalLength = Object.values(a)
@@ -69,19 +74,54 @@ function validateAnswers(answers: unknown): answers is Answers {
   return true;
 }
 
+// ─── Response validation ──────────────────────────────────────────────────────
+// The Gemini output is untrusted — verify the exact shape the client renders
+// (range_low/range_high, breakdown rows, risks, summary, recommended_stack)
+// before returning it, so a malformed response can never crash the results UI.
+
+interface EstimateResult {
+  range_low:         number;
+  range_high:        number;
+  summary:           string;
+  breakdown:         { phase: string; hours: number; rate: number; cost: number }[];
+  risks:             string[];
+  recommended_stack: string;
+}
+
+const isFiniteNum = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
+
+function validateEstimate(result: unknown): result is EstimateResult {
+  if (!result || typeof result !== 'object' || Array.isArray(result)) return false;
+
+  const r = result as Record<string, unknown>;
+
+  if (!isFiniteNum(r.range_low) || !isFiniteNum(r.range_high)) return false;
+  if (typeof r.summary !== 'string' || typeof r.recommended_stack !== 'string') return false;
+
+  if (!Array.isArray(r.breakdown) || r.breakdown.length === 0) return false;
+  for (const row of r.breakdown as Record<string, unknown>[]) {
+    if (!row || typeof row !== 'object') return false;
+    if (typeof row.phase !== 'string') return false;
+    if (!isFiniteNum(row.hours) || !isFiniteNum(row.rate) || !isFiniteNum(row.cost)) return false;
+  }
+
+  if (!Array.isArray(r.risks) || r.risks.some(risk => typeof risk !== 'string')) return false;
+
+  return true;
+}
+
 // ─── Prompt builder ───────────────────────────────────────────────────────────
 
-function buildPrompt(answers: Answers): string {
-  const details   = Object.entries(answers).map(([k, v]) => `${k}: ${v}`).join('\n');
-  const isNonTech = answers.userType === 'non-technical';
+function buildPrompt({ description, techStack, budget }: EstimateRequest): string {
+  const stack  = techStack?.trim();
+  const budgetCtx = budget?.trim();
 
-  // Fix 3: rates now correctly reflect /hire page tiers ($35–$85/hr)
-  // Fix 3: overhead is 20% (was 25% in the old prompt, contradicting the FIX 2 comment)
-  return `You are a senior .NET contractor with 10+ years of experience estimating solo development projects. Generate a well-reasoned and realistic cost estimate based on the project details below.
+  // Rates reflect /hire page tiers ($35–$85/hr); overhead is 20%
+  return `You are a senior .NET contractor with 10+ years of experience estimating solo development projects. The client has submitted a single free-form project brief. Do all the analysis yourself: infer the project type, scope, complexity, required integrations, and a realistic timeline from the brief, then generate a well-reasoned and realistic cost estimate.
 
-PROJECT DETAILS:
-${details}
-
+PROJECT BRIEF (client's own words):
+${description}
+${stack ? `\nCLIENT'S PREFERRED TECH STACK:\n${stack}\n` : ''}${budgetCtx ? `\nCLIENT'S BUDGET CONTEXT (stated budget or quotes already received):\n${budgetCtx}\n` : ''}
 ESTIMATION GUIDELINES:
 - All monetary values in USD.
 - Hourly rates: Standard tasks ($35–45/hr), Complex/architecture work ($45–65/hr), Specialist work such as legal tech integrations or AI features ($65–85/hr).
@@ -89,9 +129,10 @@ ESTIMATION GUIDELINES:
 - range_low MUST equal the exact sum of all breakdown[].cost values.
 - range_high = range_low + 20% overhead for scope creep and revisions.
 - Set hours: 0 and cost: 0 for any phase not applicable to this project type.
+- If the brief is vague on scope, assume a sensible mid-size interpretation and note the assumption in the summary.
 - risks: exactly 3 items, each specific to THIS project — no generic placeholder text.
-- summary: exactly 2–3 sentences.${isNonTech ? ' Use zero technical jargon — plain business language only.' : ''}
-- recommended_stack: comma-separated technologies only, one line.
+- summary: 2–4 sentences in plain business language a non-technical founder can understand.${budgetCtx ? ' Explicitly state whether the estimate fits the client\'s stated budget, and if not, what scope would fit it.' : ''}
+- recommended_stack: comma-separated technologies only, one line.${stack ? ' Honor the client\'s preferred stack unless it is clearly unsuitable for this project — if so, recommend the better fit and flag the concern in risks.' : ''}
 
 OUTPUT:
 Return ONLY a valid JSON object. No markdown fences, no preamble, no trailing text.
@@ -117,7 +158,7 @@ Return ONLY a valid JSON object. No markdown fences, no preamble, no trailing te
 
 export async function POST(req: NextRequest) {
 
-  // Fix 5: split x-forwarded-for — take first IP only to prevent header-spoofing bypass
+  // Split x-forwarded-for — take first IP only to prevent header-spoofing bypass
   const ip = req.headers.get('cf-connecting-ip')
            ?? req.headers.get('x-forwarded-for')?.split(',')[0].trim()
            ?? 'unknown';
@@ -144,19 +185,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid request body.' }, { status: 400 });
   }
 
-  if (!validateAnswers(body)) {
+  if (!validateRequest(body)) {
     return NextResponse.json(
-      { error: 'Incomplete project details. Please answer all questions.' },
+      { error: 'Please describe your project in a bit more detail and try again.' },
       { status: 400 },
     );
   }
 
-  const answers = body;
+  // Build prompt once — used only in the fetch body, never logged
+  const prompt = buildPrompt(body);
 
-  // Fix 1+2: build prompt once — used only in the fetch body, never logged
-  const prompt = buildPrompt(answers);
-
-  // Fix 8: API key in x-goog-api-key header — keeps it out of URL-level server logs
+  // API key goes in the x-goog-api-key header — keeps it out of URL-level server logs
   const geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
   const controller = new AbortController();
@@ -169,7 +208,7 @@ export async function POST(req: NextRequest) {
       signal:  controller.signal,
       headers: {
         'Content-Type':   'application/json',
-        'x-goog-api-key': apiKey,             // Fix 8
+        'x-goog-api-key': apiKey,
       },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
@@ -197,7 +236,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (!geminiRes.ok) {
-    // Fix 11: log internally, return a sanitised message — never expose Gemini internals
+    // Log internally, return a sanitised message — never expose Gemini internals
     const err = await geminiRes.json().catch(() => ({}));
     console.error('[/api/estimate] Gemini error — status:', geminiRes.status, '| message:', (err as any).error?.message);
     return NextResponse.json(
@@ -224,9 +263,9 @@ export async function POST(req: NextRequest) {
 
   const jsonStr = raw.slice(firstBracket, lastBracket + 1);
 
+  let result: unknown;
   try {
-    const result = JSON.parse(jsonStr);
-    return NextResponse.json(result);
+    result = JSON.parse(jsonStr);
   } catch {
     console.error('[/api/estimate] JSON parse failed');
     return NextResponse.json(
@@ -234,4 +273,14 @@ export async function POST(req: NextRequest) {
       { status: 500 },
     );
   }
+
+  if (!validateEstimate(result)) {
+    console.error('[/api/estimate] Gemini response failed shape validation');
+    return NextResponse.json(
+      { error: 'AI did not return a valid estimate. Please try again.' },
+      { status: 500 },
+    );
+  }
+
+  return NextResponse.json(result);
 }

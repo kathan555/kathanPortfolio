@@ -36,6 +36,9 @@ Thumbs.db
 *.swp
 *.swo
 
+# Claude Code — machine-local settings and launch config
+.claude/
+
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts

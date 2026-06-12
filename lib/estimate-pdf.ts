@@ -1,5 +1,6 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { fmtUSD } from "./utils";
 
 export interface BreakdownRow {
   phase: string;
@@ -38,7 +39,7 @@ export function buildEstimatePDF(result: EstimateResult, answers: Answers): jsPD
     headerBg: [30,  58, 138]  as [number, number, number],
   };
 
-  const money = (n: number) => "$" + Math.round(n).toLocaleString();
+  const money = fmtUSD;
 
   const setFont = (style: "normal" | "bold" | "italic" = "normal", size = 10, color = C.ink) => {
     doc.setFont("helvetica", style);
@@ -111,10 +112,8 @@ export function buildEstimatePDF(result: EstimateResult, answers: Answers): jsPD
 
   const details: [string, string][] = (
     [
-      ["Type",      answers.projectType],
-      ["Audience",  answers.audience],
-      ["Timeline",  answers.timeline],
-      ["Team size", answers.teamSize],
+      ["Stack",  answers.techStack],
+      ["Budget", answers.budget],
     ] as [string, string | undefined][]
   ).filter((pair): pair is [string, string] => Boolean(pair[1]));
 
@@ -131,9 +130,15 @@ export function buildEstimatePDF(result: EstimateResult, answers: Answers): jsPD
     doc.text("Description:", ML, y);
     y += 5;
     setFont("normal", 8.5, C.muted);
-    const wrapped = doc.splitTextToSize(answers.description, PW - 36);
-    doc.text(wrapped, ML, y);
-    y += wrapped.length * 4.8 + 3;
+    // Clamp long briefs so the manually positioned sections never run off the page
+    const wrapped = doc.splitTextToSize(answers.description, PW - 36) as string[];
+    const MAX_DESC_LINES = 12;
+    // Drop the trailing word (not just a character) so the ellipsis never splits a word
+    const lines = wrapped.length > MAX_DESC_LINES
+      ? [...wrapped.slice(0, MAX_DESC_LINES - 1), wrapped[MAX_DESC_LINES - 1].replace(/\s*\S+\s*$/, "") + " …"]
+      : wrapped;
+    doc.text(lines, ML, y);
+    y += lines.length * 4.8 + 3;
   }
 
   y += 4;
