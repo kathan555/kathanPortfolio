@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { signEstimateToken } from '@/lib/estimate-token';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -282,5 +283,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  return NextResponse.json(result);
+  // Issue a short-lived token so the client can request email delivery of this
+  // estimate. /api/estimate/send-email requires it, preventing standalone abuse.
+  const emailToken = signEstimateToken();
+
+  return NextResponse.json({ ...result, emailToken });
 }

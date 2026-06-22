@@ -38,7 +38,11 @@ function getFriendlyError(raw: string): string {
   return "We couldn't generate your estimate. Please try again or contact me directly.";
 }
 
-async function deliverEstimateByEmail(result: EstimateResult, answers: Answers): Promise<void> {
+async function deliverEstimateByEmail(
+  result: EstimateResult,
+  answers: Answers,
+  token: string | null,
+): Promise<void> {
   const clientEmail = answers.clientEmail?.trim();
   if (!clientEmail || !EMAIL_RE.test(clientEmail)) {
     throw new Error('A valid email address is required.');
@@ -49,7 +53,7 @@ async function deliverEstimateByEmail(result: EstimateResult, answers: Answers):
   const res = await fetch('/api/estimate/send-email', {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify({ clientEmail, pdfBase64 }),
+    body:    JSON.stringify({ clientEmail, pdfBase64, token }),
   });
 
   if (!res.ok) {
@@ -69,6 +73,7 @@ export default function EstimatorClient() {
   const [emailError,  setEmailError]  = useState('');
   const [sentToEmail, setSentToEmail] = useState('');
   const [estimate,    setEstimate]    = useState<EstimateResult | null>(null);
+  const [emailToken,  setEmailToken]  = useState<string | null>(null);
 
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -110,12 +115,12 @@ export default function EstimatorClient() {
     return answers;
   };
 
-  const sendEmail = async (result: EstimateResult, answers: Answers) => {
+  const sendEmail = async (result: EstimateResult, answers: Answers, token: string | null) => {
     setEmailStatus('sending');
     setEmailError('');
     setSentToEmail(answers.clientEmail);
     try {
-      await deliverEstimateByEmail(result, answers);
+      await deliverEstimateByEmail(result, answers, token);
       setEmailStatus('success');
     } catch (e: unknown) {
       const raw = e instanceof Error ? e.message : 'Unknown error';
@@ -154,9 +159,12 @@ export default function EstimatorClient() {
         throw new Error((err as { error?: string }).error ?? `HTTP ${res.status}`);
       }
 
-      const result = (await res.json()) as EstimateResult;
+      const { emailToken: token, ...result } =
+        (await res.json()) as EstimateResult & { emailToken?: string | null };
+      const tok = token ?? null;
+      setEmailToken(tok);
       setEstimate(result);
-      await sendEmail(result, answers);
+      await sendEmail(result, answers, tok);
     } catch (e: unknown) {
       const raw = e instanceof Error ? e.message : 'Unknown error';
       setApiError(getFriendlyError(raw));
@@ -168,7 +176,7 @@ export default function EstimatorClient() {
   // Resend only the email — the estimate already exists
   const retryEmail = async () => {
     if (!estimate || emailStatus === 'sending') return;
-    await sendEmail(estimate, buildAnswers());
+    await sendEmail(estimate, buildAnswers(), emailToken);
   };
 
   const reset = () => {
@@ -180,6 +188,7 @@ export default function EstimatorClient() {
     setEmailError('');
     setSentToEmail('');
     setEstimate(null);
+    setEmailToken(null);
   };
 
   const descLen  = fields.description.length;
