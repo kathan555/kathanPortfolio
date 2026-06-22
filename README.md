@@ -11,10 +11,11 @@ Next.js 15 · TypeScript · Tailwind CSS · Supabase · Framer Motion
 | 🌗 Light / Dark theme | Toggle in navbar; defaults to dark. Powered by `next-themes` |
 | 🛡️ Bot protection | Cloudflare Turnstile CAPTCHA, server-side verified |
 | 🔢 Animated counters | Stats count up on scroll with easeOutExpo |
-| 📄 Multi-page app | About, Skills, Experience, Projects, Education, GitHub, Blog, Estimator |
+| 📄 Multi-page app | Home, Hire, AI Integration, GitHub, Blog, Cost Estimator, Contact |
 | 🐙 GitHub Showcase | Live GitHub API — repos, stars, forks, languages, topics |
-| ✍️ Blog | Supabase-backed rich posts: text, images, YouTube/Vimeo/video, links, code, quotes |
-| 🧮 Cost Estimator | 7-step wizard → animated INR range result |
+| ✍️ Blog | Supabase-backed rich posts: text, images, YouTube/Vimeo/video, links, code, quotes, SVG |
+| 🧮 Cost Estimator | Single free-form brief → AI cost estimate in USD, shown on-page and emailed as a branded PDF. Lives at `/free-project-cost-estimator` |
+| 🤖 AI demo | Live chat widget on `/ai-integration` backed by Google Gemini |
 | 📬 Contact form | Validated → Turnstile CAPTCHA → Supabase insert |
 
 ---
@@ -94,11 +95,30 @@ Form works without these — just skips CAPTCHA. Add before going to production.
 
 ## 🔑 Environment Variables (.env.local)
 
+See [`.env.example`](.env.example) for the full annotated list. The app needs:
+
 ```
+# Supabase — contact form, blog, lead capture
 NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+
+# Cloudflare Turnstile — bot protection on the contact form
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=0x4AAAAAAAxxx
 TURNSTILE_SECRET_KEY=0x4AAAAAAAsecretxxx
+
+# Google Gemini — AI demo chat + the cost estimator
+GEMINI_API_KEY=AIza...
+
+# Gmail SMTP — emails the estimator PDF to the client
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=you@gmail.com
+SMTP_PASS=app-password
+SMTP_FROM=you@gmail.com
+
+# Optional — dedicated secret for signing estimate-email tokens.
+# Leave unset to reuse GEMINI_API_KEY automatically.
+# ESTIMATE_TOKEN_SECRET=
 ```
 
 ---
@@ -121,7 +141,7 @@ Edit `lib/data.ts` — single source of truth for all portfolio text.
 
 1. Push to GitHub
 2. vercel.com → New Project → import
-3. Add all 4 env vars
+3. Add all env vars from `.env.example`
 4. Deploy
 
 Update `metadataBase` in `app/layout.tsx` to your real domain.
@@ -181,24 +201,29 @@ After deploying, add `https://kathanpatel.dev` (your real URL) to:
 
 ### What's on this page
 - Hero explaining .NET + AI opportunity
-- **Live AI demo widget** — real chat powered by Claude API (not a mockup)
+- **Live AI demo widget** — real chat powered by Google Gemini (not a mockup)
 - Architecture SVG diagram (Blazor → ChatService → Semantic Kernel → Azure OpenAI)
 - 4 real C# code blocks: Semantic Kernel setup, ChatService, Blazor component, RAG pattern
 - 6 use case cards: AI chat, data extraction, report generation, code review, automation, semantic search
 - Tech stack breakdown: Semantic Kernel, Azure OpenAI, Qdrant, Blazor, Hangfire
 - CTA linking to /contact and /estimator
 
-### Setting up the live demo (ANTHROPIC_API_KEY)
+### Setting up the live demo (GEMINI_API_KEY)
 
-1. Go to [console.anthropic.com](https://console.anthropic.com) → API Keys → Create Key
+1. Go to [aistudio.google.com/apikey](https://aistudio.google.com/apikey) → Create API key
 2. Add to `.env.local`:
    ```
-   ANTHROPIC_API_KEY=sk-ant-your-key-here
+   GEMINI_API_KEY=AIza-your-key-here
    ```
 3. Add the same key in Vercel → Project → Settings → Environment Variables
 
-The demo uses `claude-haiku-4-5` (cheapest model) and is rate-limited to 10 requests/min per IP.
+The demo uses `gemini-2.5-flash` and is rate-limited to 10 requests/min per IP.
 Without the key, the demo widget still renders but the send button returns a 502 error.
+The same `GEMINI_API_KEY` also powers the cost estimator at `/free-project-cost-estimator`.
+
+> **Note:** the demo widget UI still reads "powered by Claude AI" — aligning that
+> label with the Gemini backend (or switching the backend to Claude) is tracked
+> separately as a known inconsistency.
 
 ### Content positioning strategy
 The page is written as a **knowledge resource + service showcase** — not a fake case study.
