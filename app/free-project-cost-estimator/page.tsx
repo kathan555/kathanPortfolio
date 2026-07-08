@@ -95,7 +95,7 @@ const FAQS = [
   },
   {
     q: "Can I hire you to build the project after estimating?",
-    a: "Yes. I am a freelance .NET Technical Lead with 8+ years of experience in Blazor, ASP.NET Core, and WPF, available for remote contract work with clients in the US, UK, Canada, and Australia. Use the estimate as a starting point and book a call from the results screen.",
+    a: "Yes. I am a freelance .NET Technical Lead with 8+ years of experience in Blazor, ASP.NET Core, and WPF, available for remote contract work with clients in the US, UK, UAE, Australia, and worldwide. Use the estimate as a starting point and book a call from the results screen.",
   },
 ];
 

@@ -36,7 +36,7 @@ import { cn } from "@/lib/utils";
 export const metadata: Metadata = {
   title: "AI Integration for .NET Apps - Hire a .NET AI Developer.",
   description:
-    "Hire a specialist .NET developer for Azure OpenAI, Semantic Kernel & RAG integration in Blazor and ASP.NET Core. Real C# code, live AI demo, production architecture. Serving US, UK, Australian, and Russian clients.",
+    "Hire a specialist .NET developer for Azure OpenAI, Semantic Kernel & RAG integration in Blazor and ASP.NET Core. Real C# code, live AI demo, production architecture. Serving clients in the US, UK, UAE, Australia, and worldwide.",
   keywords: [
     "hire .NET AI developer",
     ".NET AI integration developer",
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     "Azure OpenAI developer USA",
     "Semantic Kernel consultant UK",
     "C# AI developer Australia",
-    "AI integration developer Russia",
+    "AI integration developer UAE",
     "freelance AI integration developer",
     "contract .NET AI consultant",
     "freelance .NET developer",
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     "remote .NET developer",
     ".NET developer USA",
     ".NET developer UK",
-    ".NET developer Russia",
+    ".NET developer Dubai",
     "C# contractor USA",
     "Blazor developer UK",
     "ASP.NET Core developer Europe",
@@ -92,14 +92,11 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://kathanpatel.vercel.app/ai-integration",
-    languages: {
-      "ru-RU": "https://kathanpatel.vercel.app/ai-integration",
-    },
   },
   openGraph: {
     title: "AI Integration for .NET — Hire a .NET AI Developer | Kathan N. Patel",
     description:
-      "Specialist .NET developer for Azure OpenAI, Semantic Kernel & RAG in Blazor and ASP.NET Core. Live AI demo. Real C# code. US, UK, Australian & Russian clients.",
+      "Specialist .NET developer for Azure OpenAI, Semantic Kernel & RAG in Blazor and ASP.NET Core. Live AI demo. Real C# code. US, UK, UAE, Australia & worldwide.",
     url: "https://kathanpatel.vercel.app/ai-integration",
     siteName: "Kathan N. Patel",
     locale: "en_US",

@@ -48,12 +48,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: post.excerpt ?? undefined,
     alternates: {
       canonical: canonicalPath,
-      languages: {
-        "en-US": canonicalPath,
-        "en-GB": canonicalPath,
-        "ru-RU": canonicalPath,
-        "x-default": canonicalPath,
-      },
     },
     openGraph: {
       title: post.title,
@@ -70,6 +64,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: post.cover_image ? [post.cover_image] : undefined,
     },
   };
+}
+
+/* ── Audience heuristic ──
+   Classifies a post by its title + tags so the CTA and lead popup match
+   reader intent: business readers get a project pitch, developers get a
+   lighter ask. Defaults to "dev" — most posts are technical guides. */
+type PostAudience = "business" | "ai-dev" | "dev";
+
+const BUSINESS_INTENT_RE =
+  /cost|price|pricing|budget|estimat|hire|hiring|freelanc|outsourc|migrat|mvp|startup|business/i;
+const AI_TOPIC_RE =
+  /\bai\b|gemini|openai|gpt|llm|copilot|chatbot|semantic kernel|machine learning/i;
+
+function getPostAudience(post: { title: string; tags: string[] }): PostAudience {
+  const haystack = [post.title, ...post.tags].join(" ");
+  if (BUSINESS_INTENT_RE.test(haystack)) return "business";
+  if (AI_TOPIC_RE.test(haystack)) return "ai-dev";
+  return "dev";
 }
 
 /* ── YouTube / Vimeo ID helpers ── */
@@ -219,6 +231,72 @@ function BlockRenderer({ block }: { block: ContentBlock }) {
   }
 }
 
+/* ── Contextual end-of-post CTA ──
+   The pitch changes with the audience: AI-tutorial readers are routed to
+   the AI integration service, business-intent readers to the estimator,
+   and general dev readers to the hire page. */
+const POST_CTAS: Record<
+  PostAudience,
+  { eyebrow: string; title: string; body: string; primary: { href: string; label: string }; secondary: { href: string; label: string } }
+> = {
+  "ai-dev": {
+    eyebrow: "From demo to production",
+    title: "Building AI into a real product?",
+    body: "I integrate Gemini, Azure OpenAI, and Semantic Kernel into production .NET applications — rate limiting, fallbacks, cost control, and all the parts tutorials skip.",
+    primary:   { href: "/ai-integration", label: "AI Integration Services" },
+    secondary: { href: "/free-project-cost-estimator", label: "Estimate Your Project" },
+  },
+  business: {
+    eyebrow: "Planning a project?",
+    title: "Get a realistic budget in 60 seconds",
+    body: "Describe your project once and get an instant AI-generated cost range with a phase-by-phase breakdown — free, no sign-up.",
+    primary:   { href: "/free-project-cost-estimator", label: "Free Cost Estimator" },
+    secondary: { href: "/hire", label: "Rates & Availability" },
+  },
+  dev: {
+    eyebrow: "Work with me",
+    title: "Need a senior .NET developer on your team?",
+    body: "I take on freelance Blazor, ASP.NET Core, and WPF work — remote, worldwide, with transparent rates and weekly demos.",
+    primary:   { href: "/hire", label: "Hire Me" },
+    secondary: { href: "/free-project-cost-estimator", label: "Estimate a Project" },
+  },
+};
+
+function PostCTA({ audience }: { audience: PostAudience }) {
+  const cta = POST_CTAS[audience];
+  return (
+    <div className="mt-12 glass-card rounded-2xl p-7 sm:p-8 border-blue-500/20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-teal-500/5 pointer-events-none" />
+      <div className="relative">
+        <p className="font-mono text-blue-400 text-xs tracking-[0.25em] uppercase mb-2">
+          {cta.eyebrow}
+        </p>
+        <h2 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-3">
+          {cta.title}
+        </h2>
+        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-6 max-w-xl">
+          {cta.body}
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href={cta.primary.href}
+            className="group inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-all shadow-lg shadow-blue-500/25 hover:-translate-y-0.5"
+          >
+            {cta.primary.label}
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+          <Link
+            href={cta.secondary.href}
+            className="inline-flex items-center gap-2 px-6 py-3 border border-blue-500/40 text-blue-400 hover:bg-blue-500/10 font-medium rounded-xl transition-all hover:-translate-y-0.5"
+          >
+            {cta.secondary.label}
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── Page ── */
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
@@ -226,6 +304,36 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) notFound();
 
   const readTime = readingTime(post);
+  const audience = getPostAudience(post);
+  const postUrl  = `https://kathanpatel.vercel.app/blog/${post.slug}`;
+
+  /* ── Structured data: BlogPosting + BreadcrumbList ── */
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": `${postUrl}#article`,
+    headline: post.title,
+    description: post.excerpt ?? undefined,
+    image: post.cover_image ?? "https://kathanpatel.vercel.app/og-image.png",
+    url: postUrl,
+    datePublished: post.published_at ?? post.created_at,
+    dateModified: post.published_at ?? post.created_at,
+    keywords: post.tags.join(", "),
+    inLanguage: "en",
+    mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
+    author: { "@id": "https://kathanpatel.vercel.app/#person" },
+    publisher: { "@id": "https://kathanpatel.vercel.app/#person" },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://kathanpatel.vercel.app" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://kathanpatel.vercel.app/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: postUrl },
+    ],
+  };
 
   /* ── Related posts: sort by tag overlap, cap at 5 ── */
   const related = allPosts
@@ -239,9 +347,20 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <div className="min-h-screen pt-28 pb-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ── Two-column grid: content left, sidebar right ── */}
-        <div className="flex flex-col lg:flex-row gap-10 items-start">
+        {/* ── Two-column grid: content left, sidebar right ──
+            items-start only on lg: in mobile's column direction it would stop
+            children stretching, letting wide <pre> lines blow out the layout. */}
+        <div className="flex flex-col lg:flex-row gap-10 lg:items-start">
 
           {/* ── LEFT: main article column ── */}
           <div className="flex-1 min-w-0">
@@ -320,20 +439,17 @@ export default async function BlogPostPage({ params }: Props) {
               tags={post.tags}
             />
 
+            {/* Contextual CTA — matched to the post's audience */}
+            <PostCTA audience={audience} />
+
             {/* Post footer */}
-            <div className="mt-16 pt-8 border-t border-border flex flex-wrap items-center justify-between gap-4">
+            <div className="mt-10 pt-8 border-t border-border">
               <Link
                 href="/blog"
                 className="inline-flex items-center gap-2 px-5 py-2.5 border border-border hover:border-blue-500/40 text-muted-foreground hover:text-foreground rounded-xl transition-all text-sm"
               >
                 <ArrowLeft className="w-4 h-4" />
                 All Posts
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-500/20 rounded-xl transition-all text-sm"
-              >
-                Discuss this post →
               </Link>
             </div>
 
@@ -354,8 +470,12 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Lead capture popup — fires after 2.5 min of reading */}
-      <LeadCapturePopup postTitle={post.title} postSlug={post.slug} />
+      {/* Lead capture popup — variant matched to the post's audience */}
+      <LeadCapturePopup
+        postTitle={post.title}
+        postSlug={post.slug}
+        variant={audience === "business" ? "business" : "developer"}
+      />
     </div>
   );
 }

@@ -24,7 +24,7 @@ import { Mail, Phone, MapPin, Clock, Github, Linkedin } from "lucide-react";
 export const metadata: Metadata = {
   title: "Hire a Freelance .NET Developer - Contact Me.",
   description:
-    "Get in touch with Kathan N. Patel for freelance .NET contract work. Book a free 30-minute discovery call or send a message. Available for projects in the USA, UK, Australia, and Russia. Responds within 24 hours.",
+    "Get in touch with Kathan N. Patel for freelance .NET contract work. Book a free 30-minute discovery call or send a message. Available for projects in the USA, UK, UAE, Australia, and worldwide. Responds within 24 hours.",
   keywords: [
     "hire freelance .NET developer",
     "contact .NET developer",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     "hire .NET developer USA",
     "hire .NET developer UK",
     "hire .NET developer Australia",
-    "hire .NET developer Russia",
+    "hire .NET developer UAE",
     "contract .NET developer contact",
     "remote .NET developer for hire",
     "Kathan Patel contact",
@@ -55,22 +55,15 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://kathanpatel.vercel.app/contact",
-    languages: {
-      "en-US": "https://kathanpatel.vercel.app/contact",
-      "en-GB": "https://kathanpatel.vercel.app/contact",
-      "ru-RU": "https://kathanpatel.vercel.app/contact",
-      "x-default": "https://kathanpatel.vercel.app/contact",
-    },
   },
   openGraph: {
     title: "Hire a Freelance .NET Developer — Contact Kathan N. Patel",
     description:
-      "Book a free 30-minute discovery call or send a message. Freelance .NET developer available for contract work in the USA, UK, Australia, and Russia. Responds within 24 hours.",
+      "Book a free 30-minute discovery call or send a message. Freelance .NET developer available for contract work in the USA, UK, UAE, Australia, and worldwide. Responds within 24 hours.",
     url: "https://kathanpatel.vercel.app/contact",
     siteName: "Kathan N. Patel",
     type: "website",
     locale: "en_US",
-    alternateLocale: ["en_GB", "ru_RU"],
     images: [
       {
         url: "https://kathanpatel.vercel.app/og-image.png",
@@ -84,7 +77,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Hire a Freelance .NET Developer — Contact Kathan N. Patel",
     description:
-      "Book a free 30-min call or send a message. Available for .NET contract work in the USA, UK, Australia & Russia. Responds within 24 hours.",
+      "Book a free 30-min call or send a message. Available for .NET contract work in the USA, UK, UAE, Australia & worldwide. Responds within 24 hours.",
     images: ["https://kathanpatel.vercel.app/og-image.png"],
   },
 };

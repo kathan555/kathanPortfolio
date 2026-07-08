@@ -19,12 +19,6 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://kathanpatel.vercel.app"),
   alternates: {
     canonical: "/",
-    languages: {
-      "en-US": "/",
-      "en-GB": "/",
-      "ru-RU": "/",
-      "x-default": "/",
-    },
   },
   title: {
     default:  "Kathan N. Patel — Freelance .NET Developer | Blazor, WPF, ASP.NET Core",
@@ -43,15 +37,14 @@ export const metadata: Metadata = {
     "ASP.NET Core freelancer", "WPF developer contract",
     "Kathan Patel", "Kathan N. Patel",
     "freelance developer India", "remote .NET developer", ".NET developer Ahmedabad",
-    ".NET developer USA", ".NET developer UK", ".NET developer Europe", ".NET developer Russia",
-    "C# contractor USA", "Blazor developer UK", "ASP.NET Core developer Europe", "WPF consultant Russia",
+    ".NET developer USA", ".NET developer UK", ".NET developer Europe", ".NET developer UAE",
+    "C# contractor USA", "Blazor developer UK", "ASP.NET Core developer Europe", "hire .NET developer Dubai",
   ],
   authors: [{ name: "Kathan N. Patel", url: "https://kathanpatel.vercel.app" }],
   creator: "Kathan N. Patel",
   openGraph: {
     type:        "website",
     locale:      "en_US",
-    alternateLocale: ["en_GB", "ru_RU"],
     url:         "https://kathanpatel.vercel.app",
     title:       "Kathan N. Patel — Freelance .NET Developer | Blazor · WPF · ASP.NET Core",
     description: "Freelance .NET Technical Lead available for contract work. 8+ years. Blazor, WPF, ASP.NET Core, C#. Remote-friendly.",
@@ -78,53 +71,10 @@ export const metadata: Metadata = {
   },
 };
 
-const personSchema = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Kathan N. Patel",
-  "jobTitle": "Freelance .NET Technical Lead",
-  "description": "Freelance .NET developer with 8+ years experience in Blazor, WPF, and ASP.NET Core. Available for remote contract work.",
-  "url": "https://kathanpatel.vercel.app",
-  "email": "patel.kathan555@gmail.com",
-  "knowsAbout": ["Blazor", "ASP.NET Core", "WPF", "C#", ".NET", "Legal Tech", "Clio API", "Lawmatics"],
-  "sameAs": [
-    "https://www.linkedin.com/in/kathan555",
-    "https://github.com/kathan555"
-  ]
-};
-
-const serviceSchema = {
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  "name": "Kathan N. Patel — Freelance .NET Development",
-  "provider": { "@type": "Person", "name": "Kathan N. Patel" },
-  "serviceType": "Freelance Software Development",
-  "areaServed": ["US", "GB", "AU", "CA"],
-  "hasOfferCatalog": {
-    "@type": "OfferCatalog",
-    "name": "Services",
-    "itemListElement": [
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Blazor Web Application Development" } },
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "WPF Desktop Application Development" } },
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "ASP.NET Core API Development" } },
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Clio, Box, Zoom & Lawmatics Integration" } }
-    ]
-  }
-};
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${playfair.variable} ${lato.variable} ${jetbrainsMono.variable} bg-background text-foreground min-h-screen font-body`}>
-
-		<script
-		  type="application/ld+json"
-		  dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
-		/>
-		<script
-		  type="application/ld+json"
-		  dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
-		/>
 
         {/* ── Schema Markup — Person + ProfessionalService + WebSite ── */}
         <Script
@@ -179,8 +129,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   },
                   "sameAs": [
                     "https://github.com/kathan555",
-                    "https://www.linkedin.com/in/kathan-patel",
-                    "https://kathanpatel.vercel.app"
+                    "https://www.linkedin.com/in/kathan-patel-92215213a/"
                   ]
                 },
                 {
@@ -194,7 +143,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     "US",
                     "GB",
                     "AU",
-                    "RU",
                     "DE",
                     "FR",
                     "NL",

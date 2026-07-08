@@ -7,15 +7,9 @@ import { getAllPosts } from "@/lib/blog";
 export const metadata: Metadata = {
   title: "Blog",
   description:
-    "Kathan Patel's blog on .NET, architecture, and engineering leadership for teams in the USA, UK, Russia, and Europe.",
+    "Kathan Patel's blog on .NET, architecture, and engineering leadership for teams in the USA, UK, UAE, and Europe.",
   alternates: {
     canonical: "/blog",
-    languages: {
-      "en-US": "/blog",
-      "en-GB": "/blog",
-      "ru-RU": "/blog",
-      "x-default": "/blog",
-    },
   },
   keywords: [
     ".NET blog",
@@ -25,7 +19,7 @@ export const metadata: Metadata = {
     ".NET development USA",
     ".NET development UK",
     ".NET development Europe",
-    ".NET development Russia",
+    ".NET development UAE",
   ],
   openGraph: {
     title: "Blog | Kathan N. Patel",

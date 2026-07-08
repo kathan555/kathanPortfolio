@@ -24,12 +24,43 @@ interface LeadForm {
   message: string;
 }
 
+/* ── Variants ──
+   "business"  — full project-inquiry form (phone, company, message).
+   "developer" — light ask for tutorial readers: name + email only, framed
+                 as content updates rather than a sales conversation. */
+type Variant = "developer" | "business";
+
+const COPY: Record<
+  Variant,
+  { eyebrow: string; title: string; body: string; button: string; footnote: string; success: string }
+> = {
+  business: {
+    eyebrow:  "👋 Let's talk",
+    title:    "Working on a .NET project?",
+    body:     "Tell me a little about it and I'll personally reach out within 24 hours — whether you need a build, a rescue, or just a second opinion.",
+    button:   "Send my details",
+    footnote: "No spam, ever. Just a genuine conversation.",
+    success:  "I'll reach out personally, looking forward to connecting.",
+  },
+  developer: {
+    eyebrow:  "📬 More like this",
+    title:    "Want more guides like this one?",
+    body:     "Leave your email and I'll send you new posts on .NET, Blazor, and AI integration when I publish them. Nothing else.",
+    button:   "Keep me posted",
+    footnote: "No spam, ever. One email per new post, unsubscribe anytime.",
+    success:  "You'll hear from me when the next guide is out.",
+  },
+};
+
 interface Props {
   postTitle: string;
   postSlug: string;
+  variant?: Variant;
 }
 
-export function LeadCapturePopup({ postTitle, postSlug }: Props) {
+export function LeadCapturePopup({ postTitle, postSlug, variant = "business" }: Props) {
+  const copy = COPY[variant];
+  const isBusiness = variant === "business";
   const [visible, setVisible] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -96,6 +127,7 @@ export function LeadCapturePopup({ postTitle, postSlug }: Props) {
           message: form.message.trim() || null,
           post_title: postTitle,
           post_slug: postSlug,
+          intent: isBusiness ? "project" : "newsletter",
         }),
       });
 
@@ -166,9 +198,7 @@ export function LeadCapturePopup({ postTitle, postSlug }: Props) {
               <h3 className="font-display text-xl font-bold text-foreground mb-2">
                 Got it, thanks!
               </h3>
-              <p className="text-sm text-muted-foreground">
-                I'll reach out personally, looking forward to connecting.
-              </p>
+              <p className="text-sm text-muted-foreground">{copy.success}</p>
             </div>
           ) : (
             /* ── Form state ── */
@@ -176,15 +206,13 @@ export function LeadCapturePopup({ postTitle, postSlug }: Props) {
               {/* Header */}
               <div className="mb-5 pr-6">
                 <p className="text-xs font-mono text-blue-400 tracking-widest uppercase mb-1">
-                  👋 Stay in touch
+                  {copy.eyebrow}
                 </p>
                 <h3 className="font-display text-xl font-bold text-foreground leading-snug">
-                  Enjoying this post?
+                  {copy.title}
                 </h3>
                 <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">
-                  Drop your details and I'll personally reach out whether
-                  you're building something in .NET, need a consultant, or just
-                  want to nerd out about the stack.
+                  {copy.body}
                 </p>
               </div>
 
@@ -216,43 +244,48 @@ export function LeadCapturePopup({ postTitle, postSlug }: Props) {
                   />
                 </div>
 
-                {/* Phone */}
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
-                  <input
-                    type="tel"
-                    placeholder="Phone / WhatsApp (optional)"
-                    value={form.phone}
-                    onChange={(e) => field("phone", e.target.value)}
-                    autoComplete="tel"
-                    className="w-full pl-8 pr-4 py-2.5 bg-background/50 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-blue-500/50 focus:bg-background/80 transition-all"
-                  />
-                </div>
+                {/* Project-inquiry fields — business variant only */}
+                {isBusiness && (
+                  <>
+                    {/* Phone */}
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+                      <input
+                        type="tel"
+                        placeholder="Phone / WhatsApp (optional)"
+                        value={form.phone}
+                        onChange={(e) => field("phone", e.target.value)}
+                        autoComplete="tel"
+                        className="w-full pl-8 pr-4 py-2.5 bg-background/50 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-blue-500/50 focus:bg-background/80 transition-all"
+                      />
+                    </div>
 
-                {/* Company */}
-                <div className="relative">
-                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
-                  <input
-                    type="text"
-                    placeholder="Company / Project (optional)"
-                    value={form.company}
-                    onChange={(e) => field("company", e.target.value)}
-                    autoComplete="organization"
-                    className="w-full pl-8 pr-4 py-2.5 bg-background/50 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-blue-500/50 focus:bg-background/80 transition-all"
-                  />
-                </div>
+                    {/* Company */}
+                    <div className="relative">
+                      <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+                      <input
+                        type="text"
+                        placeholder="Company / Project (optional)"
+                        value={form.company}
+                        onChange={(e) => field("company", e.target.value)}
+                        autoComplete="organization"
+                        className="w-full pl-8 pr-4 py-2.5 bg-background/50 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-blue-500/50 focus:bg-background/80 transition-all"
+                      />
+                    </div>
 
-                {/* Message */}
-                <div className="relative">
-                  <MessageSquare className="absolute left-3 top-3 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
-                  <textarea
-                    rows={2}
-                    placeholder="What are you building? (optional)"
-                    value={form.message}
-                    onChange={(e) => field("message", e.target.value)}
-                    className="w-full pl-8 pr-4 py-2.5 bg-background/50 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-blue-500/50 focus:bg-background/80 transition-all resize-none"
-                  />
-                </div>
+                    {/* Message */}
+                    <div className="relative">
+                      <MessageSquare className="absolute left-3 top-3 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+                      <textarea
+                        rows={2}
+                        placeholder="What are you building? (optional)"
+                        value={form.message}
+                        onChange={(e) => field("message", e.target.value)}
+                        className="w-full pl-8 pr-4 py-2.5 bg-background/50 border border-border rounded-xl text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-blue-500/50 focus:bg-background/80 transition-all resize-none"
+                      />
+                    </div>
+                  </>
+                )}
 
                 {/* Error */}
                 {error && (
@@ -270,13 +303,13 @@ export function LeadCapturePopup({ postTitle, postSlug }: Props) {
                   ) : (
                     <>
                       <Send className="w-3.5 h-3.5" />
-                      Send my details
+                      {copy.button}
                     </>
                   )}
                 </button>
 
                 <p className="text-center text-xs text-muted-foreground/50 pt-0.5">
-                  No spam, ever. Just a genuine conversation.
+                  {copy.footnote}
                 </p>
               </div>
             </>

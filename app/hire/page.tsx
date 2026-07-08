@@ -3,7 +3,7 @@ import Link from "next/link";
 import {
   ArrowRight, CheckCircle, Calendar, Clock,
   MessageSquare, Rocket, DollarSign, Info,
-  Shield, Zap, AlertCircle, X,
+  Shield, Zap, AlertCircle, X, HelpCircle,
 } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { services, process, personalInfo } from "@/lib/data";
@@ -11,7 +11,7 @@ import { services, process, personalInfo } from "@/lib/data";
 export const metadata: Metadata = {
   title: "Hire a Freelance .NET Developer - Rates & Availability.",
   description:
-    "Hire a freelance .NET Technical Lead with transparent rates ($35–$85/hr), fixed-price and retainer options. Blazor, ASP.NET Core, WPF, and AI integration. Available for US, UK, Australian, and Russian clients.",
+    "Hire a freelance .NET Technical Lead with transparent rates ($35–$85/hr), fixed-price and retainer options. Blazor, ASP.NET Core, WPF, and AI integration. Serving clients in the US, UK, UAE, Australia, and worldwide.",
   keywords: [
     // Core hire intent
     "hire freelance .NET developer",
@@ -47,10 +47,11 @@ export const metadata: Metadata = {
     "freelance .NET developer Australia",
     "contract .NET developer Australia",
     "C# developer Australia",
-    // Geographic — Russia
-    "hire .NET developer Russia",
-    "WPF developer Russia",
-    "freelance C# developer Russia",
+    // Geographic — UAE & Gulf
+    "hire .NET developer UAE",
+    "hire .NET developer Dubai",
+    "freelance C# developer Dubai",
+    ".NET developer Middle East",
     // General
     "Kathan Patel",
     "Kathan N. Patel",
@@ -71,22 +72,15 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://kathanpatel.vercel.app/hire",
-    languages: {
-      "en-US": "https://kathanpatel.vercel.app/hire",
-      "en-GB": "https://kathanpatel.vercel.app/hire",
-      "ru-RU": "https://kathanpatel.vercel.app/hire",
-      "x-default": "https://kathanpatel.vercel.app/hire",
-    },
   },
   openGraph: {
     title: "Hire a Freelance .NET Developer — Rates & Availability | Kathan N. Patel",
     description:
-      "Transparent rates ($35–$85/hr), fixed-price and retainer options. Blazor, ASP.NET Core, WPF, and AI integration. Serving US, UK, Australian, and Russian clients.",
+      "Transparent rates ($35–$85/hr), fixed-price and retainer options. Blazor, ASP.NET Core, WPF, and AI integration. Serving clients in the US, UK, UAE, Australia, and worldwide.",
     url: "https://kathanpatel.vercel.app/hire",
     siteName: "Kathan N. Patel",
     type: "website",
     locale: "en_US",
-    alternateLocale: ["en_GB", "ru_RU"],
     images: [
       {
         url: "https://kathanpatel.vercel.app/og-image.png",
@@ -100,7 +94,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Hire a Freelance .NET Developer — Rates & Availability | Kathan N. Patel",
     description:
-      "Transparent rates ($35–$85/hr), fixed-price and retainer options. Blazor, ASP.NET Core, WPF & AI integration. US, UK, Australian & Russian clients.",
+      "Transparent rates ($35–$85/hr), fixed-price and retainer options. Blazor, ASP.NET Core, WPF & AI integration. US, UK, UAE, Australia & worldwide.",
     images: ["https://kathanpatel.vercel.app/og-image.png"],
   },
 };
@@ -202,11 +196,62 @@ const regions = [
   { flag: "🌏",     label: "Rest of World",   note: "All rates quoted in USD. Timezone overlap of at least 4 hours maintained for any client timezone." },
 ];
 
+// ── FAQ — single source for the visible section and FAQPage schema ───────────
+const FAQS = [
+  {
+    q: "How much does it cost to hire a freelance .NET developer?",
+    a: "My hourly rates run from $35/hr for standard maintenance work to $85/hr for specialist work such as AI integration and architecture design — most projects land in the $45–$55/hr tier. Fixed-price engagements start at $2,500 for a 2–4 week sprint; a typical MVP build starts around $8,000.",
+  },
+  {
+    q: "Do you work on existing codebases or only new projects?",
+    a: "Both. A large share of my work is on existing Blazor, ASP.NET Core, and WPF codebases — bug fixes, new modules, refactoring, and legacy .NET Framework migrations. You don't need a greenfield project to hire me.",
+  },
+  {
+    q: "How do payments work?",
+    a: "Fixed-price projects are 50% upfront and 50% on final delivery, with milestone payments available for projects over $15,000. Retainers are invoiced monthly in advance. I accept bank transfer (SWIFT/SEPA), PayPal, and Wise, in USD, GBP, AED, EUR, or INR.",
+  },
+  {
+    q: "Who owns the code?",
+    a: "You do. Full source code ownership transfers to you on final payment, including the Git repository with a clean, documented commit history. There is no lock-in — every engagement ends with a complete handover.",
+  },
+  {
+    q: "Do you sign NDAs?",
+    a: "Yes, I sign NDAs on request before any project details are shared. Confidentiality is standard practice for my client work.",
+  },
+  {
+    q: "What timezone overlap can I expect?",
+    a: "I'm based in India (IST) and maintain at least 4 hours of working overlap with any client timezone — US, UK, Europe, Gulf, or Australia. I work async-first, so progress doesn't depend on meetings.",
+  },
+  {
+    q: "What does a project include?",
+    a: "Every engagement includes weekly progress demos with working software, a documented Git repository, 30-day post-launch support for bugs and questions, and full code ownership. Third-party service costs (hosting, APIs) and UI/UX design are quoted separately.",
+  },
+  {
+    q: "How do we get started?",
+    a: "Send a short message describing your project by email or through the contact form. I respond within 24 hours and set up a free 30-minute discovery call — no obligation. For a rough budget first, try the free AI cost estimator on this site.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQS.map(({ q, a }) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: { "@type": "Answer", text: a },
+  })),
+};
+
 export default function HirePage() {
   const mailtoLink = `mailto:${personalInfo.email}?subject=Freelance%20Inquiry%20%E2%80%94%20Let%E2%80%99s%20Work%20Together&body=Hi%20Kathan%2C%0A%0AI%E2%80%99m%20interested%20in%20hiring%20you%20for%20a%20project.%0A%0AProject%20details%3A%0A-%20Type%3A%20%0A-%20Timeline%3A%20%0A-%20Budget%3A%20%0A-%20Description%3A%20%0A%0ALooking%20forward%20to%20connecting!`;
 
   return (
     <div className="min-h-screen pt-28 pb-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── Hero ── */}
@@ -532,6 +577,31 @@ export default function HirePage() {
                 </span>
                 <h3 className="font-display font-bold text-foreground">{p.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
+              </div>
+            </ScrollReveal>
+          ))}
+        </div>
+
+        {/* ── FAQ ── */}
+        <ScrollReveal>
+          <div className="flex items-center gap-2 mb-2">
+            <HelpCircle className="w-4 h-4 text-blue-400" />
+            <span className="font-mono text-blue-400 text-sm font-medium tracking-wider uppercase">
+              FAQ
+            </span>
+          </div>
+          <h2 className="font-display text-2xl sm:text-3xl font-bold mt-2 mb-8">
+            Common Questions
+          </h2>
+        </ScrollReveal>
+        <div className="grid sm:grid-cols-2 gap-4 mb-20">
+          {FAQS.map((faq, i) => (
+            <ScrollReveal key={faq.q} delay={i * 0.04}>
+              <div className="glass-card rounded-2xl p-6 h-full hover:border-blue-500/20 transition-all">
+                <h3 className="font-display font-semibold text-foreground mb-2 leading-snug">
+                  {faq.q}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
               </div>
             </ScrollReveal>
           ))}

@@ -7,7 +7,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, email, phone, company, message, post_title, post_slug } = body as Record<
+    const { name, email, phone, company, message, post_title, post_slug, intent } = body as Record<
       string,
       string | null | undefined
     >;
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
       message: message?.trim() || null,
       post_title: post_title ?? null,
       post_slug: post_slug ?? null,
-      source: "blog_popup",
+      source: intent === "newsletter" ? "blog_newsletter" : "blog_popup",
       // created_at is handled by Supabase default (now())
     });
 
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             from: "Blog Leads <leads@kathanpatel.vercel.app>",
             to: [process.env.NOTIFICATION_EMAIL],
-            subject: `🎯 New blog lead — ${name.trim()}`,
+            subject: `${intent === "newsletter" ? "📬 New newsletter signup" : "🎯 New blog lead"} — ${name.trim()}`,
             html: buildEmailHtml({ name, email, phone, company, message, post_title, post_slug }),
           }),
         });
