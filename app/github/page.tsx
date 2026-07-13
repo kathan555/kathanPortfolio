@@ -1,70 +1,12 @@
 import type { Metadata } from "next";
 import { Github, Star, GitFork, ExternalLink, Code2, Clock } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { getRepos, langColors } from "@/lib/github";
 
 export const metadata: Metadata = {
   title: "GitHub Showcase",
   description: "Live showcase of Kathan Patel's open-source GitHub repositories.",
 };
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 👇 ADD repo names here (exact, case-sensitive) to hide them from the showcase
-// ─────────────────────────────────────────────────────────────────────────────
-const HIDDEN_REPOS: string[] = [
-  "kathanPortfolio",
-  "kathan",
-  // "forked-repo-i-dont-want-shown",
-];
-// ─────────────────────────────────────────────────────────────────────────────
-
-type Repo = {
-  id:                number;
-  name:              string;
-  description:       string | null;
-  html_url:          string;
-  homepage:          string | null;
-  stargazers_count:  number;
-  forks_count:       number;
-  language:          string | null;
-  topics:            string[];
-  updated_at:        string;
-  fork:              boolean;
-};
-
-const langColors: Record<string, string> = {
-  "C#":        "#178600",
-  TypeScript:  "#3178c6",
-  JavaScript:  "#f7df1e",
-  Python:      "#3572A5",
-  HTML:        "#e34c26",
-  CSS:         "#563d7c",
-  Go:          "#00ADD8",
-  Rust:        "#dea584",
-  Java:        "#b07219",
-  Kotlin:      "#A97BFF",
-};
-
-async function getRepos(): Promise<Repo[]> {
-  try {
-    const res = await fetch(
-      "https://api.github.com/users/kathan555/repos?sort=updated&per_page=50&type=owner",
-      {
-        headers: { Accept: "application/vnd.github.v3+json" },
-        next: { revalidate: 3600 }, // ISR — re-fetch every hour
-      }
-    );
-    if (!res.ok) return [];
-    const data: Repo[] = await res.json();
-
-    return data.filter(
-      (r) =>
-        !r.fork &&                          // exclude forks
-        !HIDDEN_REPOS.includes(r.name)      // exclude manually hidden repos
-    );
-  } catch {
-    return [];
-  }
-}
 
 export default async function GithubPage() {
   const repos = await getRepos();

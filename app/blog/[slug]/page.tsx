@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowLeft, Calendar, Tag, Clock, ArrowRight } from "lucide-react";
 import { ShareButtons } from "@/components/ShareButtons";
 import { LeadCapturePopup } from "@/components/LeadCapturePopup";
+import { GithubAdPoster } from "@/components/GithubAdPoster";
 import { getAllSlugs, getPostBySlug, getAllPosts, type ContentBlock } from "@/lib/blog";
 
 export const revalidate = 60;
@@ -346,7 +347,9 @@ export default async function BlogPostPage({ params }: Props) {
     .slice(0, 5);
 
   return (
-    <div className="min-h-screen pt-28 pb-20">
+    /* min-[1440px]:pl-52 reserves the left gutter for the fixed GithubAdPoster,
+       shifting the centred content right so the article is never covered. */
+    <div className="min-h-screen pt-28 pb-20 min-[1440px]:pl-52">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
@@ -469,6 +472,9 @@ export default async function BlogPostPage({ params }: Props) {
           )}
         </div>
       </div>
+
+      {/* Fixed left-edge GitHub promo poster (wide screens only) */}
+      <GithubAdPoster />
 
       {/* Lead capture popup — variant matched to the post's audience */}
       <LeadCapturePopup
