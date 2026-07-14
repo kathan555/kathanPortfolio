@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowLeft, Calendar, Tag, Clock, ArrowRight } from "lucide-react";
 import { ShareButtons } from "@/components/ShareButtons";
 import { LeadCapturePopup } from "@/components/LeadCapturePopup";
-import { GithubAdPoster } from "@/components/GithubAdPoster";
+import { HireMePoster } from "@/components/HireMePoster";
 import { getAllSlugs, getPostBySlug, getAllPosts, type ContentBlock } from "@/lib/blog";
 
 export const revalidate = 60;
@@ -347,9 +347,13 @@ export default async function BlogPostPage({ params }: Props) {
     .slice(0, 5);
 
   return (
-    /* min-[1440px]:pl-52 reserves the left gutter for the fixed GithubAdPoster,
-       shifting the centred content right so the article is never covered. */
-    <div className="min-h-screen pt-28 pb-20 min-[1440px]:pl-52">
+    /* relative: HireMePoster is an absolute, full-height left column inside
+       this container, so its sticky card stays scoped to the page and stops
+       before the footer.
+       min-[1440px]:pl-60 reserves the left gutter for it (poster is w-52 at
+       left-4), shifting the centred content right so the article is never
+       covered. */
+    <div className="relative min-h-screen pt-28 pb-20 min-[1440px]:pl-60">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
@@ -473,8 +477,8 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Fixed left-edge GitHub promo poster (wide screens only) */}
-      <GithubAdPoster />
+      {/* Left-edge hire/refer poster (wide screens only) */}
+      <HireMePoster />
 
       {/* Lead capture popup — variant matched to the post's audience */}
       <LeadCapturePopup

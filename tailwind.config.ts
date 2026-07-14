@@ -43,8 +43,11 @@ const config: Config = {
       },
       animation: {
         "gradient-shift": "gradient-shift 8s ease infinite",
+        "border-flow":    "gradient-shift 5s ease infinite",
         "pulse-slow":     "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         float:            "float 6s ease-in-out infinite",
+        shine:            "shine 3.2s ease-in-out infinite",
+        "glow-pulse":     "glow-pulse 3.2s ease-in-out infinite",
       },
       keyframes: {
         "gradient-shift": {
@@ -54,6 +57,16 @@ const config: Config = {
         float: {
           "0%, 100%": { transform: "translateY(0px)" },
           "50%":       { transform: "translateY(-10px)" },
+        },
+        // Light sweep across a card; idles off-screen for most of the cycle.
+        shine: {
+          "0%":        { transform: "translateX(0) skewX(-20deg)" },
+          "45%, 100%": { transform: "translateX(600%) skewX(-20deg)" },
+        },
+        // Breathing halo, timed with `shine` so the card pulses as it flashes.
+        "glow-pulse": {
+          "0%, 100%": { opacity: "0.35", transform: "scale(0.96)" },
+          "50%":       { opacity: "0.85", transform: "scale(1.04)" },
         },
       },
     },
