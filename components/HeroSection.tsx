@@ -4,8 +4,10 @@ import { useRef, useCallback } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { Github, Linkedin, Mail, MapPin, Briefcase } from "lucide-react";
+import { Github, Linkedin, Mail, MapPin, Briefcase, Sparkles } from "lucide-react";
 import { personalInfo } from "@/lib/data";
+import { NeuralBackground } from "@/components/NeuralBackground";
+import { HeroCommandBar } from "@/components/HeroCommandBar";
 
 const TILT_MAX = 14;
 const SPRING = { stiffness: 280, damping: 22, mass: 0.6 };
@@ -185,6 +187,30 @@ function PortraitFrame() {
 export function HeroSection() {
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center pt-20 pb-10 overflow-hidden">
+      {/* ── Immersive AI backdrop ─────────────────────────────────────────── */}
+      {/* Aurora sheet */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-70 animate-aurora"
+        style={{
+          background:
+            "radial-gradient(60% 55% at 15% 20%, hsl(217 91% 60% / 0.16) 0%, transparent 60%), radial-gradient(55% 55% at 85% 30%, hsl(175 77% 45% / 0.14) 0%, transparent 60%), radial-gradient(60% 60% at 50% 100%, hsl(217 91% 60% / 0.10) 0%, transparent 65%)",
+          backgroundSize: "200% 200%",
+        }}
+      />
+      {/* Neural network canvas */}
+      <NeuralBackground className="opacity-90" />
+      {/* Sweeping light beams */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-1/4 left-0 h-[150%] w-40 animate-beam bg-gradient-to-r from-transparent via-blue-400/10 to-transparent motion-reduce:hidden" />
+        <div className="absolute -top-1/4 left-1/3 h-[150%] w-40 animate-beam-delayed bg-gradient-to-r from-transparent via-teal-400/10 to-transparent motion-reduce:hidden" />
+      </div>
+      {/* Grid fade at the very bottom for depth */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent"
+      />
+
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid lg:grid-cols-[1fr_auto] gap-12 xl:gap-20 items-center">
 
@@ -199,6 +225,10 @@ export function HeroSection() {
               </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-400 text-xs font-medium">
                 🌏 Remote-friendly
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-300 text-xs font-semibold">
+                <Sparkles className="w-3.5 h-3.5" />
+                AI-Native
               </span>
             </motion.div>
 
@@ -229,6 +259,11 @@ export function HeroSection() {
               teams in legal tech, healthcare, and enterprise | available to start{" "}
               <span className="text-teal-400 font-semibold">{personalInfo.availableFrom.toLowerCase()}</span>.
             </motion.p>
+
+            {/* ── AI command bar — the interactive hero centrepiece ── */}
+            <motion.div variants={item} className="mb-8">
+              <HeroCommandBar />
+            </motion.div>
 
             <motion.div variants={item} className="mb-10">
               <Link

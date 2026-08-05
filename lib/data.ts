@@ -214,6 +214,116 @@ export const projects = [
   },
 ];
 
+// ── Independent / self-built projects ─────────────────────────────────────────
+// Products designed and shipped SOLO — no client, no team. This is the counterpart
+// to `projects` (client work): it shows initiative, range, and an AI-accelerated
+// build workflow. Each entry links to its public GitHub repo and, where one exists,
+// a live demo. Keep this list curated and honest — only real, shipped repos.
+export const selfBuilt = [
+  {
+    id: 1,
+    title: "NOCpilot",
+    subtitle: "Multi-Tenant Fire-Safety Compliance SaaS",
+    domain: "SaaS Backend",
+    domainColor: "blue",
+    description:
+      "An India-first compliance platform that stores fire-safety documents, derives each premise's legal obligations from state rules, and reminds owners before every renewal deadline — architected end-to-end as a multi-tenant .NET backend.",
+    highlights: [
+      "JWT identity with rotating refresh tokens, automatic per-tenant row isolation, and per-tenant envelope encryption",
+      "A “rules as data” obligation engine plus an encrypted document vault with inspection-ready exports",
+      "Reminder scheduler with WhatsApp → SMS → email fallback, Razorpay billing, and a partner + super-admin console",
+    ],
+    tags: [".NET", "C#", "Multi-tenancy", "JWT", "Razorpay", "REST API"],
+    repo: "https://github.com/kathan555/nocpilot",
+    demo: null,
+  },
+  {
+    id: 2,
+    title: "This Portfolio + AI Assistant",
+    subtitle: "Next.js Site with a Live AI Demo",
+    domain: "AI-Powered Web",
+    domainColor: "teal",
+    description:
+      "The site you're on: a Next.js 15 app with a live, Claude-powered AI assistant and an AI project-cost estimator — a working example of AI features running in production, not a mockup.",
+    highlights: [
+      "Streaming AI chat and an AI cost estimator wired to real API routes with rate limiting",
+      "Server-rendered and SEO-tuned, with dark/light theming and a fully responsive layout",
+      "Live GitHub showcase and a Supabase-backed blog, all in one codebase",
+    ],
+    tags: ["Next.js 15", "TypeScript", "Claude AI", "Tailwind", "Supabase"],
+    repo: "https://github.com/kathan555/kathanPortfolio",
+    demo: "https://kathanpatel.vercel.app",
+  },
+  {
+    id: 3,
+    title: "Craftura",
+    subtitle: "Furniture Storefront + Admin & CMS",
+    domain: "Full-Stack E-Commerce",
+    domainColor: "orange",
+    description:
+      "A full-stack furniture manufacturing website with B2B/B2C ordering, an inquiry-based cart, an admin panel with analytics, order tracking, and a built-in CMS.",
+    highlights: [
+      "B2B/B2C ordering flows with an inquiry cart — no forced checkout",
+      "Admin dashboard for orders, products, and content, with order tracking",
+      "Dark/light mode and SEO baked in from the start",
+    ],
+    tags: ["Next.js 14", "Prisma", "SQLite", "TypeScript", "Tailwind"],
+    repo: "https://github.com/kathan555/craftura",
+    demo: null,
+  },
+  {
+    id: 4,
+    title: "Cohort Analysis Chart",
+    subtitle: "Interactive Trading-Style Matrix Grid",
+    domain: "WPF / Desktop",
+    domainColor: "purple",
+    description:
+      "A high-interactivity cohort/retention matrix built in WPF (.NET 8) — a customizable grid with full keyboard navigation and a detailed popup view, styled for trading and analytics dashboards.",
+    highlights: [
+      "13×14 interactive matrix with arrow-key navigation and row/column highlighting",
+      "Double-click / Enter popup with a buy-sell order simulation view",
+      "Clean MVVM architecture with live-updating cells",
+    ],
+    tags: ["WPF", ".NET 8", "C#", "MVVM", "XAML"],
+    repo: "https://github.com/kathan555/CohortAnalysisChart",
+    demo: null,
+  },
+  {
+    id: 5,
+    title: "Live Internet Meter",
+    subtitle: "Real-Time Speed & Ping Monitor",
+    domain: "Browser Tool",
+    domainColor: "green",
+    description:
+      "A single self-contained HTML file that measures ping, download, and upload speed live in the browser — with gauges, sparklines, a rolling history chart, and automatic nearest-server selection. No installs, no backend.",
+    highlights: [
+      "Live gauges and a rolling history chart, fully client-side",
+      "Automatic nearest-server selection",
+      "One file, zero build step",
+    ],
+    tags: ["HTML", "CSS", "JavaScript"],
+    repo: "https://github.com/kathan555/live-internet-meter",
+    demo: null,
+  },
+  {
+    id: 6,
+    title: "Excel Dynamic Viewer",
+    subtitle: "Schema-Agnostic Excel & CSV Viewer",
+    domain: "WPF / Desktop",
+    domainColor: "blue",
+    description:
+      "A WPF (.NET 9) desktop app that dynamically reads and displays .xls, .xlsx, and .csv files of any column structure — using free, open-source libraries with no licensing fees.",
+    highlights: [
+      "Auto-detects columns and data types from any spreadsheet",
+      "Reads .xls, .xlsx, and .csv via ExcelDataReader",
+      "Modern MVVM UI with a clean data grid",
+    ],
+    tags: ["WPF", ".NET 9", "C#", "MVVM"],
+    repo: "https://github.com/kathan555/ExcelDynamicViewer",
+    demo: null,
+  },
+];
+
 // ── Testimonials (point 7) ────────────────────────────────────────────────────
 // Replace placeholder quotes with real ones from colleagues/managers/clients
 export const testimonials = [

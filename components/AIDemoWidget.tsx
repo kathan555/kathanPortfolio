@@ -23,11 +23,16 @@ export function AIDemoWidget() {
   const [messages, setMessages]   = useState<Message[]>([]);
   const [input,    setInput]      = useState("");
   const [loading,  setLoading]    = useState(false);
-  const bottomRef  = useRef<HTMLDivElement>(null);
+  const listRef    = useRef<HTMLDivElement>(null);
   const inputRef   = useRef<HTMLTextAreaElement>(null);
 
+  // Keep the newest message in view — scroll the chat's OWN container only,
+  // never the page (scrollIntoView would scroll the window too, jumping the
+  // whole page down to this widget on mount). Skip while empty.
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messages.length === 0) return;
+    const el = listRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [messages]);
 
   async function send(text: string) {
@@ -115,7 +120,7 @@ export function AIDemoWidget() {
       </div>
 
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[280px] max-h-[380px]">
+      <div ref={listRef} className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[280px] max-h-[380px]">
         {/* Empty state */}
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full gap-5 py-6">
@@ -201,8 +206,6 @@ export function AIDemoWidget() {
             </div>
           </motion.div>
         )}
-
-        <div ref={bottomRef} />
       </div>
 
       {/* Input */}

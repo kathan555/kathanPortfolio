@@ -2,16 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, Code2, Briefcase, FolderOpen, GraduationCap } from "lucide-react";
+import { Home, Code2, Briefcase, FolderOpen, GraduationCap, Sparkles, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ─── Sections manifest ─────────────────────────────────────────────────── */
 const SECTIONS = [
   { id: "section-hero", label: "Home",       num: "",   icon: Home          },
+  { id: "ai",           label: "Ask AI",     num: "",   icon: Bot           },
   { id: "skills",       label: "Skills",     num: "01", icon: Code2         },
   { id: "experience",   label: "Experience", num: "02", icon: Briefcase     },
   { id: "projects",     label: "Projects",   num: "03", icon: FolderOpen    },
-  { id: "education",    label: "Education",  num: "04", icon: GraduationCap },
+  { id: "builds",       label: "Builds",     num: "04", icon: Sparkles      },
+  { id: "education",    label: "Education",  num: "05", icon: GraduationCap },
 ] as const;
 
 /* ─── Component ─────────────────────────────────────────────────────────── */

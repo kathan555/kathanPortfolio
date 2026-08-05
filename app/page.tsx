@@ -3,6 +3,8 @@ import { HomeAboutSection }   from "@/components/HomeAboutSection";
 import { SkillsSection }      from "@/components/SkillsSection";
 import { ExperienceSection }  from "@/components/ExperienceSection";
 import { ProjectsSection }    from "@/components/ProjectsSection";
+import { SelfBuiltSection }   from "@/components/SelfBuiltSection";
+import { HomeAIAssistant }    from "@/components/HomeAIAssistant";
 import { EducationSection }   from "@/components/EducationSection";
 import { SectionProgress }    from "@/components/SectionProgress";
 import { ChapterDivider }     from "@/components/ChapterDivider";
@@ -31,6 +33,14 @@ export default function Home() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════
+          LIVE AI ASSISTANT
+          HomeAIAssistant renders its own <section id="ai">. Placed high so the
+          "AI-enabled" impression lands immediately, and the hero command bar
+          feeds questions into it.
+          ══════════════════════════════════════════════════════════════════ */}
+      <HomeAIAssistant />
+
+      {/* ══════════════════════════════════════════════════════════════════
           01 — SKILLS
           SkillsSection renders its own <section id="skills"> internally.
           ══════════════════════════════════════════════════════════════════ */}
@@ -52,10 +62,18 @@ export default function Home() {
       <ProjectsSection />
 
       {/* ══════════════════════════════════════════════════════════════════
-          04 — EDUCATION
+          04 — INDEPENDENT BUILDS
+          SelfBuiltSection renders its own <section id="builds"> internally.
+          Solo, self-shipped products — the counterpart to client "Key Work".
+          ══════════════════════════════════════════════════════════════════ */}
+      <ChapterDivider number="04" title="Independent Builds" icon="sparkles" />
+      <SelfBuiltSection />
+
+      {/* ══════════════════════════════════════════════════════════════════
+          05 — EDUCATION
           EducationSection renders its own <section id="education"> internally.
           ══════════════════════════════════════════════════════════════════ */}
-      <ChapterDivider number="04" title="Academic Background" icon="graduation" />
+      <ChapterDivider number="05" title="Academic Background" icon="graduation" />
       <EducationSection />
 
       {/* ══════════════════════════════════════════════════════════════════

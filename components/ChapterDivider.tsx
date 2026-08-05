@@ -7,10 +7,11 @@ import {
   Briefcase,
   FolderOpen,
   GraduationCap,
+  Sparkles,
 } from "lucide-react";
 
 /* ─── Types ─────────────────────────────────────────────────────────────── */
-export type ChapterIcon = "code" | "briefcase" | "folder" | "graduation";
+export type ChapterIcon = "code" | "briefcase" | "folder" | "graduation" | "sparkles";
 
 interface ChapterDividerProps {
   number: string;       // e.g. "01"
@@ -24,6 +25,7 @@ const ICONS: Record<ChapterIcon, React.ReactNode> = {
   briefcase:  <Briefcase     className="w-4 h-4" />,
   folder:     <FolderOpen    className="w-4 h-4" />,
   graduation: <GraduationCap className="w-4 h-4" />,
+  sparkles:   <Sparkles      className="w-4 h-4" />,
 };
 
 /* ─── Component ─────────────────────────────────────────────────────────── */

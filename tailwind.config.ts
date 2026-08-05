@@ -48,8 +48,33 @@ const config: Config = {
         float:            "float 6s ease-in-out infinite",
         shine:            "shine 3.2s ease-in-out infinite",
         "glow-pulse":     "glow-pulse 3.2s ease-in-out infinite",
+        // ── AI-immersive additions ──
+        "spin-slow":      "spin-slow 14s linear infinite",
+        "caret-blink":    "caret-blink 1.1s step-end infinite",
+        aurora:           "aurora 16s ease infinite",
+        beam:             "beam 7s ease-in-out infinite",
+        "beam-delayed":   "beam 7s ease-in-out 3.5s infinite",
       },
       keyframes: {
+        "spin-slow": {
+          "0%":   { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+        "caret-blink": {
+          "0%, 100%": { opacity: "1" },
+          "50%":       { opacity: "0" },
+        },
+        // Aurora sheet — slow hue/position drift behind the hero.
+        aurora: {
+          "0%, 100%": { backgroundPosition: "0% 50%",   opacity: "0.7" },
+          "50%":       { backgroundPosition: "100% 50%", opacity: "1"   },
+        },
+        // Diagonal light beam sweeping across the hero.
+        beam: {
+          "0%":        { transform: "translateX(-120%) skewX(-18deg)", opacity: "0" },
+          "20%, 40%":  { opacity: "0.5" },
+          "60%, 100%": { transform: "translateX(220%) skewX(-18deg)",  opacity: "0" },
+        },
         "gradient-shift": {
           "0%, 100%": { backgroundPosition: "0% 50%" },
           "50%":       { backgroundPosition: "100% 50%" },
