@@ -71,7 +71,7 @@ const FAQS = [
   },
   {
     q: "How accurate is an AI-generated cost estimate?",
-    a: "It is a planning-stage ballpark, not a binding quote. The estimate is grounded in real contractor rate tiers ($35–85/hr) and a six-phase delivery methodology, so the range is realistic for scoping and budgeting. A precise quote always follows a scope conversation.",
+    a: "It is a planning-stage ballpark, not a binding quote. The estimate is grounded in real contractor rate tiers and a six-phase delivery methodology, so the range is realistic for scoping and budgeting. Your estimate shows the hours and rate used for each phase. A precise quote always follows a scope conversation.",
   },
   {
     q: "Is this project cost estimator really free?",
@@ -79,7 +79,7 @@ const FAQS = [
   },
   {
     q: "How much does .NET or Blazor development cost?",
-    a: "Solo senior .NET contractor rates typically range from $35/hr for standard work to $85/hr for specialist work such as legal-tech or AI integrations. A typical Blazor Server business application lands between $8,000 and $30,000 depending on modules, integrations, and timeline.",
+    a: "It varies with modules, integrations, and timeline more than with the framework itself — a single-purpose internal tool and a multi-tenant Blazor platform are not comparable numbers. Describe your project above and the estimator returns a range specific to it, broken down by delivery phase, in about a minute.",
   },
   {
     q: "What information do I need to provide?",
@@ -247,10 +247,14 @@ export default function EstimatorPage() {
                 Real contractor rate tiers
               </h3>
               <ul className="text-sm text-muted-foreground leading-relaxed space-y-2">
-                <li><span className="text-foreground font-medium">$35–45/hr</span> — standard tasks: CRUD modules, forms, reports</li>
-                <li><span className="text-foreground font-medium">$45–65/hr</span> — complex and architecture work: multi-tenancy, real-time features</li>
-                <li><span className="text-foreground font-medium">$65–85/hr</span> — specialist work: legal-tech integrations, AI features</li>
+                <li><span className="text-foreground font-medium">Standard</span> — CRUD modules, forms, reports</li>
+                <li><span className="text-foreground font-medium">Complex</span> — architecture work: multi-tenancy, real-time features</li>
+                <li><span className="text-foreground font-medium">Specialist</span> — legal-tech integrations, AI features</li>
               </ul>
+              <p className="text-xs text-muted-foreground/70 leading-relaxed mt-3 pt-3 border-t border-border/60">
+                Each phase is priced at the tier the work actually falls into, not a single
+                blended rate. Your estimate shows the exact figures used.
+              </p>
             </div>
             <div className="glass-card rounded-2xl p-6">
               <h3 className="font-display text-base font-semibold text-foreground mb-3">

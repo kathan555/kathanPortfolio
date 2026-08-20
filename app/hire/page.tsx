@@ -9,9 +9,9 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 import { services, process, personalInfo } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Hire a Freelance .NET Developer - Rates & Availability.",
+  title: "Hire a Freelance .NET Developer - Free Quote & Availability.",
   description:
-    "Hire a freelance .NET Technical Lead with transparent rates ($35–$85/hr), fixed-price and retainer options. Blazor, ASP.NET Core, WPF, and AI integration. Serving clients in the US, UK, UAE, Australia, and worldwide.",
+    "Hire a freelance .NET Technical Lead. Free discovery call, fixed-price quotes against your scope, and retainer options. Blazor, ASP.NET Core, WPF, and AI integration. Serving clients in the US, UK, UAE, Australia, and worldwide.",
   keywords: [
     // Core hire intent
     "hire freelance .NET developer",
@@ -74,9 +74,9 @@ export const metadata: Metadata = {
     canonical: "https://kathanpatel.vercel.app/hire",
   },
   openGraph: {
-    title: "Hire a Freelance .NET Developer — Rates & Availability | Kathan N. Patel",
+    title: "Hire a Freelance .NET Developer — Free Quote & Availability | Kathan N. Patel",
     description:
-      "Transparent rates ($35–$85/hr), fixed-price and retainer options. Blazor, ASP.NET Core, WPF, and AI integration. Serving clients in the US, UK, UAE, Australia, and worldwide.",
+      "Free discovery call, fixed-price quotes against your scope, retainer options. Blazor, ASP.NET Core, WPF, and AI integration. Serving clients in the US, UK, UAE, Australia, and worldwide.",
     url: "https://kathanpatel.vercel.app/hire",
     siteName: "Kathan N. Patel",
     type: "website",
@@ -92,9 +92,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hire a Freelance .NET Developer — Rates & Availability | Kathan N. Patel",
+    title: "Hire a Freelance .NET Developer — Free Quote & Availability | Kathan N. Patel",
     description:
-      "Transparent rates ($35–$85/hr), fixed-price and retainer options. Blazor, ASP.NET Core, WPF & AI integration. US, UK, UAE, Australia & worldwide.",
+      "Free discovery call, fixed-price quotes, retainer options. Blazor, ASP.NET Core, WPF & AI integration. US, UK, UAE, Australia & worldwide.",
     images: ["https://kathanpatel.vercel.app/og-image.png"],
   },
 };
@@ -109,18 +109,21 @@ const whyMe = [
   { icon: "🛠️", title: "Full-Stack Depth",  desc: "From database schema to UI — I handle the whole vertical, not just one layer." },
 ];
 
-// ── Hourly rate tiers ─────────────────────────────────────────────────────────
-const hourlyTiers = [
+// ── Complexity bands ──────────────────────────────────────────────────────────
+// Where a project sits drives the number more than anything else, so these
+// describe the work rather than the price. Figures are quoted per project after
+// a scope call — see the estimator for a self-serve ballpark.
+const complexityBands = [
   {
-    range:    "$35–$45 / hr",
-    label:    "Standard/Maintenance",
+    range:    "Maintenance & Support",
+    label:    "Standard",
     color:    "border-blue-500/25 bg-blue-500/5",
     badgeCol: "bg-blue-500/15 border-blue-500/30 text-blue-400",
     best:     "Ongoing retainers, maintenance, bug fixes, feature additions on existing codebases",
     tasks:    ["Blazor / ASP.NET Core maintenance", "WPF updates & enhancements", "API additions & fixes", "Code review & refactoring"],
   },
   {
-    range:    "$45-$55 / hr",
+    range:    "Builds & Integrations",
     label:    "Complex",
     color:    "border-blue-500/40 bg-blue-500/8 shadow-lg shadow-blue-500/8",
     badgeCol: "bg-blue-500/20 border-blue-500/40 text-blue-400",
@@ -129,10 +132,10 @@ const hourlyTiers = [
     tasks:    ["New Blazor web applications", "WPF desktop development", "Third-party API integrations", "Full-stack module builds"],
   },
   {
-    range:    "$65-$70 / hr",
+    range:    "Architecture & AI",
     label:    "Specialist",
-    color:    "border-teal-500/25 bg-teal-500/5",
-    badgeCol: "bg-teal-500/15 border-teal-500/30 text-teal-400",
+    color:    "border-rose-500/25 bg-rose-500/5",
+    badgeCol: "bg-rose-500/15 border-rose-500/30 text-rose-400",
     best:     "AI integrations, architecture design, legacy migrations, technical leadership, urgent timelines",
     tasks:    ["AI / Semantic Kernel integration", ".NET legacy migration", "System architecture design", "Fractional Tech Lead / CTO"],
   },
@@ -143,14 +146,14 @@ const engagements = [
   {
     label:    "Short Sprint",
     duration: "2–4 weeks",
-    price:    "from $2,500",
+    billing:  "Time & materials, or a fixed quote if the scope is tight.",
     best:     "Bug fixes, feature additions, API integrations, small builds",
     highlight: false,
   },
   {
     label:    "Fixed-Price Project",
     duration: "1–3 months",
-    price:    "from $8,000",
+    billing:  "One agreed total, quoted from the spec. No hourly surprises.",
     best:     "MVP builds, module rewrites, Blazor migrations, API projects",
     highlight: true,
     badge:    "Most Common",
@@ -158,7 +161,7 @@ const engagements = [
   {
     label:    "Monthly Retainer",
     duration: "Ongoing",
-    price:    "from $3,500 / mo",
+    billing:  "Fixed monthly fee for an agreed block of capacity.",
     best:     "Continued development, new features, tech lead support",
     highlight: false,
   },
@@ -183,7 +186,7 @@ const notIncluded = [
 
 // ── Payment terms ─────────────────────────────────────────────────────────────
 const paymentTerms = [
-  { icon: "🔐", label: "Fixed Projects",   desc: "50% upfront, 50% on final delivery. Milestone payments available for projects > $15,000." },
+  { icon: "🔐", label: "Fixed Projects",   desc: "50% upfront, 50% on final delivery. Milestone payments available on larger projects." },
   { icon: "📆", label: "Retainers",        desc: "Invoiced monthly in advance. Cancel anytime with 14 days notice." },
   { icon: "💳", label: "Payment Methods",  desc: "Bank transfer (SWIFT/SEPA), PayPal, Wise, or Razorpay (India)." },
   { icon: "💱", label: "Currencies",       desc: "USD (preferred), GBP, AED, EUR, or INR. Invoices issued in your preferred currency." },
@@ -191,16 +194,16 @@ const paymentTerms = [
 
 // ── Region notes ──────────────────────────────────────────────────────────────
 const regions = [
-  { flag: "🇺🇸🇬🇧", label: "USA & UK",       note: "Rates are 40–60% below US/UK market rates for equivalent senior-level .NET expertise. Most clients save $30–$50/hr compared to local hires." },
+  { flag: "🇺🇸🇬🇧", label: "USA & UK",       note: "Senior-level .NET expertise at a meaningful discount to what an equivalent local hire costs. Ask for a quote and compare it against your last one." },
   { flag: "🇦🇪🇸🇦", label: "UAE & Gulf",      note: "Experienced working in Gulf timezone (IST +1.5–2.5 hrs from UAE/Saudi). NDA and Arabic invoice available on request." },
-  { flag: "🌏",     label: "Rest of World",   note: "All rates quoted in USD. Timezone overlap of at least 4 hours maintained for any client timezone." },
+  { flag: "🌏",     label: "Rest of World",   note: "All quotes issued in USD. Timezone overlap of at least 4 hours maintained for any client timezone." },
 ];
 
 // ── FAQ — single source for the visible section and FAQPage schema ───────────
 const FAQS = [
   {
     q: "How much does it cost to hire a freelance .NET developer?",
-    a: "My hourly rates run from $35/hr for standard maintenance work to $85/hr for specialist work such as AI integration and architecture design — most projects land in the $45–$55/hr tier. Fixed-price engagements start at $2,500 for a 2–4 week sprint; a typical MVP build starts around $8,000.",
+    a: "It depends on scope, complexity, and how well-defined the spec is — a maintenance retainer and a multi-module MVP are not comparable numbers, and any developer quoting you before seeing the brief is guessing. Two ways to get a real figure: run your brief through the free AI cost estimator on this site for an instant ballpark, or book a free 30-minute discovery call and I'll quote a fixed price against the actual scope.",
   },
   {
     q: "Do you work on existing codebases or only new projects?",
@@ -208,7 +211,7 @@ const FAQS = [
   },
   {
     q: "How do payments work?",
-    a: "Fixed-price projects are 50% upfront and 50% on final delivery, with milestone payments available for projects over $15,000. Retainers are invoiced monthly in advance. I accept bank transfer (SWIFT/SEPA), PayPal, and Wise, in USD, GBP, AED, EUR, or INR.",
+    a: "Fixed-price projects are 50% upfront and 50% on final delivery, with milestone payments available on larger projects. Retainers are invoiced monthly in advance. I accept bank transfer (SWIFT/SEPA), PayPal, and Wise, in USD, GBP, AED, EUR, or INR.",
   },
   {
     q: "Who owns the code?",
@@ -257,8 +260,8 @@ export default function HirePage() {
         {/* ── Hero ── */}
         <ScrollReveal>
           <div className="mb-16 max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-teal-500/40 bg-teal-500/8 text-teal-400 text-sm font-semibold mb-6">
-              <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-rose-500/40 bg-rose-500/8 text-rose-400 text-sm font-semibold mb-6">
+              <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse" />
               {personalInfo.availableForWork
                 ? `Available — ${personalInfo.availableFrom}`
                 : "Currently Engaged · Open to Discussions"}
@@ -292,34 +295,39 @@ export default function HirePage() {
         </ScrollReveal>
 
         {/* ═══════════════════════════════════════════════════════════════════ */}
-        {/* ── RATES & PRICING ── */}
+        {/* ── HOW PRICING WORKS ── */}
         {/* ═══════════════════════════════════════════════════════════════════ */}
         <ScrollReveal>
           <div className="mb-4">
             <span className="font-mono text-blue-400 text-sm font-medium tracking-wider uppercase">
-              Rates & Pricing
+              How Pricing Works
             </span>
             <h2 className="font-display text-2xl sm:text-3xl font-bold mt-2 mb-2">
-              Transparent Pricing — No Surprises
+              Quoted Against Your Scope — No Surprises
             </h2>
             <p className="text-muted-foreground max-w-2xl mb-8">
-              I publish my rates because clients who know what to expect make better partners.
-              All prices are in <span className="text-blue-400 font-semibold">USD</span> unless agreed otherwise.
+              Every project is different, so I quote against the actual brief rather than
+              a menu. Want a number before you talk to anyone? Run your brief through the{" "}
+              <Link href="/free-project-cost-estimator" className="text-blue-400 font-semibold hover:underline">
+                free cost estimator
+              </Link>{" "}
+              for an instant ballpark, no sign-up needed. All quotes are issued in{" "}
+              <span className="text-blue-400 font-semibold">USD</span> unless agreed otherwise.
             </p>
           </div>
         </ScrollReveal>
 
-        {/* Hourly rate tiers */}
+        {/* Complexity bands */}
         <ScrollReveal delay={0.05}>
           <div className="mb-10">
             <div className="flex items-center gap-2 mb-5">
               <DollarSign className="w-4 h-4 text-blue-400" />
-              <h3 className="font-display font-bold text-foreground">Hourly Rate Tiers</h3>
-              <span className="text-xs text-muted-foreground">(for time & materials work)</span>
+              <h3 className="font-display font-bold text-foreground">What Drives the Number</h3>
+              <span className="text-xs text-muted-foreground">(where your project sits)</span>
             </div>
 
             <div className="grid sm:grid-cols-3 gap-5 mb-4">
-              {hourlyTiers.map((tier) => (
+              {complexityBands.map((tier) => (
                 <div
                   key={tier.label}
                   className={`glass-card rounded-2xl p-6 flex flex-col gap-4 border transition-all duration-300 hover:scale-[1.01] ${tier.color}`}
@@ -351,7 +359,7 @@ export default function HirePage() {
                   <ul className="flex flex-col gap-1.5">
                     {tier.tasks.map((t) => (
                       <li key={t} className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <CheckCircle className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                        <CheckCircle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
                         {t}
                       </li>
                     ))}
@@ -363,9 +371,9 @@ export default function HirePage() {
             <div className="flex items-start gap-2 p-3.5 rounded-xl bg-blue-500/5 border border-blue-500/15 text-xs text-muted-foreground max-w-2xl">
               <Info className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
               <span>
-                Hourly rates apply to T&M (time and materials) contracts. For fixed-price projects, I quote a total
-                based on scope — often more cost-effective for well-defined work.
-                <span className="text-blue-400 font-medium"> Minimum engagement: 20 hours.</span>
+                These bands describe the kind of work, not a price list. Well-defined work is usually
+                quoted as a fixed total, which is generally more cost-effective than time and materials.
+                <span className="text-blue-400 font-medium"> Small jobs are welcome — there&apos;s no minimum engagement.</span>
               </span>
             </div>
           </div>
@@ -377,7 +385,7 @@ export default function HirePage() {
             <div className="flex items-center gap-2 mb-5">
               <Calendar className="w-4 h-4 text-blue-400" />
               <h3 className="font-display font-bold text-foreground">Project Engagement Models</h3>
-              <span className="text-xs text-muted-foreground">(fixed-price options)</span>
+              <span className="text-xs text-muted-foreground">(how the work is structured)</span>
             </div>
 
             <div className="grid sm:grid-cols-3 gap-5 mb-4">
@@ -392,11 +400,11 @@ export default function HirePage() {
                     </span>
                   )}
                   <h4 className="font-display text-lg font-bold text-foreground">{eng.label}</h4>
-                  <div className="font-display text-2xl font-extrabold gradient-text">{eng.price}</div>
                   <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                     <Clock className="w-4 h-4 shrink-0" />
                     {eng.duration}
                   </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{eng.billing}</p>
                   <p className="text-xs text-muted-foreground leading-relaxed border-t border-border/60 pt-3">
                     <span className="text-foreground font-medium">Best for: </span>
                     {eng.best}
@@ -411,17 +419,17 @@ export default function HirePage() {
         <ScrollReveal delay={0.1}>
           <div className="grid sm:grid-cols-2 gap-5 mb-10">
             {/* Included */}
-            <div className="glass-card rounded-2xl p-6 border-teal-500/20">
+            <div className="glass-card rounded-2xl p-6 border-rose-500/20">
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-teal-500/15 border border-teal-500/25 flex items-center justify-center">
-                  <CheckCircle className="w-4 h-4 text-teal-400" />
+                <div className="w-8 h-8 rounded-lg bg-rose-500/15 border border-rose-500/25 flex items-center justify-center">
+                  <CheckCircle className="w-4 h-4 text-rose-400" />
                 </div>
                 <h3 className="font-display font-bold text-foreground">Always Included</h3>
               </div>
               <ul className="flex flex-col gap-2.5">
                 {included.map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground">
-                    <CheckCircle className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                    <CheckCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
                     {item}
                   </li>
                 ))}
@@ -610,7 +618,7 @@ export default function HirePage() {
         {/* ── Final CTA ── */}
         <ScrollReveal>
           <div className="glass-card rounded-2xl p-8 sm:p-12 text-center relative overflow-hidden border-blue-500/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-teal-500/5 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-rose-500/5 pointer-events-none" />
             <div className="relative">
               <Rocket className="w-10 h-10 text-blue-400 mx-auto mb-4" />
               <h2 className="font-display text-3xl sm:text-4xl font-extrabold mb-3">

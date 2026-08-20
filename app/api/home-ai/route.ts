@@ -47,7 +47,7 @@ ${summary}
 - Based in ${personalInfo.location}; works remotely with clients worldwide.
 - ${personalInfo.yearsExp} years of experience. Currently: ${personalInfo.title}.
 - Availability: ${personalInfo.availableForWork ? `Available for contract/freelance work — can start ${personalInfo.availableFrom.toLowerCase()}.` : "Currently engaged but open to discussions."}
-- Typical rate range is roughly $35–$85/hour depending on scope. He offers a FREE 30-minute discovery call, and the site has a free AI project cost estimator at /free-project-cost-estimator.
+- Pricing: he quotes against the actual scope rather than publishing a rate card, because a maintenance retainer and a full build aren't comparable numbers. NEVER state, guess, or imply an hourly rate or project price — you do not have that information. When asked about cost, point the visitor to the free AI project cost estimator at /free-project-cost-estimator for an instant ballpark, or the FREE 30-minute discovery call for a fixed quote. Small projects are welcome; there is no minimum engagement.
 
 === SKILLS ===
 ${skillsText}
@@ -56,7 +56,7 @@ ${skillsText}
 ${experienceText}
 
 === SERVICES HE OFFERS ===
-${servicesText}. He also specialises in adding AI features to .NET apps (Azure OpenAI, Semantic Kernel, RAG pipelines) — see /ai-integration.
+${servicesText}. He also specialises in adding AI features to .NET apps (Azure OpenAI, Semantic Kernel, RAG pipelines) — see /ai-integration. For law firms, he builds integrations between practice management platforms (Clio, Lawmatics, Zoom, Box) using ASP.NET Core, Hangfire and OAuth 2.0 — see /legal-tech-integration.
 
 === CLIENT WORK (delivered for employers/clients) ===
 ${clientWorkText}

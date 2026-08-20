@@ -116,7 +116,10 @@ function buildPrompt({ description, techStack, budget }: EstimateRequest): strin
   const stack  = techStack?.trim();
   const budgetCtx = budget?.trim();
 
-  // Rates reflect /hire page tiers ($35–$85/hr); overhead is 20%
+  // Internal rate bands — deliberately NOT published on /hire, which quotes per
+  // project instead. They live here because the estimator is gated behind an
+  // email, so the number it produces arrives with a lead attached.
+  // Overhead is 20%.
   return `You are a senior .NET contractor with 10+ years of experience estimating solo development projects. The client has submitted a single free-form project brief. Do all the analysis yourself: infer the project type, scope, complexity, required integrations, and a realistic timeline from the brief, then generate a well-reasoned and realistic cost estimate.
 
 PROJECT BRIEF (client's own words):
