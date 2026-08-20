@@ -7,6 +7,7 @@ const moreLinks = [
   { label: "Blog",            href: "/blog"           },
   { label: "Cost Estimator",  href: "/free-project-cost-estimator"      },
   { label: "AI Integration",  href: "/ai-integration" },
+  { label: "Legal Tech",      href: "/legal-tech-integration" },
 ];
 
 const quickLinks = [
@@ -31,8 +32,8 @@ export function Footer() {
                 Kathan<span className="text-blue-400">.</span>
               </h3>
               {personalInfo.availableForWork && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-teal-500/30 bg-teal-500/8 text-teal-400 text-[10px] font-semibold">
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-rose-500/30 bg-rose-500/8 text-rose-400 text-[10px] font-semibold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
                   Available
                 </span>
               )}
@@ -143,8 +144,8 @@ export function Footer() {
             © {currentYear} Kathan N. Patel. All rights reserved.
           </p>
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
-            <span className="text-teal-400 font-medium">Available for new projects</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
+            <span className="text-rose-400 font-medium">Available for new projects</span>
             <span className="mx-1.5">·</span>
             <Link href="/hire" className="hover:text-blue-400 transition-colors">
               Hire Me →

@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Menu, X, ChevronDown,
-  Github, PenLine, Calculator, Brain,
+  Github, PenLine, Calculator, Brain, Scale,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -24,6 +24,7 @@ const navLinks = [
       { label: "Blog",            href: "/blog",           icon: <PenLine    className="w-4 h-4" />, desc: "Thoughts & tutorials"        },
       { label: "Cost Estimator",  href: "/free-project-cost-estimator",      icon: <Calculator className="w-4 h-4" />, desc: "Project cost calculator"     },
       { label: "AI Integration",  href: "/ai-integration", icon: <Brain      className="w-4 h-4" />, desc: ".NET + AI showcase & demo"   },
+      { label: "Legal Tech",      href: "/legal-tech-integration", icon: <Scale className="w-4 h-4" />, desc: "Clio & Lawmatics integrations" },
     ],
   },
   {
@@ -325,8 +326,8 @@ export function Navbar() {
 
               {personalInfo.availableForWork && (
                 <div className="flex items-center gap-2 px-3 py-2 mb-1">
-                  <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse shrink-0" />
-                  <span className="text-xs text-teal-400 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse shrink-0" />
+                  <span className="text-xs text-rose-400 font-medium">
                     Available for freelance / contract work
                   </span>
                 </div>
