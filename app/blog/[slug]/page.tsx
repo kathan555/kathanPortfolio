@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowLeft, Calendar, Tag, Clock, ArrowRight } from "lucide-react";
 import { ShareButtons } from "@/components/ShareButtons";
 import { LeadCapturePopup } from "@/components/LeadCapturePopup";
-import { HireMePoster } from "@/components/HireMePoster";
+import { HireMePoster, HireMeInlineCard } from "@/components/HireMePoster";
 import { getAllSlugs, getPostBySlug, getAllPosts, type ContentBlock } from "@/lib/blog";
 
 export const revalidate = 60;
@@ -252,7 +252,7 @@ const POST_CTAS: Record<
     title: "Get a realistic budget in 60 seconds",
     body: "Describe your project once and get an instant AI-generated cost range with a phase-by-phase breakdown — free, no sign-up.",
     primary:   { href: "/free-project-cost-estimator", label: "Free Cost Estimator" },
-    secondary: { href: "/hire", label: "Rates & Availability" },
+    secondary: { href: "/hire", label: "How I Work" },
   },
   dev: {
     eyebrow: "Work with me",
@@ -267,7 +267,7 @@ function PostCTA({ audience }: { audience: PostAudience }) {
   const cta = POST_CTAS[audience];
   return (
     <div className="mt-12 glass-card rounded-2xl p-7 sm:p-8 border-blue-500/20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-teal-500/5 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-rose-500/5 pointer-events-none" />
       <div className="relative">
         <p className="font-mono text-blue-400 text-xs tracking-[0.25em] uppercase mb-2">
           {cta.eyebrow}
@@ -448,6 +448,11 @@ export default async function BlogPostPage({ params }: Props) {
 
             {/* Contextual CTA — matched to the post's audience */}
             <PostCTA audience={audience} />
+
+            {/* Hire/refer ask for everyone below 1440px, where the left-edge
+                poster can't render. Placed after the CTA above as the softer
+                fallback: readers who aren't hiring can still refer. */}
+            <HireMeInlineCard />
 
             {/* Post footer */}
             <div className="mt-10 pt-8 border-t border-border">
