@@ -140,7 +140,7 @@ export function HomeAIAssistant() {
             <p className="text-muted-foreground leading-relaxed mb-6">
               This isn&apos;t a scripted chatbot — it&apos;s a real AI assistant wired to a
               live model, primed with my actual experience, skills, and projects.
-              Ask about what I&apos;ve built, my stack, availability, or rates and get a
+              Ask about what I&apos;ve built, my stack, or availability and get a
               straight answer. It&apos;s also a working sample of the kind of AI feature I
               can drop into <span className="text-foreground font-semibold">your</span> Blazor or ASP.NET Core app.
             </p>
@@ -152,7 +152,7 @@ export function HomeAIAssistant() {
                 "Streaming answers over a rate-limited API route",
               ].map((line) => (
                 <div key={line} className="flex items-start gap-2.5 text-sm text-muted-foreground">
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-teal-400" />
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-rose-400" />
                   {line}
                 </div>
               ))}
@@ -176,10 +176,10 @@ export function HomeAIAssistant() {
             className="relative"
           >
             {/* Breathing halo */}
-            <div className="pointer-events-none absolute -inset-2 rounded-[1.75rem] bg-gradient-to-b from-blue-500/40 via-teal-500/20 to-transparent blur-2xl animate-glow-pulse motion-reduce:animate-none" />
+            <div className="pointer-events-none absolute -inset-2 rounded-[1.75rem] bg-gradient-to-b from-blue-500/40 via-rose-500/20 to-transparent blur-2xl animate-glow-pulse motion-reduce:animate-none" />
 
             {/* Animated gradient border frame */}
-            <div className="relative rounded-3xl bg-[linear-gradient(120deg,theme(colors.blue.500),theme(colors.teal.400),theme(colors.blue.600),theme(colors.teal.400),theme(colors.blue.500))] bg-[length:300%_300%] p-px shadow-2xl shadow-blue-500/20 animate-border-flow motion-reduce:animate-none">
+            <div className="relative rounded-3xl bg-[linear-gradient(120deg,theme(colors.blue.500),theme(colors.rose.400),theme(colors.blue.600),theme(colors.rose.400),theme(colors.blue.500))] bg-[length:300%_300%] p-px shadow-2xl shadow-blue-500/20 animate-border-flow motion-reduce:animate-none">
               <div className="rounded-[23px] bg-card/95 backdrop-blur-xl overflow-hidden flex flex-col">
 
                 {/* Header */}
@@ -190,8 +190,8 @@ export function HomeAIAssistant() {
                     </div>
                     <div>
                       <p className="font-semibold text-sm text-foreground leading-tight">Kathan&apos;s AI Assistant</p>
-                      <p className="text-xs text-teal-400 flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse inline-block" />
+                      <p className="text-xs text-rose-400 flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse inline-block" />
                         Online · knows my full portfolio
                       </p>
                     </div>
@@ -220,7 +220,7 @@ export function HomeAIAssistant() {
                       </div>
                       <div className="text-center">
                         <p className="font-semibold text-foreground mb-1 text-sm">Ask me anything about Kathan</p>
-                        <p className="text-xs text-muted-foreground max-w-xs">His work, stack, availability, rates — or how he&apos;d add AI to your app.</p>
+                        <p className="text-xs text-muted-foreground max-w-xs">His work, stack, availability — or how he&apos;d add AI to your app.</p>
                       </div>
                       <div className="grid sm:grid-cols-2 gap-2 w-full">
                         {STARTERS.map((s) => (

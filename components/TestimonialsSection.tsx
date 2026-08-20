@@ -37,7 +37,7 @@ function TestimonialCard({
 
       {/* Author */}
       <div className="flex items-center gap-3 pt-2 border-t border-border/60">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500/30 to-teal-500/30 border border-blue-500/20 flex items-center justify-center shrink-0">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500/30 to-rose-500/30 border border-blue-500/20 flex items-center justify-center shrink-0">
           <span className="font-display font-bold text-xs text-blue-400">{initials}</span>
         </div>
         <div>

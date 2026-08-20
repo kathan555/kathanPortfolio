@@ -2,25 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Light theme ──────────────────────────────────────────────────────────────
+   Previously every token here was 0% saturation — pure greyscale — which is
+   why the page read like a printed document. The scale is now a cool-tinted
+   neutral, and --primary / --accent carry the actual brand hues so anything
+   bound to them (blog links, focus rings) reads as brand rather than black. */
 :root,
 .light {
-  --background: 0 0% 100%;
-  --foreground: 0 0% 0%;
-  --primary: 0 0% 10%;
+  --background: 210 40% 99%;
+  --foreground: 222 47% 12%;
+  --primary: 217 84% 46%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 96%;
-  --secondary-foreground: 0 0% 0%;
-  --accent: 0 0% 15%;
+  --secondary: 214 32% 95%;
+  --secondary-foreground: 222 47% 12%;
+  --accent: 345 74% 45%;
   --accent-foreground: 0 0% 100%;
-  --muted: 0 0% 96%;
-  --muted-foreground: 0 0% 38%;
+  --muted: 214 32% 95%;
+  --muted-foreground: 215 19% 35%;
   --card: 0 0% 100%;
-  --card-foreground: 0 0% 0%;
-  --border: 0 0% 88%;
-  --ring: 0 0% 0%;
+  --card-foreground: 222 47% 12%;
+  --border: 214 25% 87%;
+  --ring: 217 84% 46%;
   --font-playfair: 'Playfair Display', Georgia, serif;
   --font-lato: 'Lato', sans-serif;
   --font-jetbrains-mono: 'JetBrains Mono', monospace;
+
+  /* Accent scales — darkened so they clear WCAG AA on a near-white ground.
+     Tailwind's stock values measure 1.8–2.5:1 here; these measure 4.8–7.6:1.
+     Ordering is inverted relative to dark mode on purpose: lower shade numbers
+     are DARKER, so `hover:text-blue-300` over a `text-blue-400` base still
+     reads as a hover. */
+  --c-blue-50:     239 246 255;
+  --c-blue-100:    219 234 254;
+  --c-blue-200:    180 205 250;
+  --c-blue-300:     12  74 174;
+  --c-blue-400:     10  90 219;
+  --c-blue-500:     19  94 216;
+  --c-blue-600:     21  78 180;
+  --c-rose-300:    159  18  57;
+  --c-rose-400:    190  18  60;
+  --c-rose-500:    200  30  74;
+  /* Yellow is a highlight, not an accent colour: identical in both themes and
+     only ever used as a fill behind dark text. On this background yellow-400
+     as text measures 1.49:1; as a fill under near-black text it is 11.4:1. */
+  --c-yellow-300:  253 224  71;
+  --c-yellow-400:  250 204  21;
+  --c-yellow-500:  234 179   8;
+  --c-purple-300:   96  26 165;
+  --c-purple-400:  125  37 208;
+  --c-purple-500:  115  27 197;
+  --c-green-300:    15  95  45;
+  --c-green-400:    21 127  60;
+  --c-green-500:    22 120  55;
+  --c-orange-300:  140  60   6;
+  --c-orange-400:  184  82  10;
+  --c-orange-500:  175  75   8;
+  --c-emerald-400:  11 122  85;
+  --c-emerald-500:  10 110  77;
+  --c-emerald-600:   8  95  66;
+
+  /* Decorative strengths. Light needs more alpha than dark: the same wash that
+     reads clearly against a near-black ground disappears on a near-white one. */
+  --divider-ghost: rgb(var(--c-blue-500) / 0.16);
+  --divider-line:  rgb(var(--c-blue-500) / 0.40);
+  --hero-wash-1:   rgb(var(--c-blue-500) / 0.13);
+  --hero-wash-2:   rgb(var(--c-rose-500) / 0.11);
 }
 
 .dark {
@@ -30,7 +76,7 @@
   --primary-foreground: 222 47% 5%;
   --secondary: 217 33% 12%;
   --secondary-foreground: 210 40% 96%;
-  --accent: 175 77% 40%;
+  --accent: 350 89% 60%;
   --accent-foreground: 222 47% 5%;
   --muted: 217 33% 15%;
   --muted-foreground: 215 20% 55%;
@@ -38,6 +84,40 @@
   --card-foreground: 210 40% 96%;
   --border: 217 33% 16%;
   --ring: 217 91% 60%;
+
+  /* Tailwind's stock values, verbatim — dark mode is unchanged by design. */
+  --c-blue-50:     239 246 255;
+  --c-blue-100:    219 234 254;
+  --c-blue-200:    191 219 254;
+  --c-blue-300:    147 197 253;
+  --c-blue-400:     96 165 250;
+  --c-blue-500:     59 130 246;
+  --c-blue-600:     37  99 235;
+  --c-rose-300:    253 164 175;
+  --c-rose-400:    251 113 133;
+  --c-rose-500:    244  63  94;
+  /* Same values as light — see note there. */
+  --c-yellow-300:  253 224  71;
+  --c-yellow-400:  250 204  21;
+  --c-yellow-500:  234 179   8;
+  --c-purple-300:  216 180 254;
+  --c-purple-400:  192 132 252;
+  --c-purple-500:  168  85 247;
+  --c-green-300:   134 239 172;
+  --c-green-400:    74 222 128;
+  --c-green-500:    34 197  94;
+  --c-orange-300:  253 186 116;
+  --c-orange-400:  251 146  60;
+  --c-orange-500:  249 115  22;
+  --c-emerald-400:  52 211 153;
+  --c-emerald-500:  16 185 129;
+  --c-emerald-600:   5 150 105;
+
+  /* Original dark-mode alphas, preserved. */
+  --divider-ghost: rgb(var(--c-blue-500) / 0.07);
+  --divider-line:  rgb(var(--c-blue-500) / 0.22);
+  --hero-wash-1:   rgb(var(--c-blue-500) / 0.16);
+  --hero-wash-2:   rgb(var(--c-rose-500) / 0.14);
 }
 
 * { box-sizing: border-box; padding: 0; margin: 0; }
@@ -63,53 +143,51 @@ p, li, td, th, label, span:not(.font-mono):not(.font-display) {
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: hsl(var(--background)); }
-::-webkit-scrollbar-thumb { background: hsl(217 91% 45%); border-radius: 3px; }
-.dark ::-webkit-scrollbar-thumb { background: hsl(217, 71%, 58%); }
-::selection { background: hsl(0 0% 0% / 0.12); color: hsl(var(--foreground)); }
-.dark ::selection { background: hsl(217 91% 60% / 0.3); color: hsl(var(--foreground)); }
+/* Everything below draws from --c-blue-500 / --c-rose-500, so it follows the
+   active theme instead of being pinned to the dark-mode hues. Several of these
+   were previously blue at 7–22% alpha, which is invisible on a white ground. */
+::-webkit-scrollbar-thumb { background: rgb(var(--c-blue-500)); border-radius: 3px; }
+::selection { background: rgb(var(--c-blue-500) / 0.18); color: hsl(var(--foreground)); }
+.dark ::selection { background: rgb(var(--c-blue-500) / 0.3); }
 
 .dark .glass-card {
   background: hsl(222 47% 7% / 0.85);
   backdrop-filter: blur(12px);
-  border: 1px solid hsl(217 91% 60% / 0.1);
+  border: 1px solid rgb(var(--c-blue-500) / 0.1);
 }
 .light .glass-card {
   background: hsl(0 0% 100% / 0.92);
   backdrop-filter: blur(12px);
-  border: 1px solid hsl(0 0% 0% / 0.08);
-  box-shadow: 0 2px 16px hsl(0 0% 0% / 0.04);
+  border: 1px solid hsl(214 25% 84%);
+  box-shadow: 0 1px 2px hsl(222 47% 12% / 0.04), 0 8px 24px hsl(222 47% 12% / 0.05);
 }
 
+/* 400 shades, not 500 — matches what dark mode has always rendered, and the
+   light values of those same shades are dark enough to read on a white ground. */
 .gradient-text {
-  background: linear-gradient(135deg, #1a1a1a 0%, #525252 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.dark .gradient-text {
-  background: linear-gradient(135deg, #60A5FA 0%, #2DD4BF 100%);
+  background: linear-gradient(135deg, rgb(var(--c-blue-400)) 0%, rgb(var(--c-rose-400)) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.timeline-line { background: linear-gradient(180deg, #3B82F6 0%, #14B8A6 100%); }
+.timeline-line { background: linear-gradient(180deg, rgb(var(--c-blue-500)) 0%, rgb(var(--c-rose-500)) 100%); }
 
 .skill-badge { transition: all 0.2s ease; }
-.skill-badge:hover { transform: translateY(-2px); box-shadow: 0 8px 25px hsl(217 91% 60% / 0.2); }
+.skill-badge:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgb(var(--c-blue-500) / 0.28); }
 
 .project-card { transition: all 0.3s ease; }
 .project-card:hover {
   transform: translateY(-4px);
-  border-color: hsl(217 91% 60% / 0.4) !important;
-  box-shadow: 0 20px 60px hsl(217 91% 60% / 0.1);
+  border-color: rgb(var(--c-blue-500) / 0.45) !important;
+  box-shadow: 0 20px 60px rgb(var(--c-blue-500) / 0.16);
 }
 
 .nav-link::after {
   content: '';
   display: block;
   height: 2px;
-  background: linear-gradient(90deg, #3B82F6, #14B8A6);
+  background: linear-gradient(90deg, rgb(var(--c-blue-500)), rgb(var(--c-rose-500)));
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.3s ease;
@@ -134,9 +212,49 @@ p, li, td, th, label, span:not(.font-mono):not(.font-display) {
 .blog-content li { margin-bottom: 0.375rem; line-height: 1.85; font-weight: 400; }
 .blog-content hr { border: none; border-top: 1px solid hsl(var(--border)); margin: 2rem 0; }
 
-.step-active   { border-color: hsl(217 91% 60% / 0.6); background: hsl(217 91% 60% / 0.06); }
+.step-active   { border-color: rgb(var(--c-blue-500) / 0.6); background: rgb(var(--c-blue-500) / 0.07); }
 .step-inactive { border-color: hsl(var(--border)); }
-.step-done     { border-color: hsl(175 77% 40% / 0.6); background: hsl(175 77% 40% / 0.06); }
+.step-done     { border-color: rgb(var(--c-rose-500) / 0.6); background: rgb(var(--c-rose-500) / 0.07); }
+
+/* ── Section rhythm ───────────────────────────────────────────────────────────
+   Every section below the hero was `py-24` on a transparent ground, so the page
+   scrolled as one undifferentiated column — the main reason it read like a
+   document rather than a site. `.section-band` gives alternating sections a
+   tinted surface with soft edges, so chapters become visible while scrolling.
+
+   The ::before carries the tint and fades out at both ends, which avoids the
+   hard horizontal seams a plain background-color would produce. */
+.section-band { position: relative; isolation: isolate; }
+.section-band::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: hsl(var(--muted) / 0.55);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 9%, #000 91%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 9%, #000 91%, transparent 100%);
+}
+.dark .section-band::before { background: hsl(217 33% 11% / 0.5); }
+
+/* Ambient wash sitting on top of the band — a much quieter reuse of the hero's
+   aurora, giving each banded section a faint colour drift instead of flat grey. */
+.section-glow { position: relative; isolation: isolate; }
+.section-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(50% 45% at 12% 18%, rgb(var(--c-blue-500) / 0.07) 0%, transparent 62%),
+    radial-gradient(45% 45% at 88% 78%, rgb(var(--c-rose-500) / 0.06) 0%, transparent 62%);
+  background-size: 200% 200%;
+  animation: aurora 22s ease infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .section-glow::after { animation: none; }
+}
 
 @layer utilities {
   .text-balance { text-wrap: balance; }

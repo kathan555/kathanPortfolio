@@ -1,5 +1,23 @@
 import type { Config } from "tailwindcss";
 
+/* ── Theme-aware accent scales ────────────────────────────────────────────────
+   The whole design was authored in dark mode: ~290 usages of blue-400 /
+   teal-400 / purple-300 and friends, which sit at 7–11:1 on the dark
+   background but collapse to 1.8–2.5:1 on white — and light is the default
+   theme. Rather than rewrite every call site, the scales themselves resolve
+   through CSS variables that swap per theme (see app/globals.css).
+
+   Channels are stored as raw RGB triplets ("59 130 246") rather than HSL so the
+   dark values are byte-identical to Tailwind's defaults — no rounding drift —
+   while `<alpha-value>` keeps every existing /10, /20, /25 modifier working.
+
+   Only shades actually used in the codebase are declared. Adding a new shade
+   means adding it here AND in both blocks of globals.css. */
+const themed = (name: string, shades: number[]) =>
+  Object.fromEntries(
+    shades.map((s) => [s, `rgb(var(--c-${name}-${s}) / <alpha-value>)`])
+  );
+
 const config: Config = {
   darkMode: "class",
   content: [
@@ -35,6 +53,17 @@ const config: Config = {
         card:       { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
         border: "hsl(var(--border))",
         ring:   "hsl(var(--ring))",
+
+        // Accent scales — resolved per theme, see comment at top of file.
+        blue:    themed("blue",    [50, 100, 200, 300, 400, 500, 600]),
+        rose:    themed("rose",    [300, 400, 500]),
+        // Highlight only — bright in BOTH themes, always paired with dark text.
+        // Never use as text on a light surface: yellow-400 on white is 1.49:1.
+        yellow:  themed("yellow",  [300, 400, 500]),
+        purple:  themed("purple",  [300, 400, 500]),
+        green:   themed("green",   [300, 400, 500]),
+        orange:  themed("orange",  [300, 400, 500]),
+        emerald: themed("emerald", [400, 500, 600]),
       },
       fontFamily: {
         display: ["var(--font-playfair)", "Georgia", "serif"],

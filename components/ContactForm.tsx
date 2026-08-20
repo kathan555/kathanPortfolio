@@ -98,7 +98,7 @@ export function ContactForm() {
       {SITE_KEY ? (
         <div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
-            <ShieldCheck className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+            <ShieldCheck className="w-3.5 h-3.5 text-rose-400 shrink-0" />
             Human verification — powered by Cloudflare Turnstile
           </div>
           <TurnstileWidget

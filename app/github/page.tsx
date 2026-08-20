@@ -123,7 +123,7 @@ export default async function GithubPage() {
                       href={repo.homepage}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs text-teal-400 hover:underline mb-3"
+                      className="inline-flex items-center gap-1.5 text-xs text-rose-400 hover:underline mb-3"
                     >
                       <ExternalLink className="w-3 h-3" />
                       {repo.homepage.replace(/^https?:\/\//, "")}

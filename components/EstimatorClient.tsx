@@ -433,9 +433,9 @@ export default function EstimatorClient() {
 
           {/* ── Email sent successfully ── */}
           {emailStatus === 'success' && (
-            <div className="glass-card rounded-2xl p-8 text-center border border-teal-500/20">
-              <div className="w-14 h-14 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-7 h-7 text-teal-400" />
+            <div className="glass-card rounded-2xl p-8 text-center border border-rose-500/20">
+              <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="w-7 h-7 text-rose-400" />
               </div>
               <h3 className="font-display text-lg font-semibold text-foreground mb-2">
                 Estimate sent successfully

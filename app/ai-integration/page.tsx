@@ -232,7 +232,7 @@ var prompt = $"""
 // ── Data ─────────────────────────────────────────────────────────────────────
 const useCases = [
   { icon: <MessageSquare className="w-5 h-5 text-blue-400" />,  title: "AI Customer Support Chat",  desc: "Replace FAQ pages with a chat widget that answers from your actual documentation. Blazor + Semantic Kernel + your PDF/Word knowledge base." },
-  { icon: <Database       className="w-5 h-5 text-teal-400" />, title: "Smart Data Extraction",    desc: "Users upload invoices, contracts, or forms — AI extracts structured data automatically into your MS-SQL database. No manual entry." },
+  { icon: <Database       className="w-5 h-5 text-rose-400" />, title: "Smart Data Extraction",    desc: "Users upload invoices, contracts, or forms — AI extracts structured data automatically into your MS-SQL database. No manual entry." },
   { icon: <Cpu            className="w-5 h-5 text-purple-400" />, title: "Intelligent Report Generator", desc: "AI reads your database, understands context, and generates human-readable reports or summaries on demand. Works in WPF dashboards too." },
   { icon: <Shield         className="w-5 h-5 text-orange-400" />, title: "AI-Assisted Code Review", desc: "Internal developer tool: paste a C# function, get an AI review with security, performance, and style feedback — all within your .NET tooling." },
   { icon: <Zap            className="w-5 h-5 text-green-400" />,  title: "Process Automation Agent", desc: "AI that reads emails, classifies them, and triggers business workflows in your existing ASP.NET Core app — no manual routing." },
@@ -250,7 +250,7 @@ const stack = [
 
 const colorMap: Record<string, string> = {
   blue:   "bg-blue-500/10   border-blue-500/25   text-blue-400",
-  teal:   "bg-teal-500/10   border-teal-500/25   text-teal-400",
+  teal:   "bg-rose-500/10   border-rose-500/25   text-rose-400",
   purple: "bg-purple-500/10 border-purple-500/25 text-purple-400",
   orange: "bg-orange-500/10 border-orange-500/25 text-orange-400",
   green:  "bg-green-500/10  border-green-500/25  text-green-400",
@@ -291,7 +291,7 @@ export default function AIIntegrationPage() {
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px flex-1 bg-gradient-to-r from-transparent to-blue-500/30" />
               <span className="font-mono text-blue-400 text-sm font-semibold uppercase tracking-wider flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse" />
                 Live Demo
               </span>
               <div className="h-px flex-1 bg-gradient-to-l from-transparent to-blue-500/30" />
@@ -321,17 +321,17 @@ export default function AIIntegrationPage() {
             <div className="grid md:grid-cols-2 gap-6">
               {[
                 {
-                  icon: <CheckCircle className="w-5 h-5 text-teal-400 shrink-0" />,
+                  icon: <CheckCircle className="w-5 h-5 text-rose-400 shrink-0" />,
                   title: "Clients are asking — every project",
                   desc: "In the last year, 'can you add AI to this?' has become the most common question in .NET project discussions. Businesses that can't answer yes are losing contracts.",
                 },
                 {
-                  icon: <CheckCircle className="w-5 h-5 text-teal-400 shrink-0" />,
+                  icon: <CheckCircle className="w-5 h-5 text-rose-400 shrink-0" />,
                   title: "The .NET ecosystem is AI-ready today",
                   desc: "Microsoft's Semantic Kernel SDK is production-stable, Azure OpenAI is enterprise-compliant, and Blazor's real-time model is ideal for streaming AI responses.",
                 },
                 {
-                  icon: <CheckCircle className="w-5 h-5 text-teal-400 shrink-0" />,
+                  icon: <CheckCircle className="w-5 h-5 text-rose-400 shrink-0" />,
                   title: "Your existing C# codebase is the advantage",
                   desc: "You don't rebuild your app. Semantic Kernel integrates as an injectable service — your business logic, database, and APIs stay exactly as they are. AI is added on top.",
                 },
@@ -379,7 +379,7 @@ export default function AIIntegrationPage() {
                 {[
                   { label: "Blazor UI",       sub: "Component",        color: "border-blue-500/50   bg-blue-500/10   text-blue-400"   },
                   { label: "ChatService",      sub: "C# Injectable",    color: "border-purple-500/50 bg-purple-500/10 text-purple-400" },
-                  { label: "Semantic Kernel",  sub: "Orchestrator",     color: "border-teal-500/50   bg-teal-500/10   text-teal-400"   },
+                  { label: "Semantic Kernel",  sub: "Orchestrator",     color: "border-rose-500/50   bg-rose-500/10   text-rose-400"   },
                   { label: "Azure OpenAI",     sub: "GPT-4o / Embed.",  color: "border-orange-500/50 bg-orange-500/10 text-orange-400" },
                 ].map((node, i, arr) => (
                   <div key={node.label} className="flex items-center gap-2 flex-1">
@@ -399,7 +399,7 @@ export default function AIIntegrationPage() {
                 {[
                   { label: "Blazor UI",       sub: "Component",        color: "border-blue-500/50   bg-blue-500/10   text-blue-400"   },
                   { label: "ChatService",      sub: "C# Injectable",    color: "border-purple-500/50 bg-purple-500/10 text-purple-400" },
-                  { label: "Semantic Kernel",  sub: "Orchestrator",     color: "border-teal-500/50   bg-teal-500/10   text-teal-400"   },
+                  { label: "Semantic Kernel",  sub: "Orchestrator",     color: "border-rose-500/50   bg-rose-500/10   text-rose-400"   },
                   { label: "Azure OpenAI",     sub: "GPT-4o / Embed.",  color: "border-orange-500/50 bg-orange-500/10 text-orange-400" },
                 ].map((node, i, arr) => (
                   <div key={node.label} className="w-full flex flex-col items-center gap-1">
@@ -416,8 +416,8 @@ export default function AIIntegrationPage() {
 
               {/* Vector DB note */}
               <div className="mt-4 flex items-center gap-2 justify-center md:justify-end">
-                <div className="h-px flex-1 border-t border-teal-500/20 border-dashed md:max-w-[180px]" />
-                <span className="text-xs text-teal-400 border border-teal-500/30 bg-teal-500/8 rounded-lg px-3 py-1.5 whitespace-nowrap">
+                <div className="h-px flex-1 border-t border-rose-500/20 border-dashed md:max-w-[180px]" />
+                <span className="text-xs text-rose-400 border border-rose-500/30 bg-rose-500/8 rounded-lg px-3 py-1.5 whitespace-nowrap">
                   ⬆ Vector DB / Memory (optional)
                 </span>
               </div>
@@ -535,7 +535,7 @@ export default function AIIntegrationPage() {
         {/* ── CTA ── */}
         <ScrollReveal>
           <div className="glass-card rounded-2xl p-6 sm:p-10 md:p-14 text-center relative overflow-hidden border-blue-500/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-teal-500/5 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-rose-500/5 pointer-events-none" />
             <div className="relative">
               <Brain className="w-10 h-10 text-blue-400 mx-auto mb-4" />
               <h2 className="font-display text-3xl sm:text-4xl font-extrabold mb-3">

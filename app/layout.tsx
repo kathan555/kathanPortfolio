@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   title: {
-    default:  "Kathan N. Patel — Freelance .NET Developer | Blazor, WPF, ASP.NET Core",
+    default:  "Kathan N. Patel — Freelance AI & .NET Developer | Blazor, WPF, ASP.NET Core",
     template: "%s | Kathan N. Patel",
   },
   description:
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     type:        "website",
     locale:      "en_US",
     url:         "https://kathanpatel.vercel.app",
-    title:       "Kathan N. Patel — Freelance .NET Developer | Blazor · WPF · ASP.NET Core",
+    title:       "Kathan N. Patel — Freelance AI & .NET Developer | Blazor · WPF · ASP.NET Core",
     description: "Freelance .NET Technical Lead available for contract work. 8+ years. Blazor, WPF, ASP.NET Core, C#. Remote-friendly.",
     siteName:    "Kathan N. Patel",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Kathan N. Patel — Freelance .NET Developer" }],
@@ -114,17 +114,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     "occupationLocation": {
                       "@type": "Country",
                       "name": "Remote / Worldwide"
-                    },
-                    "estimatedSalary": {
-                      "@type": "MonetaryAmountDistribution",
-                      "name": "Hourly Rate",
-                      "currency": "USD",
-                      "duration": "PT1H",
-                      "percentile10": 35,
-                      "percentile25": 45,
-                      "median": 55,
-                      "percentile75": 70,
-                      "percentile90": 85
                     }
                   },
                   "sameAs": [
@@ -168,7 +157,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     ".NET Legacy Migration",
                     "Technical Lead / Fractional CTO"
                   ],
-                  "priceRange": "$35–$85/hr",
                   "currenciesAccepted": "USD, GBP, AED",
                   "paymentAccepted": "Bank Transfer, PayPal, Wise"
                 },

@@ -40,10 +40,10 @@ export function HeroCommandBar() {
       {/* Command bar */}
       <div className="group relative">
         {/* Glow */}
-        <div className="pointer-events-none absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-blue-500/40 via-teal-400/30 to-blue-500/40 opacity-60 blur-md transition-opacity duration-300 group-focus-within:opacity-100" />
+        <div className="pointer-events-none absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-blue-500/40 via-rose-400/30 to-blue-500/40 opacity-60 blur-md transition-opacity duration-300 group-focus-within:opacity-100" />
 
         <div className="relative flex items-center gap-2 rounded-2xl border border-blue-500/30 bg-card/80 backdrop-blur-xl px-3 py-2 shadow-lg shadow-blue-500/10">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-blue-500 to-teal-500 text-white shadow-md shadow-blue-500/30">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-blue-500 to-rose-500 text-white shadow-md shadow-blue-500/30">
             <Sparkles className="h-4.5 w-4.5" strokeWidth={2} />
           </span>
 

@@ -33,46 +33,45 @@ export default function Home() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════
-          LIVE AI ASSISTANT
+          SECTION RHYTHM
+          Alternating chapters are wrapped in `.section-band` (tinted surface,
+          soft-faded edges) plus `.section-glow` (slow aurora wash). Without it
+          all seven sections were transparent `py-24` blocks, so the page
+          scrolled as one undifferentiated column and read like a document.
+          Each divider is wrapped WITH its section so the chapter header and
+          its content band together as one unit.
+          ══════════════════════════════════════════════════════════════════ */}
+
+      {/* ── LIVE AI ASSISTANT (banded) ──
           HomeAIAssistant renders its own <section id="ai">. Placed high so the
           "AI-enabled" impression lands immediately, and the hero command bar
-          feeds questions into it.
-          ══════════════════════════════════════════════════════════════════ */}
-      <HomeAIAssistant />
+          feeds questions into it. */}
+      <div className="section-band section-glow">
+        <HomeAIAssistant />
+      </div>
 
-      {/* ══════════════════════════════════════════════════════════════════
-          01 — SKILLS
-          SkillsSection renders its own <section id="skills"> internally.
-          ══════════════════════════════════════════════════════════════════ */}
+      {/* ── 01 — SKILLS (plain) ── */}
       <ChapterDivider number="01" title="Technical Skills" icon="code" />
       <SkillsSection />
 
-      {/* ══════════════════════════════════════════════════════════════════
-          02 — EXPERIENCE
-          ExperienceSection renders its own <section id="experience"> internally.
-          ══════════════════════════════════════════════════════════════════ */}
-      <ChapterDivider number="02" title="Career Journey" icon="briefcase" />
-      <ExperienceSection />
+      {/* ── 02 — EXPERIENCE (banded) ── */}
+      <div className="section-band section-glow">
+        <ChapterDivider number="02" title="Career Journey" icon="briefcase" />
+        <ExperienceSection />
+      </div>
 
-      {/* ══════════════════════════════════════════════════════════════════
-          03 — PROJECTS
-          ProjectsSection renders its own <section id="projects"> internally.
-          ══════════════════════════════════════════════════════════════════ */}
+      {/* ── 03 — PROJECTS (plain) ── */}
       <ChapterDivider number="03" title="Key Work" icon="folder" />
       <ProjectsSection />
 
-      {/* ══════════════════════════════════════════════════════════════════
-          04 — INDEPENDENT BUILDS
-          SelfBuiltSection renders its own <section id="builds"> internally.
-          Solo, self-shipped products — the counterpart to client "Key Work".
-          ══════════════════════════════════════════════════════════════════ */}
-      <ChapterDivider number="04" title="Independent Builds" icon="sparkles" />
-      <SelfBuiltSection />
+      {/* ── 04 — INDEPENDENT BUILDS (banded) ──
+          Solo, self-shipped products — the counterpart to client "Key Work". */}
+      <div className="section-band section-glow">
+        <ChapterDivider number="04" title="Independent Builds" icon="sparkles" />
+        <SelfBuiltSection />
+      </div>
 
-      {/* ══════════════════════════════════════════════════════════════════
-          05 — EDUCATION
-          EducationSection renders its own <section id="education"> internally.
-          ══════════════════════════════════════════════════════════════════ */}
+      {/* ── 05 — EDUCATION (plain) ── */}
       <ChapterDivider number="05" title="Academic Background" icon="graduation" />
       <EducationSection />
 
@@ -91,14 +90,17 @@ export default function Home() {
               Ready to build?
             </span>
 
+            {/* Deliberately not ".NET Expert" — that framing filters out every
+                project that isn't already a .NET project. */}
             <h2 className="font-display text-4xl sm:text-5xl font-bold mt-3 mb-5">
-              Need a{" "}
-              <span className="gradient-text">.NET Expert?</span>
+              Need an{" "}
+              <span className="gradient-text">AI Expert Developer?</span>
             </h2>
 
             <p className="text-muted-foreground text-lg mb-10 max-w-xl mx-auto leading-relaxed">
-              Available for freelance and contract work — Blazor, WPF, ASP.NET
-              Core, and more. Let&apos;s talk about your project.
+              Available for freelance and contract work — AI integration, web and
+              desktop applications, and legacy modernisation. Bring me the problem,
+              not the tech stack.
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-4">

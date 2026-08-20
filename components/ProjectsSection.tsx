@@ -3,12 +3,12 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { projects } from "@/lib/data";
-import { Calendar, TrendingUp } from "lucide-react";
+import { Calendar, TrendingUp, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const domainColors: Record<string, string> = {
   blue:   "bg-blue-500/10   border-blue-500/25   text-blue-400",
-  teal:   "bg-teal-500/10   border-teal-500/25   text-teal-400",
+  teal:   "bg-rose-500/10   border-rose-500/25   text-rose-400",
   purple: "bg-purple-500/10 border-purple-500/25 text-purple-400",
   orange: "bg-orange-500/10 border-orange-500/25 text-orange-400",
   green:  "bg-green-500/10  border-green-500/25  text-green-400",
@@ -16,7 +16,7 @@ const domainColors: Record<string, string> = {
 
 const dotColors: Record<string, string> = {
   blue:   "bg-blue-400",
-  teal:   "bg-teal-400",
+  teal:   "bg-rose-400",
   purple: "bg-purple-400",
   orange: "bg-orange-400",
   green:  "bg-green-400",
@@ -24,13 +24,24 @@ const dotColors: Record<string, string> = {
 
 const resultColors: Record<string, string> = {
   blue:   "bg-blue-500/8   border-blue-500/20   text-blue-300",
-  teal:   "bg-teal-500/8   border-teal-500/20   text-teal-300",
+  teal:   "bg-rose-500/8   border-rose-500/20   text-rose-300",
   purple: "bg-purple-500/8 border-purple-500/20 text-purple-300",
   orange: "bg-orange-500/8 border-orange-500/20 text-orange-300",
   green:  "bg-green-500/8  border-green-500/20  text-green-300",
 };
 
-function ProjectCard({ project, index }: { project: typeof projects[0]; index: number }) {
+/* `featured` promotes the first project to a two-column card. A uniform 3×N
+   grid of identical cards is the pattern that made this page scan like a
+   document; one card breaking the rhythm gives the eye somewhere to land. */
+function ProjectCard({
+  project,
+  index,
+  featured = false,
+}: {
+  project: typeof projects[0];
+  index: number;
+  featured?: boolean;
+}) {
   const ref    = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
 
@@ -40,18 +51,34 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
       initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.55, delay: (index % 3) * 0.08, ease: [0.25, 0.4, 0.25, 1] }}
+      className={cn(featured && "md:col-span-2")}
     >
-      <div className="project-card glass-card rounded-2xl p-6 h-full flex flex-col border-blue-500/10 group">
+      <div
+        className={cn(
+          "project-card glass-card rounded-2xl p-6 h-full flex flex-col group",
+          featured
+            ? "border-blue-500/30 shadow-lg shadow-blue-500/10 md:p-8"
+            : "border-blue-500/10"
+        )}
+      >
         {/* Header */}
         <div className="flex items-start justify-between gap-2 mb-4">
-          <span
-            className={cn(
-              "inline-flex items-center px-2.5 py-1 rounded-lg border text-xs font-medium shrink-0",
-              domainColors[project.domainColor] ?? domainColors.blue
+          <div className="flex flex-wrap items-center gap-2">
+            <span
+              className={cn(
+                "inline-flex items-center px-2.5 py-1 rounded-lg border text-xs font-medium shrink-0",
+                domainColors[project.domainColor] ?? domainColors.blue
+              )}
+            >
+              {project.domain}
+            </span>
+            {featured && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-yellow-400 text-slate-900 text-xs font-bold shrink-0">
+                <Sparkles className="w-3 h-3" />
+                Featured
+              </span>
             )}
-          >
-            {project.domain}
-          </span>
+          </div>
           <span className="flex items-center gap-1 text-xs text-muted-foreground font-mono whitespace-nowrap">
             <Calendar className="w-3 h-3 shrink-0" />
             {project.period}
@@ -59,20 +86,30 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
         </div>
 
         {/* Title */}
-        <h3 className="font-display text-xl font-bold text-foreground mb-0.5 group-hover:text-blue-400 transition-colors">
+        <h3
+          className={cn(
+            "font-display font-bold text-foreground mb-0.5 group-hover:text-blue-400 transition-colors",
+            featured ? "text-2xl md:text-3xl" : "text-xl"
+          )}
+        >
           {project.title}
         </h3>
         <p className="text-sm text-blue-400 font-medium mb-3">{project.subtitle}</p>
 
         {/* Description */}
-        <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+        <p
+          className={cn(
+            "text-muted-foreground leading-relaxed mb-4",
+            featured ? "text-sm md:text-base md:max-w-2xl" : "text-sm"
+          )}
+        >
           {project.description}
         </p>
 
-        {/* Highlights */}
-        <ul className="space-y-1.5 mb-5 flex-1">
+        {/* Highlights — two columns on the wider featured card */}
+        <ul className={cn("space-y-1.5 mb-5 flex-1", featured && "md:columns-2 md:gap-x-8")}>
           {project.highlights.map((h, j) => (
-            <li key={j} className="flex items-start gap-2 text-xs text-muted-foreground">
+            <li key={j} className="flex items-start gap-2 text-xs text-muted-foreground break-inside-avoid">
               <span
                 className={cn(
                   "w-1.5 h-1.5 rounded-full mt-1.5 shrink-0",
@@ -124,7 +161,7 @@ export function ProjectsSection() {
 
   return (
     <section id="projects" className="py-24 relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-teal-500/[0.02] to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-rose-500/[0.02] to-transparent pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -148,7 +185,7 @@ export function ProjectsSection() {
 
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
           {projects.map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} />
+            <ProjectCard key={project.id} project={project} index={i} featured={i === 0} />
           ))}
         </div>
       </div>

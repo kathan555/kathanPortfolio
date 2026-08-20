@@ -20,7 +20,7 @@ export function ExperienceSection() {
 
         <div className="relative">
           {/* Timeline vertical line */}
-          <div className="absolute left-6 top-4 bottom-4 w-px bg-gradient-to-b from-blue-500/60 via-teal-500/40 to-transparent hidden md:block" />
+          <div className="absolute left-6 top-4 bottom-4 w-px bg-gradient-to-b from-blue-500/60 via-rose-500/40 to-transparent hidden md:block" />
 
           <div className="space-y-8">
             {experiences.map((exp, i) => (
@@ -50,8 +50,8 @@ export function ExperienceSection() {
                     <div className="flex flex-wrap items-start justify-between gap-3 mb-5">
                       <div>
                         {exp.type === "current" && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-medium mb-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-medium mb-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
                             Current Role
                           </span>
                         )}

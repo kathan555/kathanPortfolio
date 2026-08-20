@@ -95,7 +95,7 @@ export default async function BlogPage() {
                   blog_posts
                 </code>{" "}
                 table with{" "}
-                <code className="font-mono text-xs bg-muted px-1.5 py-0.5 rounded text-teal-400">
+                <code className="font-mono text-xs bg-muted px-1.5 py-0.5 rounded text-rose-400">
                   published = true
                 </code>{" "}
                 to see it here.

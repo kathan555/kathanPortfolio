@@ -51,9 +51,10 @@ export function ChapterDivider({ number, title, icon }: ChapterDividerProps) {
           style={{
             /* Responsive from ~8rem to ~18rem */
             fontSize: "clamp(7rem, 22vw, 18rem)",
-            /* Faint gradient — dark mode friendly, light mode friendly */
+            /* --divider-ghost carries a heavier alpha in light mode; the dark
+               value that reads well on near-black vanishes on near-white. */
             background:
-              "linear-gradient(180deg, hsl(217 91% 60% / 0.07) 0%, transparent 80%)",
+              "linear-gradient(180deg, var(--divider-ghost) 0%, transparent 80%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
@@ -75,7 +76,7 @@ export function ChapterDivider({ number, title, icon }: ChapterDividerProps) {
             className="flex-1 h-px origin-left"
             style={{
               background:
-                "linear-gradient(90deg, transparent 0%, hsl(217 91% 60% / 0.22) 100%)",
+                "linear-gradient(90deg, transparent 0%, var(--divider-line) 100%)",
             }}
           />
 
@@ -125,7 +126,7 @@ export function ChapterDivider({ number, title, icon }: ChapterDividerProps) {
             className="flex-1 h-px origin-right"
             style={{
               background:
-                "linear-gradient(270deg, transparent 0%, hsl(217 91% 60% / 0.22) 100%)",
+                "linear-gradient(270deg, transparent 0%, var(--divider-line) 100%)",
             }}
           />
         </div>

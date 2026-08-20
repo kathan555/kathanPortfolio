@@ -115,7 +115,7 @@ export function NavigationProgress() {
     >
       {/* Main bar */}
       <div
-        className="h-[2.5px] bg-gradient-to-r from-blue-500 via-blue-400 to-teal-400"
+        className="h-[2.5px] bg-gradient-to-r from-blue-500 via-blue-400 to-rose-400"
         style={{
           width:      `${width}%`,
           transition: width === 100

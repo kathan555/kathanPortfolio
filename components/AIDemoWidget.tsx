@@ -102,8 +102,8 @@ export function AIDemoWidget() {
           </div>
           <div>
             <p className="font-semibold text-sm text-foreground leading-tight">AI Integration Assistant</p>
-            <p className="text-xs text-teal-400 flex items-center gap-1.5 truncate">
-              <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse inline-block" />
+            <p className="text-xs text-rose-400 flex items-center gap-1.5 truncate">
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse inline-block" />
               Live demo — powered by Claude AI
             </p>
           </div>

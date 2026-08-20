@@ -122,7 +122,7 @@ function PortraitFrame() {
 
         {/* Outer frame */}
         <div
-          className="relative rounded-2xl p-[5px] bg-gradient-to-br from-blue-500/25 via-border/80 to-teal-500/20 shadow-lg"
+          className="relative rounded-2xl p-[5px] bg-gradient-to-br from-blue-500/25 via-border/80 to-rose-500/20 shadow-lg"
           style={{ transform: "translateZ(0px)" }}
         >
           <div className="rounded-[11px] p-3 sm:p-3.5 bg-muted/30 dark:bg-muted/20 border border-border/60">
@@ -170,8 +170,10 @@ function PortraitFrame() {
       </motion.div>
 
       <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap pointer-events-none">
-        <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-background border border-teal-500/35 text-teal-400 text-xs font-semibold shadow-md">
-          <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+        {/* Availability stays emerald, not the rose accent — a red "Open to
+            Work" pill reads as unavailable at a glance. */}
+        <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-background border border-emerald-500/35 text-emerald-500 text-xs font-semibold shadow-md">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
           Open to Work
         </span>
       </div>
@@ -189,12 +191,14 @@ export function HeroSection() {
     <section id="hero" className="relative min-h-screen flex items-center justify-center pt-20 pb-10 overflow-hidden">
       {/* ── Immersive AI backdrop ─────────────────────────────────────────── */}
       {/* Aurora sheet */}
+      {/* --hero-wash-* are theme-scoped: the dark-tuned alphas here were washing
+          out to nothing against the near-white light background. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-70 animate-aurora"
+        className="pointer-events-none absolute inset-0 opacity-70 animate-aurora motion-reduce:animate-none"
         style={{
           background:
-            "radial-gradient(60% 55% at 15% 20%, hsl(217 91% 60% / 0.16) 0%, transparent 60%), radial-gradient(55% 55% at 85% 30%, hsl(175 77% 45% / 0.14) 0%, transparent 60%), radial-gradient(60% 60% at 50% 100%, hsl(217 91% 60% / 0.10) 0%, transparent 65%)",
+            "radial-gradient(60% 55% at 15% 20%, var(--hero-wash-1) 0%, transparent 60%), radial-gradient(55% 55% at 85% 30%, var(--hero-wash-2) 0%, transparent 60%), radial-gradient(60% 60% at 50% 100%, var(--hero-wash-1) 0%, transparent 65%)",
           backgroundSize: "200% 200%",
         }}
       />
@@ -203,7 +207,7 @@ export function HeroSection() {
       {/* Sweeping light beams */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-1/4 left-0 h-[150%] w-40 animate-beam bg-gradient-to-r from-transparent via-blue-400/10 to-transparent motion-reduce:hidden" />
-        <div className="absolute -top-1/4 left-1/3 h-[150%] w-40 animate-beam-delayed bg-gradient-to-r from-transparent via-teal-400/10 to-transparent motion-reduce:hidden" />
+        <div className="absolute -top-1/4 left-1/3 h-[150%] w-40 animate-beam-delayed bg-gradient-to-r from-transparent via-rose-400/10 to-transparent motion-reduce:hidden" />
       </div>
       {/* Grid fade at the very bottom for depth */}
       <div
@@ -217,8 +221,8 @@ export function HeroSection() {
           <motion.div variants={container} initial="hidden" animate="show" className="max-w-2xl">
 
             <motion.div variants={item} className="mb-6 flex flex-wrap items-center gap-3">
-              <span className="inline-flex items-center gap-2 px-3 py-2 sm:px-4 rounded-full border border-teal-500/40 bg-teal-500/8 text-teal-400 text-xs sm:text-sm font-semibold">
-                <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+              <span className="inline-flex items-center gap-2 px-3 py-2 sm:px-4 rounded-full border border-emerald-500/40 bg-emerald-500/8 text-emerald-500 text-xs sm:text-sm font-semibold">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 {personalInfo.availableForWork
                   ? `Available for Contract · ${personalInfo.availableFrom}`
                   : "Currently Engaged · Open to Discussions"}
@@ -226,7 +230,10 @@ export function HeroSection() {
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-400 text-xs font-medium">
                 🌏 Remote-friendly
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-300 text-xs font-semibold">
+              {/* The one solid-yellow element above the fold. Yellow is only
+                  ever a fill here — dark text on yellow-400 is 11.4:1, whereas
+                  yellow text on this background would be 1.5:1. */}
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-yellow-400 text-slate-900 text-xs font-bold shadow-sm shadow-yellow-400/40">
                 <Sparkles className="w-3.5 h-3.5" />
                 AI-Native
               </span>
@@ -239,7 +246,7 @@ export function HeroSection() {
             <motion.h2 variants={item} className="flex items-center gap-3 mb-4">
               <Briefcase className="w-5 h-5 text-blue-400 shrink-0" />
               <span className="font-mono text-blue-400 text-lg font-medium">
-                Blazor & WPF Specialist | .NET Contract Developer
+                AI &amp; .NET Developer | Blazor · WPF · ASP.NET Core
               </span>
             </motion.h2>
 
@@ -255,9 +262,10 @@ export function HeroSection() {
             </motion.div>
 
             <motion.p variants={item} className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl mb-10">
-              I build <span className="text-foreground font-semibold">production-grade Blazor and WPF applications</span> for
-              teams in legal tech, healthcare, and enterprise | available to start{" "}
-              <span className="text-teal-400 font-semibold">{personalInfo.availableFrom.toLowerCase()}</span>.
+              I build <span className="text-foreground font-semibold">production-grade applications with AI built in</span> —
+              Blazor, WPF and ASP.NET Core for teams in legal tech, healthcare, and
+              enterprise | available to start{" "}
+              <span className="text-emerald-500 font-semibold">{personalInfo.availableFrom.toLowerCase()}</span>.
             </motion.p>
 
             {/* ── AI command bar — the interactive hero centrepiece ── */}

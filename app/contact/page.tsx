@@ -202,9 +202,9 @@ export default function ContactPage() {
             </div>
 
             {/* Response time note */}
-            <div className="glass-card rounded-2xl p-5 border-teal-500/20">
+            <div className="glass-card rounded-2xl p-5 border-rose-500/20">
               <p className="text-sm text-muted-foreground leading-relaxed">
-                <span className="text-teal-400 font-semibold">Typical response time:</span>{" "}
+                <span className="text-rose-400 font-semibold">Typical response time:</span>{" "}
                 Within 24 hours. For urgent matters, feel free to call directly.
               </p>
             </div>

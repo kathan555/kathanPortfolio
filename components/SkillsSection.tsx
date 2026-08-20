@@ -1,9 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef, type CSSProperties, type ReactNode } from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
+import Link from "next/link";
 import { ScrollReveal, StaggerChildren, staggerItem } from "@/components/ScrollReveal";
 import { skills } from "@/lib/data";
-import { Code2, Layers, Database, Monitor, Wrench, Zap } from "lucide-react";
+import {
+  Code2, Layers, Database, Monitor, Wrench, Zap,
+  Brain, RefreshCw, Link2, Users,
+} from "lucide-react";
 import { motion } from "framer-motion";
 
 /* ─── Icon / meta map ──────────────────────────────────────────────────── */
@@ -73,41 +77,67 @@ const SKILL_META: Record<string, SkillMeta> = {
   "LEAD Tools":    { glow: "#60a5fa" },
   "DevExpress":    { glow: "#FF5722" },
   "ABP.io":        { glow: "#512BD4" },
+  /* AI stack. No OpenAI entry: Simple Icons removed the mark and devicon 403s,
+     so any URL here would render an empty tile. Azure below covers Azure OpenAI. */
+  "Gemini":        { src: "https://cdn.simpleicons.org/googlegemini/8E75B2",                                                 glow: "#8E75B2" },
+  "Anthropic":     { src: "https://cdn.simpleicons.org/anthropic/D4A27F",                                                    glow: "#D4A27F" },
 };
 
-/* ─── Featured hero skills ─────────────────────────────────────────────── */
+/* ─── Featured stack ────────────────────────────────────────────────────────
+   Names and logos only. This grid previously carried a 1–5 dot rating and an
+   "Expert / Advanced / Proficient" badge per item — self-assessed skill levels
+   read as a junior signal to anyone hiring, and they volunteer weaknesses
+   nobody asked about. What a technology is used for belongs here; how good
+   someone claims to be at it does not. */
 
 const FEATURED = [
-  { name: "React",        level: 5, label: "Expert" },
-  { name: "Next.js",      level: 5, label: "Expert" },
-  { name: "TypeScript",   level: 5, label: "Expert" },
-  { name: "C#",           level: 5, label: "Expert" },
-  { name: ".NET 9",       level: 5, label: "Expert" },
-  { name: "Blazor",       level: 4, label: "Advanced" },
-  { name: "Tailwind CSS", level: 5, label: "Expert" },
-  { name: "Prisma",       level: 4, label: "Advanced" },
-  { name: "PostgreSQL",   level: 4, label: "Advanced" },
-  { name: "Docker",       level: 3, label: "Proficient" },
-  { name: "Git",          level: 5, label: "Expert" },
+  { name: "C#" },
+  { name: ".NET 9" },
+  { name: "Blazor" },
+  { name: "React" },
+  { name: "Next.js" },
+  { name: "TypeScript" },
+  { name: "Gemini" },
+  { name: "Anthropic" },
+  { name: "PostgreSQL" },
+  { name: "Docker" },
+  { name: "Azure" },
+  { name: "Git" },
 ];
 
 type FeaturedSkill = (typeof FEATURED)[number];
 
-const LEVEL_COLOR: Record<string, string> = {
-  Expert:     "text-blue-400   border-blue-400/30   bg-blue-400/10",
-  Advanced:   "text-purple-400 border-purple-400/30 bg-purple-400/10",
-  Proficient: "text-teal-400   border-teal-400/30   bg-teal-400/10",
-};
+/* ─── Capability areas ──────────────────────────────────────────────────────
+   Replaces the percentage bars. A buyer cannot act on "DevOps / CI-CD 70%",
+   and a declared 70% is an argument against hiring. These say what the work
+   actually is instead. */
 
-/* ─── Skill bar data ───────────────────────────────────────────────────── */
-
-const SKILL_BARS = [
-  { name: "C# / .NET Ecosystem", pct: 95, color: "#512BD4" },
-  { name: "React / Next.js",     pct: 92, color: "#00D8FF" },
-  { name: "TypeScript",          pct: 90, color: "#3178C6" },
-  { name: "Database Design",     pct: 85, color: "#336791" },
-  { name: "System Architecture", pct: 88, color: "#a78bfa" },
-  { name: "DevOps / CI-CD",      pct: 70, color: "#2496ED" },
+const CAPABILITIES = [
+  {
+    icon: <Layers className="w-4 h-4" />,
+    title: "Architecture & system design",
+    body:  "Turning ambiguous requirements into a structure that still makes sense in year three.",
+  },
+  {
+    icon: <Brain className="w-4 h-4" />,
+    title: "AI integration",
+    body:  "Gemini, Azure OpenAI and Semantic Kernel wired into production apps — rate limits, fallbacks and cost control included.",
+  },
+  {
+    icon: <RefreshCw className="w-4 h-4" />,
+    title: "Legacy modernisation",
+    body:  "Incremental migration off ageing stacks, one slice at a time, without a big-bang rewrite.",
+  },
+  {
+    icon: <Link2 className="w-4 h-4" />,
+    title: "Platform integration",
+    body:  "OAuth 2.0, scheduled sync and idempotent writes between systems that were never designed to talk.",
+  },
+  {
+    icon: <Users className="w-4 h-4" />,
+    title: "Technical leadership",
+    body:  "Leading sprints, reviewing code, and mentoring whoever inherits the codebase.",
+  },
 ];
 
 /* ─── Category icon map ────────────────────────────────────────────────── */
@@ -122,9 +152,25 @@ const iconMap: Record<string, ReactNode> = {
 
 /* ─── SkillLogo ─────────────────────────────────────────────────────────── */
 
+/* Logos come from third-party CDNs, so a mark being pulled or renamed upstream
+   is a real failure mode. Previously an errored image was just hidden, leaving
+   an empty tile with no clue what it was; now it falls back to the same
+   initials treatment used when no logo is configured at all. */
 function SkillLogo({ name, size = 28 }: { name: string; size?: number }) {
+  const [failed, setFailed] = useState(false);
   const meta = SKILL_META[name];
-  if (!meta?.src) return null;
+
+  if (!meta?.src || failed) {
+    return (
+      <span
+        className="font-mono font-bold leading-none"
+        style={{ color: meta?.glow ?? "#60a5fa", fontSize: size * 0.55 }}
+      >
+        {name.slice(0, 2)}
+      </span>
+    );
+  }
+
   return (
     <img
       src={meta.src}
@@ -133,7 +179,7 @@ function SkillLogo({ name, size = 28 }: { name: string; size?: number }) {
       height={size}
       style={meta.invert ? { filter: "brightness(0) invert(1)" } : undefined}
       className="object-contain"
-      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+      onError={() => setFailed(true)}
     />
   );
 }
@@ -168,39 +214,32 @@ function FeaturedCard({ skill }: { skill: FeaturedSkill }) {
         className="w-14 h-14 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
         style={{ background: `${glow}12`, border: `1px solid ${glow}25` }}
       >
-        {meta?.src ? (
-          <SkillLogo name={skill.name} size={36} />
-        ) : (
-          <span className="text-2xl font-bold font-mono" style={{ color: glow }}>
-            {skill.name.slice(0, 2)}
-          </span>
-        )}
+        {/* SkillLogo falls back to initials itself, for both a missing config
+            and a logo that fails to load from the CDN. */}
+        <SkillLogo name={skill.name} size={36} />
       </div>
 
       {/* Name */}
       <p className="font-display font-semibold text-sm text-foreground text-center leading-tight transition-colors">
         {skill.name}
       </p>
-
-      {/* Dots */}
-      <div className="flex items-center gap-1">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div
-            key={i}
-            className="w-1.5 h-1.5 rounded-full transition-all duration-300"
-            style={{
-              background: i < skill.level ? glow : `${glow}30`,
-              boxShadow: i < skill.level ? `0 0 4px ${glow}80` : "none",
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Level badge */}
-      <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border ${LEVEL_COLOR[skill.label]}`}>
-        {skill.label}
-      </span>
     </motion.div>
+  );
+}
+
+/* ─── CapabilityRow ─────────────────────────────────────────────────────── */
+
+function CapabilityRow({ icon, title, body }: (typeof CAPABILITIES)[number]) {
+  return (
+    <div className="flex items-start gap-3">
+      <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400">
+        {icon}
+      </span>
+      <div className="min-w-0">
+        <p className="font-display font-semibold text-sm text-foreground leading-snug">{title}</p>
+        <p className="text-xs text-muted-foreground leading-relaxed mt-1">{body}</p>
+      </div>
+    </div>
   );
 }
 
@@ -241,47 +280,9 @@ function SkillBadge({ skill }: { skill: string }) {
   );
 }
 
-/* ─── AnimatedBar ───────────────────────────────────────────────────────── */
-
-function AnimatedBar({ name, pct, color, started }: { name: string; pct: number; color: string; started: boolean }) {
-  return (
-    <div className="space-y-1.5">
-      <div className="flex items-center justify-between text-sm">
-        <span className="text-muted-foreground font-medium">{name}</span>
-        <span className="font-mono text-xs font-bold" style={{ color }}>{pct}%</span>
-      </div>
-      <div className="h-1.5 w-full rounded-full bg-muted/40 overflow-hidden">
-        <div
-          className="h-full rounded-full transition-all duration-1000 ease-out"
-          style={{
-            width: started ? `${pct}%` : "0%",
-            background: `linear-gradient(90deg, ${color}aa, ${color})`,
-            boxShadow: started ? `0 0 8px ${color}60` : "none",
-            transitionDelay: "200ms",
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
 /* ─── Main ──────────────────────────────────────────────────────────────── */
 
 export function SkillsSection() {
-  const [barsStarted, setBarsStarted] = useState(false);
-  const barsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = barsRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setBarsStarted(true); obs.disconnect(); } },
-      { threshold: 0.2 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
   return (
     <section id="skills" className="py-24 relative overflow-hidden">
 
@@ -303,11 +304,11 @@ export function SkillsSection() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/2 to-transparent" />
         <div
           className="skills-orb absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-40"
-          style={{ background: "radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(circle, rgb(var(--c-blue-500) / 0.09) 0%, transparent 70%)" }}
         />
         <div
           className="skills-orb absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-30"
-          style={{ background: "radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)", animationDelay: "7s" }}
+          style={{ background: "radial-gradient(circle, rgb(var(--c-purple-500) / 0.08) 0%, transparent 70%)", animationDelay: "7s" }}
         />
       </div>
 
@@ -323,7 +324,10 @@ export function SkillsSection() {
               Technical{" "}
               <span
                 style={{
-                  background: "linear-gradient(90deg,#60a5fa,#a78bfa,#60a5fa)",
+                  /* Theme-aware: the literal hexes here were dark-mode blues
+                     that washed out to near-invisible on the light ground. */
+                  background:
+                    "linear-gradient(90deg,rgb(var(--c-blue-400)),rgb(var(--c-purple-400)),rgb(var(--c-blue-400)))",
                   backgroundSize: "200% auto",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
@@ -335,7 +339,8 @@ export function SkillsSection() {
               </span>
             </h2>
             <p className="text-muted-foreground mt-3 max-w-xl text-lg">
-              8+ years across the full .NET ecosystem — from desktop to cloud.
+              8+ years shipping production software — desktop, web, and AI-enabled
+              systems, across .NET and the modern JavaScript stack.
             </p>
           </div>
         </ScrollReveal>
@@ -396,60 +401,39 @@ export function SkillsSection() {
             </div>
           </div>
 
-          {/* Right: Proficiency bars */}
+          {/* Right: What the work actually is —
+              replaces the old percentage bars and the "25+ Technologies"
+              style counters, both of which measured the wrong thing. */}
           <div>
             <ScrollReveal>
               <div className="mb-6 flex items-center gap-3">
-                <Code2 className="w-4 h-4 text-teal-400" />
-                <span className="font-mono text-xs text-teal-400 tracking-widest uppercase font-medium">
-                  Proficiency
+                <Code2 className="w-4 h-4 text-rose-400" />
+                <span className="font-mono text-xs text-rose-400 tracking-widest uppercase font-medium">
+                  Where I&apos;m Brought In
                 </span>
-                <div className="flex-1 h-px bg-teal-500/15" />
+                <div className="flex-1 h-px bg-rose-500/15" />
               </div>
             </ScrollReveal>
 
             <ScrollReveal delay={0.1}>
-              <div
-                ref={barsRef}
-                className="glass-card rounded-2xl p-6 space-y-5"
-              >
-                {SKILL_BARS.map((bar) => (
-                  <AnimatedBar
-                    key={bar.name}
-                    name={bar.name}
-                    pct={bar.pct}
-                    color={bar.color}
-                    started={barsStarted}
-                  />
+              <div className="glass-card rounded-2xl p-6 space-y-5">
+                {CAPABILITIES.map((c) => (
+                  <CapabilityRow key={c.title} {...c} />
                 ))}
 
-                {/* Legend */}
-                <div className="pt-3 border-t border-border/50 flex items-center justify-between text-[11px] font-mono text-muted-foreground/60">
-                  <span>Beginner</span>
-                  <span>Intermediate</span>
-                  <span>Expert</span>
+                <div className="pt-4 border-t border-border/50">
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Not sure which of these your project needs?{" "}
+                    <Link
+                      href="/contact"
+                      className="text-blue-400 font-medium hover:underline underline-offset-2"
+                    >
+                      Describe it and I&apos;ll tell you.
+                    </Link>
+                  </p>
                 </div>
               </div>
             </ScrollReveal>
-
-            {/* Quick stat cards */}
-            <div className="grid grid-cols-2 gap-3 mt-4">
-              {[
-                { label: "Technologies", value: "25+", color: "#60a5fa" },
-                { label: "Frameworks",   value: "12+", color: "#a78bfa" },
-                { label: "Years Coding", value: "8+",  color: "#34d399" },
-                { label: "Open Source",  value: "10+", color: "#fb923c" },
-              ].map((s) => (
-                <ScrollReveal key={s.label} delay={0.15}>
-                  <div className="glass-card rounded-xl p-4 text-center group hover:border-opacity-40 transition-all duration-300"
-                    style={{ "--s-color": s.color } as CSSProperties}
-                  >
-                    <p className="font-display text-2xl font-bold" style={{ color: s.color }}>{s.value}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5 font-medium">{s.label}</p>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
           </div>
         </div>
       </div>

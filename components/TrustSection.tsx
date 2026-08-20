@@ -88,7 +88,7 @@ const timeline = [
 
 const colorMap: Record<string, string> = {
   blue:   "bg-blue-500/10   border-blue-500/20   text-blue-400",
-  teal:   "bg-teal-500/10   border-teal-500/20   text-teal-400",
+  teal:   "bg-rose-500/10   border-rose-500/20   text-rose-400",
   purple: "bg-purple-500/10 border-purple-500/20 text-purple-400",
   orange: "bg-orange-500/10 border-orange-500/20 text-orange-400",
 };
@@ -188,14 +188,14 @@ export function TrustSection() {
                 key={i}
                 className={`flex-1 rounded-xl p-4 border transition-all ${
                   item.type === "current"
-                    ? "border-teal-500/30 bg-teal-500/6"
+                    ? "border-rose-500/30 bg-rose-500/6"
                     : "border-border bg-muted/20"
                 }`}
               >
                 {item.type === "current" && (
                   <div className="flex items-center gap-1.5 mb-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
-                    <span className="text-[10px] font-semibold text-teal-400 uppercase tracking-wider">
+                    <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
+                    <span className="text-[10px] font-semibold text-rose-400 uppercase tracking-wider">
                       Current
                     </span>
                   </div>

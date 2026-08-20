@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 
 const domainColors: Record<string, string> = {
   blue:   "bg-blue-500/10   border-blue-500/25   text-blue-400",
-  teal:   "bg-teal-500/10   border-teal-500/25   text-teal-400",
+  teal:   "bg-rose-500/10   border-rose-500/25   text-rose-400",
   purple: "bg-purple-500/10 border-purple-500/25 text-purple-400",
   orange: "bg-orange-500/10 border-orange-500/25 text-orange-400",
   green:  "bg-green-500/10  border-green-500/25  text-green-400",
@@ -24,7 +24,7 @@ const domainColors: Record<string, string> = {
 
 const dotColors: Record<string, string> = {
   blue:   "bg-blue-400",
-  teal:   "bg-teal-400",
+  teal:   "bg-rose-400",
   purple: "bg-purple-400",
   orange: "bg-orange-400",
   green:  "bg-green-400",
@@ -117,7 +117,7 @@ function BuildCard({ project, index }: { project: typeof selfBuilt[0]; index: nu
               href={project.demo}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-teal-400 hover:text-teal-300 transition-colors ml-auto"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-rose-400 hover:text-rose-300 transition-colors ml-auto"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               Live demo

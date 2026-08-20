@@ -112,7 +112,7 @@ export function ShareButtons({ title, url, tags = [] }: ShareButtonsProps) {
       {/* ── Card ── */}
       <div className="relative rounded-2xl overflow-hidden">
         {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/15 via-purple-500/8 to-teal-500/15" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/15 via-purple-500/8 to-rose-500/15" />
         <div className="absolute inset-0 backdrop-blur-sm" />
         <div className="absolute inset-0 border border-blue-500/20 rounded-2xl" />
 
@@ -120,7 +120,7 @@ export function ShareButtons({ title, url, tags = [] }: ShareButtonsProps) {
 
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center shadow-lg shadow-blue-500/30">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-rose-500 flex items-center justify-center shadow-lg shadow-blue-500/30">
               <Share2 className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -196,7 +196,7 @@ export function ShareButtons({ title, url, tags = [] }: ShareButtonsProps) {
               className={cn(
                 "shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200",
                 copied
-                  ? "bg-teal-500 text-white shadow-md shadow-teal-500/30"
+                  ? "bg-rose-500 text-white shadow-md shadow-rose-500/30"
                   : "bg-blue-500 hover:bg-blue-600 text-white shadow-md shadow-blue-500/30 hover:scale-105 active:scale-95"
               )}
             >

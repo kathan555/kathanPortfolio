@@ -83,7 +83,7 @@ export function SectionProgress() {
               </p>
               <div className="h-0.5 rounded-full bg-white/5 overflow-hidden">
                 <motion.div
-                  className="h-full rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-teal-400"
+                  className="h-full rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-rose-400"
                   style={{ scaleX: scrollPct, transformOrigin: "left", width: "100%" }}
                 />
               </div>
