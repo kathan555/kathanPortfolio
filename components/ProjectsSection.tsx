@@ -3,7 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { projects } from "@/lib/data";
-import { Calendar, TrendingUp, Sparkles } from "lucide-react";
+import { Calendar, TrendingUp, Sparkles, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const domainColors: Record<string, string> = {
@@ -134,6 +134,24 @@ function ProjectCard({
           </div>
         )}
 
+        {/* ── AI-assisted delivery ──
+            Sits behind a disclosure: it is reassurance for the reader who
+            cares how the work was produced, and noise for everyone else. */}
+        {project.aiDelivery && (
+          <details className="group/ai mb-4 rounded-xl border border-border bg-muted/30 overflow-hidden">
+            <summary className="flex items-center gap-2 px-3 py-2 cursor-pointer list-none text-xs font-medium text-muted-foreground hover:text-blue-400 transition-colors">
+              <Bot className="w-3.5 h-3.5 shrink-0 text-blue-400" />
+              How AI was used here
+              <span className="ml-auto text-[10px] font-mono opacity-60 group-open/ai:hidden">
+                show
+              </span>
+            </summary>
+            <p className="px-3 pb-3 text-xs text-muted-foreground leading-relaxed">
+              {project.aiDelivery}
+            </p>
+          </details>
+        )}
+
         {/* Tech tags */}
         <div className="flex flex-wrap gap-1.5 pt-4 border-t border-border/60">
           {project.tags.slice(0, 5).map((tag) => (
@@ -179,7 +197,8 @@ export function ProjectsSection() {
           </h2>
           <p className="text-muted-foreground mt-3 max-w-xl">
             Production applications across legal tech, fintech, healthcare, and e-commerce —
-            with measurable outcomes for each client.
+            with measurable outcomes for each client, and an honest note on where AI
+            helped and where it deliberately did not.
           </p>
         </motion.div>
 

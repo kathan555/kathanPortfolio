@@ -4,6 +4,7 @@ import { SkillsSection }      from "@/components/SkillsSection";
 import { ExperienceSection }  from "@/components/ExperienceSection";
 import { ProjectsSection }    from "@/components/ProjectsSection";
 import { SelfBuiltSection }   from "@/components/SelfBuiltSection";
+import { AIWorkflowSection }  from "@/components/AIWorkflowSection";
 import { HomeAIAssistant }    from "@/components/HomeAIAssistant";
 import { EducationSection }   from "@/components/EducationSection";
 import { SectionProgress }    from "@/components/SectionProgress";
@@ -14,7 +15,8 @@ import { ArrowRight, Calculator } from "lucide-react";
 
 /* ─────────────────────────────────────────────────────────────────────────
    Home Page
-   Structure:  Hero + About → Skills → Experience → Projects → Education → CTA
+   Structure:  Hero + About → Skills → How I Build → Experience → Projects
+               → Independent Builds → Education → CTA
    Navigation: SectionProgress (fixed right rail + top progress bar)
    ───────────────────────────────────────────────────────────────────────── */
 export default function Home() {
@@ -54,26 +56,36 @@ export default function Home() {
       <ChapterDivider number="01" title="Technical Skills" icon="code" />
       <SkillsSection />
 
-      {/* ── 02 — EXPERIENCE (banded) ── */}
+      {/* ── 02 — HOW I BUILD (banded) ──
+          The AI-assisted delivery method. Placed straight after Skills because
+          "which tools" and "how they are actually used" are one question for a
+          buyer, and because everything below (per-project AI notes, the solo
+          builds) reads as evidence for the claims made here. */}
       <div className="section-band section-glow">
-        <ChapterDivider number="02" title="Career Journey" icon="briefcase" />
-        <ExperienceSection />
+        <ChapterDivider number="02" title="How I Build" icon="workflow" />
+        <AIWorkflowSection />
       </div>
 
-      {/* ── 03 — PROJECTS (plain) ── */}
-      <ChapterDivider number="03" title="Key Work" icon="folder" />
-      <ProjectsSection />
+      {/* ── 03 — EXPERIENCE (plain) ── */}
+      <ChapterDivider number="03" title="Career Journey" icon="briefcase" />
+      <ExperienceSection />
 
-      {/* ── 04 — INDEPENDENT BUILDS (banded) ──
+      {/* ── 04 — PROJECTS (banded) ── */}
+      <div className="section-band section-glow">
+        <ChapterDivider number="04" title="Key Work" icon="folder" />
+        <ProjectsSection />
+      </div>
+
+      {/* ── 05 — INDEPENDENT BUILDS (plain) ──
           Solo, self-shipped products — the counterpart to client "Key Work". */}
-      <div className="section-band section-glow">
-        <ChapterDivider number="04" title="Independent Builds" icon="sparkles" />
-        <SelfBuiltSection />
-      </div>
+      <ChapterDivider number="05" title="Independent Builds" icon="sparkles" />
+      <SelfBuiltSection />
 
-      {/* ── 05 — EDUCATION (plain) ── */}
-      <ChapterDivider number="05" title="Academic Background" icon="graduation" />
-      <EducationSection />
+      {/* ── 06 — EDUCATION (banded) ── */}
+      <div className="section-band section-glow">
+        <ChapterDivider number="06" title="Academic Background" icon="graduation" />
+        <EducationSection />
+      </div>
 
       {/* ══════════════════════════════════════════════════════════════════
           FINAL CTA

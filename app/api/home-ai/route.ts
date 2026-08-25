@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   personalInfo, summary, skills, experiences,
-  projects, selfBuilt, services,
+  projects, selfBuilt, services, aiWorkflow,
 } from "@/lib/data";
 
 // Rate limiting — simple in-memory store (resets on cold start)
@@ -31,7 +31,7 @@ const experienceText = experiences
   .join("; ");
 
 const clientWorkText = projects
-  .map((p) => `${p.title} — ${p.subtitle} [${p.domain}]: ${p.description}${p.result ? ` Outcome: ${p.result}` : ""}`)
+  .map((p) => `${p.title} — ${p.subtitle} [${p.domain}]: ${p.description}${p.result ? ` Outcome: ${p.result}` : ""}${p.aiDelivery ? ` AI-assisted delivery: ${p.aiDelivery}` : ""}`)
   .join("\n");
 
 const selfBuiltText = selfBuilt
@@ -39,6 +39,14 @@ const selfBuiltText = selfBuilt
   .join("\n");
 
 const servicesText = services.map((s) => s.title).join(", ");
+
+const workflowText = aiWorkflow.pillars
+  .map((p) => `${p.step}. ${p.title} — ${p.body} (Why it matters: ${p.guards})`)
+  .join("\n");
+
+const proofText = aiWorkflow.proof.stats
+  .map((st) => `${st.value} ${st.unit} (${st.note})`)
+  .join("; ");
 
 const SYSTEM_PROMPT = `You are Kathan's AI assistant — a friendly, knowledgeable concierge embedded on the homepage of ${personalInfo.name}'s portfolio (${personalInfo.fullTitle}). Your job is to help visitors (potential clients, recruiters, and fellow developers) quickly understand what Kathan does, what he has built, and how to work with him — and to nudge genuinely interested visitors toward getting in touch.
 
@@ -54,6 +62,12 @@ ${skillsText}
 
 === EXPERIENCE ===
 ${experienceText}
+
+=== HOW HE WORKS WITH AI (his delivery method) ===
+${aiWorkflow.intro}
+${workflowText}
+Measured on Craftura, a full e-commerce platform he built: ${proofText}. ${aiWorkflow.proof.caveat}
+If a visitor is worried that AI-assisted work means unreviewed or low-quality code, reassure them with the review-first discipline and the plan-first workflow above — he reviews, tests, and validates every suggestion against coding standards and security requirements before it merges.
 
 === SERVICES HE OFFERS ===
 ${servicesText}. He also specialises in adding AI features to .NET apps (Azure OpenAI, Semantic Kernel, RAG pipelines) — see /ai-integration. For law firms, he builds integrations between practice management platforms (Clio, Lawmatics, Zoom, Box) using ASP.NET Core, Hangfire and OAuth 2.0 — see /legal-tech-integration.

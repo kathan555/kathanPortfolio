@@ -3,7 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { selfBuilt } from "@/lib/data";
-import { Github, ExternalLink, Sparkles } from "lucide-react";
+import { Github, ExternalLink, Sparkles, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -83,6 +83,14 @@ function BuildCard({ project, index }: { project: typeof selfBuilt[0]; index: nu
             </li>
           ))}
         </ul>
+
+        {/* ── Measured outcome (only where one honestly exists) ── */}
+        {project.result && (
+          <div className="flex items-start gap-2.5 p-3 rounded-xl border border-blue-500/20 bg-blue-500/[0.06] mb-4 text-xs leading-relaxed text-muted-foreground">
+            <TrendingUp className="w-3.5 h-3.5 shrink-0 mt-0.5 text-blue-400" />
+            <span>{project.result}</span>
+          </div>
+        )}
 
         {/* Tech tags */}
         <div className="flex flex-wrap gap-1.5 mb-4">

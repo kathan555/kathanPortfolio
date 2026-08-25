@@ -8,10 +8,12 @@ import {
   FolderOpen,
   GraduationCap,
   Sparkles,
+  Workflow,
 } from "lucide-react";
 
 /* ─── Types ─────────────────────────────────────────────────────────────── */
-export type ChapterIcon = "code" | "briefcase" | "folder" | "graduation" | "sparkles";
+export type ChapterIcon =
+  | "code" | "briefcase" | "folder" | "graduation" | "sparkles" | "workflow";
 
 interface ChapterDividerProps {
   number: string;       // e.g. "01"
@@ -26,6 +28,7 @@ const ICONS: Record<ChapterIcon, React.ReactNode> = {
   folder:     <FolderOpen    className="w-4 h-4" />,
   graduation: <GraduationCap className="w-4 h-4" />,
   sparkles:   <Sparkles      className="w-4 h-4" />,
+  workflow:   <Workflow      className="w-4 h-4" />,
 };
 
 /* ─── Component ─────────────────────────────────────────────────────────── */

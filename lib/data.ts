@@ -1,6 +1,6 @@
 export const personalInfo = {
   name: "Kathan N. Patel",
-  title: "Technical Lead (ASP.NET)",
+  title: "Technical Lead (Full Stack .NET Developer)",
   fullTitle: "Technical Lead · Full Stack .NET Developer",
   email: "patel.kathan555@gmail.com",
   phone: "(+91) 7600410895",
@@ -18,7 +18,7 @@ export const personalInfo = {
 };
 
 export const summary =
-  "I'm a freelance .NET Technical Lead with 8+ years of experience building production-grade web and desktop applications. I specialise in Blazor, ASP.NET Core, and WPF — helping startups and businesses turn complex requirements into clean, scalable software. Remote-friendly, deadline-driven, and available for contract work right now.";
+  "I'm a freelance .NET Technical Lead with 8+ years of experience building production-grade web and desktop applications across fintech, legal tech, healthcare, and e-commerce. I specialise in Blazor, ASP.NET Core, and WPF — turning complex business requirements into clean, scalable software, and running an AI-assisted build process that compresses delivery without putting unreviewed code into production. Remote-friendly, deadline-driven, and available for contract work right now.";
 
 export const education = [
   {
@@ -60,6 +60,73 @@ export const skills = [
     ],
   },
 ];
+
+// ── AI-assisted delivery method ────────────────────────────────────
+// The CV lists these as capability bullets. Here they are ordered as the pipeline
+// a project actually moves through, because "I use AI" is table stakes and worth
+// nothing on its own — what a buyer is actually deciding is whether there is a
+// discipline around it. Each pillar therefore carries a `guards` line: the failure
+// mode that practice exists to prevent.
+export const aiWorkflow = {
+  eyebrow: "How I Build",
+  heading: "AI accelerates the build. It never skips the review.",
+  intro:
+    "Claude Code runs alongside my .NET and full-stack work every day — scaffolding modules, refactoring legacy WPF and ASP.NET Core code, and generating unit tests against existing business logic. The speed is the easy part. This is the process that keeps it safe to ship.",
+  pillars: [
+    {
+      step: "01",
+      icon: "map",
+      title: "Plan before prompting",
+      body:
+        "Planning-only sessions settle scope, architecture, folder structure, and independently testable milestones before a line of code is written — so every implementation prompt reads as a specification, not an open request.",
+      guards: "You approve the plan before the build starts.",
+    },
+    {
+      step: "02",
+      icon: "book",
+      title: "Context that outlives the session",
+      body:
+        "In-repo context files pin stack versions, naming conventions, build commands, and explicit constraints, keeping output consistent across sessions and modules.",
+      guards: "The codebase stays coherent instead of drifting module to module.",
+    },
+    {
+      step: "03",
+      icon: "terminal",
+      title: "Applied to real codebases",
+      body:
+        "Claude Code in CLI and IDE, used across production .NET and full-stack work — scaffolding modules, refactoring legacy WPF and ASP.NET Core code, and writing tests against business logic I did not originally author.",
+      guards: "Proven on inherited, messy, real-world code — not greenfield demos.",
+    },
+    {
+      step: "04",
+      icon: "shield",
+      title: "Review-first discipline",
+      body:
+        "Every suggestion is treated as a first draft. It is read, tested, and validated against the project's coding standards and security requirements before it merges.",
+      guards: "Nothing ships because a model sounded confident.",
+    },
+    {
+      step: "05",
+      icon: "message",
+      title: "Written for the people paying",
+      body:
+        "Client discussions become structured requirement documents, technical specifications, and progress updates written for non-technical stakeholders.",
+      guards: "You always know what is being built, and what is already done.",
+    },
+  ],
+  /* The single most persuasive number in the whole record — and it is only
+     credible because the second half admits what the AI got wrong. */
+  proof: {
+    label: "Measured on Craftura, a full e-commerce platform",
+    stats: [
+      { value: "8–10", unit: "days to ship",   note: "against a 21–26 day conventional estimate" },
+      { value: "17+",   unit: "pages",          note: "storefront, admin dashboard, and CMS" },
+      { value: "20+",   unit: "API routes",     note: "across 9 data models" },
+    ],
+    caveat:
+      "The same review pass caught Edge Runtime, caching, and data-accuracy defects that unreviewed generated code would have shipped. That is the half of the workflow that actually earns the speed.",
+  },
+};
 
 export const experiences = [
   {
@@ -114,18 +181,20 @@ export const projects = [
     id: 1,
     title: "North City Law",
     subtitle: "Legal Practice Automation Platform",
-    period: "Nov 2025 – Apr 2026",
+    period: "Nov 2025 – Present",
     domain: "Legal Tech",
     domainColor: "blue",
     description:
-      "Automated background jobs using Hangfire on Blazor Server + .NET 9 to securely transfer contacts, call recordings, transcripts, and related data between Clio, Lawmatics, and Zoom platforms.",
+      "Automated background jobs using Hangfire on Blazor Server + .NET 9 to securely transfer contacts, call recordings, transcripts, and related data between the Clio, Lawmatics, Box, and Zoom platforms.",
     highlights: [
       "Single-click OAuth 2.0 token generation and management for Clio and Zoom",
       "Scheduled periodic workflows for hands-free data synchronization",
       "Real-time consistency across legal practice management tools",
     ],
     result: "Eliminated manual data entry entirely — saving the firm 10+ hours per week of admin work.",
-    tags: ["Blazor Server", ".NET 9", "Hangfire", "OAuth 2.0", "Clio API", "Lawmatics", "Zoom API"],
+    aiDelivery:
+      "Used Claude to compress research across the Clio, Lawmatics, and Zoom API surfaces — comparing authentication models, rate limits, and payload structures before committing to an integration design — and to draft job scaffolding and retry logic. Token handling and cross-platform data-mapping rules were reviewed and hardened manually before release.",
+    tags: ["Blazor Server", ".NET 9", "Hangfire", "OAuth 2.0", "Clio API", "Lawmatics", "Box", "Zoom API"],
   },
   {
     id: 2,
@@ -142,6 +211,8 @@ export const projects = [
       "Subscription-based access control for scalable SaaS model",
     ],
     result: "Enabled the client to onboard multiple companies under one platform with zero data overlap.",
+    aiDelivery:
+      "Used Claude to work through ABP.io framework conventions and multi-tenancy patterns at speed, generating consistent module, entity, and permission scaffolding across the codebase. Tenant-isolation and subscription-gating logic was verified manually rather than trusted to generated output.",
     tags: ["Blazor Server", "ABP.io", "Syncfusion", "Multi-tenancy", "C#", "MS-SQL"],
   },
   {
@@ -159,6 +230,8 @@ export const projects = [
       "Custom kernel integration for reliable trade execution",
     ],
     result: "Delivered a sub-100ms UI response time for live trading operations handling thousands of ticks per second.",
+    aiDelivery:
+      "Used Claude to prototype DevExpress grid and charting configurations and to evaluate UI virtualisation and threading approaches for large real-time datasets. Trade-execution and market-data logic was written and validated manually, given the correctness requirements of live trading.",
     tags: ["WPF", "DevExpress", "C#", "Real-time Trading", "XAML", ".NET"],
   },
   {
@@ -176,6 +249,7 @@ export const projects = [
       "Product browsing, cart, and purchasing capabilities",
     ],
     result: "Launched the platform from zero — replacing a fully manual leasing process with an automated online system.",
+    aiDelivery: null,
     tags: ["React.js", ".NET Framework 4.6", "C#", "MS-SQL", "REST API", "Payment Gateway"],
   },
   {
@@ -193,6 +267,7 @@ export const projects = [
       "Cross-platform desktop and web compatibility",
     ],
     result: "Reduced analyst report generation time from hours to minutes via automated real-time dashboards.",
+    aiDelivery: null,
     tags: ["WPF", "Blazor", ".NET Core 6", "SciChart", "Syncfusion", "MySQL", "LINQ"],
   },
   {
@@ -210,6 +285,7 @@ export const projects = [
       "Medical imaging with LEAD Tools integration",
     ],
     result: "Improved record retrieval speed by 60% and eliminated paper-based medication tracking across departments.",
+    aiDelivery: null,
     tags: ["WPF", "C#", "MS-SQL", "XAML", "LINQ", "LEAD Tools", "Telerik"],
   },
 ];
@@ -220,6 +296,25 @@ export const projects = [
 // build workflow. Each entry links to its public GitHub repo and, where one exists,
 // a live demo. Keep this list curated and honest — only real, shipped repos.
 export const selfBuilt = [
+  {
+    id: 3,
+    title: "Craftura Fine Furniture",
+    subtitle: "AI-Assisted Full-Stack E-Commerce Platform",
+    domain: "Full-Stack E-Commerce",
+    domainColor: "orange",
+    description:
+      "A complete furniture manufacturing and ordering platform on Next.js 14, Prisma and TypeScript — 17+ pages, 20+ API routes and 9 data models — spanning a customer storefront, an admin dashboard with custom SVG analytics, and a CMS for site content. Built on SQLite against a PostgreSQL-ready schema.",
+    highlights: [
+      "Storefront with product search and filtering, an inquiry cart handling both standard and bulk B2B orders, order tracking with self-cancellation, and WhatsApp handoff on key customer actions",
+      "Admin dashboard with revenue-trend, B2B/B2C split and manufacturing-cost reports, CSV and Excel export, full CRUD, and a content CMS",
+      "JWT authentication with Edge-compatible middleware, email notifications, and SEO through dynamic sitemap, JSON-LD structured data, and per-page metadata",
+    ],
+    result:
+      "Shipped in 8–10 days against a 21–26 day conventional estimate — while the review pass caught Edge Runtime, caching and data-accuracy defects that unreviewed generated code would have shipped.",
+    tags: ["Next.js 14", "Prisma", "TypeScript", "SQLite", "JWT", "Tailwind"],
+    repo: "https://github.com/kathan555/craftura",
+    demo: null,
+  },
   {
     id: 1,
     title: "NOCpilot",
@@ -233,6 +328,7 @@ export const selfBuilt = [
       "A “rules as data” obligation engine plus an encrypted document vault with inspection-ready exports",
       "Reminder scheduler with WhatsApp → SMS → email fallback, Razorpay billing, and a partner + super-admin console",
     ],
+    result: null,
     tags: [".NET", "C#", "Multi-tenancy", "JWT", "Razorpay", "REST API"],
     repo: "https://github.com/kathan555/nocpilot",
     demo: null,
@@ -244,32 +340,16 @@ export const selfBuilt = [
     domain: "AI-Powered Web",
     domainColor: "teal",
     description:
-      "The site you're on: a Next.js 15 app with a live, Claude-powered AI assistant and an AI project-cost estimator — a working example of AI features running in production, not a mockup.",
+      "The site you're on: a Next.js 15 app with a live AI assistant and an AI project-cost estimator — a working example of AI features running in production, not a mockup.",
     highlights: [
       "Streaming AI chat and an AI cost estimator wired to real API routes with rate limiting",
       "Server-rendered and SEO-tuned, with dark/light theming and a fully responsive layout",
       "Live GitHub showcase and a Supabase-backed blog, all in one codebase",
     ],
-    tags: ["Next.js 15", "TypeScript", "Claude AI", "Tailwind", "Supabase"],
+    result: null,
+    tags: ["Next.js 15", "TypeScript", "Gemini", "Tailwind", "Supabase"],
     repo: "https://github.com/kathan555/kathanPortfolio",
     demo: "https://kathanpatel.vercel.app",
-  },
-  {
-    id: 3,
-    title: "Craftura",
-    subtitle: "Furniture Storefront + Admin & CMS",
-    domain: "Full-Stack E-Commerce",
-    domainColor: "orange",
-    description:
-      "A full-stack furniture manufacturing website with B2B/B2C ordering, an inquiry-based cart, an admin panel with analytics, order tracking, and a built-in CMS.",
-    highlights: [
-      "B2B/B2C ordering flows with an inquiry cart — no forced checkout",
-      "Admin dashboard for orders, products, and content, with order tracking",
-      "Dark/light mode and SEO baked in from the start",
-    ],
-    tags: ["Next.js 14", "Prisma", "SQLite", "TypeScript", "Tailwind"],
-    repo: "https://github.com/kathan555/craftura",
-    demo: null,
   },
   {
     id: 4,
@@ -284,6 +364,7 @@ export const selfBuilt = [
       "Double-click / Enter popup with a buy-sell order simulation view",
       "Clean MVVM architecture with live-updating cells",
     ],
+    result: null,
     tags: ["WPF", ".NET 8", "C#", "MVVM", "XAML"],
     repo: "https://github.com/kathan555/CohortAnalysisChart",
     demo: null,
@@ -301,6 +382,7 @@ export const selfBuilt = [
       "Automatic nearest-server selection",
       "One file, zero build step",
     ],
+    result: null,
     tags: ["HTML", "CSS", "JavaScript"],
     repo: "https://github.com/kathan555/live-internet-meter",
     demo: null,
@@ -318,6 +400,7 @@ export const selfBuilt = [
       "Reads .xls, .xlsx, and .csv via ExcelDataReader",
       "Modern MVVM UI with a clean data grid",
     ],
+    result: null,
     tags: ["WPF", ".NET 9", "C#", "MVVM"],
     repo: "https://github.com/kathan555/ExcelDynamicViewer",
     demo: null,
