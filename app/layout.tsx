@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Playfair_Display, Lato, JetBrains_Mono } from "next/font/google";
 import { GoogleAnalytics } from '@next/third-parties/google'
 import "./globals.css";
@@ -25,7 +24,7 @@ export const metadata: Metadata = {
     template: "%s | Kathan N. Patel",
   },
   description:
-    "Freelance .NET Technical Lead available for contract work. 8+ years building Blazor web apps, WPF desktop software, and ASP.NET Core APIs. Remote-friendly. Based in India, working globally.",
+    "Freelance AI & .NET developer with 8+ years of experience. I add AI to production .NET apps — Gemini, Azure OpenAI, RAG — and build Blazor, WPF and ASP.NET Core software. Remote, available now.",
   verification: {
     google: "vJ2WYAxQQtEna5rl9S17hYQDcx9oIRFc7S9hrMqKHLQ",
   },  
@@ -39,6 +38,13 @@ export const metadata: Metadata = {
     "freelance developer India", "remote .NET developer", ".NET developer Ahmedabad",
     ".NET developer USA", ".NET developer UK", ".NET developer Europe", ".NET developer UAE",
     "C# contractor USA", "Blazor developer UK", "ASP.NET Core developer Europe", "hire .NET developer Dubai",
+    /* AI positioning. The whole "How I Build" section, the live assistant and
+       the cost estimator were invisible here — every term below was missing. */
+    "freelance AI developer", "hire AI developer", "AI integration developer",
+    "AI developer for hire", "add AI to .NET application", "AI integration consultant",
+    "AI .NET developer", "LLM integration developer", "RAG developer",
+    "Gemini API developer", "Azure OpenAI developer", "Semantic Kernel developer",
+    "AI-assisted development", "AI chatbot integration .NET",
   ],
   authors: [{ name: "Kathan N. Patel", url: "https://kathanpatel.vercel.app" }],
   creator: "Kathan N. Patel",
@@ -47,14 +53,14 @@ export const metadata: Metadata = {
     locale:      "en_US",
     url:         "https://kathanpatel.vercel.app",
     title:       "Kathan N. Patel — Freelance AI & .NET Developer | Blazor · WPF · ASP.NET Core",
-    description: "Freelance .NET Technical Lead available for contract work. 8+ years. Blazor, WPF, ASP.NET Core, C#. Remote-friendly.",
+    description: "Freelance AI & .NET developer, 8+ years. AI integration for production .NET apps, plus Blazor, WPF and ASP.NET Core. Remote-friendly.",
     siteName:    "Kathan N. Patel",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Kathan N. Patel — Freelance .NET Developer" }],
   },
   twitter: {
     card:        "summary_large_image",
-    title:       "Kathan N. Patel — Freelance .NET Developer",
-    description: "Available for .NET contract work. Blazor · WPF · ASP.NET Core · C#. Remote-friendly.",
+    title:       "Kathan N. Patel — Freelance AI & .NET Developer",
+    description: "Available for AI integration and .NET contract work. Gemini · Blazor · WPF · ASP.NET Core · C#. Remote-friendly.",
     images:      ["/og-image.png"],
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large" } },
@@ -77,10 +83,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${playfair.variable} ${lato.variable} ${jetbrainsMono.variable} bg-background text-foreground min-h-screen font-body`}>
 
         {/* ── Schema Markup — Person + ProfessionalService + WebSite ── */}
-        <Script
+        <script
           id="schema-person"
           type="application/ld+json"
-          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
@@ -90,8 +95,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   "@id": "https://kathanpatel.vercel.app/#person",
                   "name": "Kathan N. Patel",
                   "alternateName": "Kathan Patel",
-                  "jobTitle": "Freelance .NET Technical Lead",
-                  "description": "Freelance .NET Technical Lead with 8+ years building Blazor web apps, WPF desktop software, and ASP.NET Core APIs. Remote-friendly. Available for contract and freelance work globally.",
+                  "jobTitle": "Freelance AI & .NET Technical Lead",
+                  "description": "Freelance AI & .NET Technical Lead with 8+ years of experience. Integrates AI into production .NET applications (Google Gemini, Azure OpenAI, Semantic Kernel, RAG pipelines) and builds Blazor web apps, WPF desktop software, and ASP.NET Core APIs. Remote-friendly. Available for contract and freelance work globally.",
                   "url": "https://kathanpatel.vercel.app",
                   "email": "patel.kathan555@gmail.com",
                   "telephone": "+917600410895",
@@ -105,16 +110,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   "knowsAbout": [
                     "ASP.NET Core", "Blazor Server", "Blazor WebAssembly",
                     "WPF", "C#", ".NET", "MS-SQL", "Entity Framework",
-                    "Semantic Kernel", "Azure OpenAI", "REST API Development",
+                    "Semantic Kernel", "Azure OpenAI", "Google Gemini API",
+                    "AI Integration", "Large Language Models", "RAG Pipelines",
+                    "AI-Assisted Development", "REST API Development",
                     "Software Architecture", "Technical Leadership"
                   ],
                   "hasOccupation": {
                     "@type": "Occupation",
-                    "name": "Freelance Software Developer",
+                    "name": "Freelance AI & .NET Software Developer",
                     "occupationLocation": {
                       "@type": "Country",
                       "name": "Remote / Worldwide"
-                    }
+                    },
+                    "experienceRequirements": {
+                      "@type": "OccupationalExperienceRequirements",
+                      "monthsOfExperience": 96
+                    },
+                    "skills": "AI integration, .NET, Blazor, WPF, ASP.NET Core, C#, software architecture"
                   },
                   "sameAs": [
                     "https://github.com/kathan555",
@@ -124,7 +136,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {
                   "@type": "ProfessionalService",
                   "@id": "https://kathanpatel.vercel.app/#service",
-                  "name": "Kathan Patel — Freelance .NET Development",
+                  "name": "Kathan Patel — Freelance AI & .NET Development",
                   "description": "Custom .NET software development services — Blazor web apps, WPF desktop tools, ASP.NET Core APIs, AI integrations, and legacy .NET migrations. Remote-friendly, available worldwide.",
                   "url": "https://kathanpatel.vercel.app/hire",
                   "provider": { "@id": "https://kathanpatel.vercel.app/#person" },
@@ -153,7 +165,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     "Blazor Web Application Development",
                     "WPF Desktop Application Development",
                     "ASP.NET Core API Development",
-                    "AI Integration with Semantic Kernel",
+                    "AI Integration (Gemini, Azure OpenAI, Semantic Kernel, RAG)",
                     ".NET Legacy Migration",
                     "Technical Lead / Fractional CTO"
                   ],
@@ -163,10 +175,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {
                   "@type": "WebSite",
                   "@id": "https://kathanpatel.vercel.app/#website",
-                  "name": "Kathan N. Patel — Freelance .NET Developer",
+                  "name": "Kathan N. Patel — Freelance AI & .NET Developer",
                   "url": "https://kathanpatel.vercel.app",
                   "author": { "@id": "https://kathanpatel.vercel.app/#person" },
-                  "description": "Portfolio and hiring page for Kathan N. Patel, freelance .NET Technical Lead.",
+                  "description": "Portfolio and hiring page for Kathan N. Patel, freelance AI & .NET Technical Lead with 8+ years of experience.",
                   "potentialAction": {
                     "@type": "SearchAction",
                     "target": {
