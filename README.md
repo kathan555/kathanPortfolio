@@ -101,6 +101,25 @@ NEXT_PUBLIC_TURNSTILE_SITE_KEY=0x4AAAAAAAxxx
 TURNSTILE_SECRET_KEY=0x4AAAAAAAsecretxxx
 ```
 
+See `.env.example` for the full list, including the Job Radar variables below.
+
+---
+
+## 🎯 Job Radar (automated contract-opportunity scan)
+
+A Vercel cron runs `/api/cron/job-scan` daily at 09:30 IST. It pulls postings from seven free job
+boards plus a Gemini web-search sweep, scores each against the profile in `lib/data.ts`, stores
+matches in the Supabase `job_leads` table, and emails a digest. Every match carries a reference URL
+and an apply route.
+
+Private dashboard at `/opportunities?k=<JOB_RADAR_DASHBOARD_TOKEN>` — mark leads applied or
+dismissed, or trigger a scan on demand.
+
+Needs four extra env vars (`CRON_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`, `JOB_RADAR_EMAIL`,
+`JOB_RADAR_DASHBOARD_TOKEN`) and one new table.
+
+**Full setup, schema, and tuning: [`docs/job-radar.md`](docs/job-radar.md)**
+
 ---
 
 ## 📄 Resume
@@ -121,7 +140,7 @@ Edit `lib/data.ts` — single source of truth for all portfolio text.
 
 1. Push to GitHub
 2. vercel.com → New Project → import
-3. Add all 4 env vars
+3. Add every variable from `.env.example` under Settings → Environment Variables
 4. Deploy
 
 Update `metadataBase` in `app/layout.tsx` to your real domain.
@@ -188,17 +207,20 @@ After deploying, add `https://kathanpatel.dev` (your real URL) to:
 - Tech stack breakdown: Semantic Kernel, Azure OpenAI, Qdrant, Blazor, Hangfire
 - CTA linking to /contact and /estimator
 
-### Setting up the live demo (ANTHROPIC_API_KEY)
+### Setting up the live demo (GEMINI_API_KEY)
 
-1. Go to [console.anthropic.com](https://console.anthropic.com) → API Keys → Create Key
+1. Go to [aistudio.google.com/apikey](https://aistudio.google.com/apikey) → Create API key
 2. Add to `.env.local`:
    ```
-   ANTHROPIC_API_KEY=sk-ant-your-key-here
+   GEMINI_API_KEY=your_gemini_api_key
    ```
 3. Add the same key in Vercel → Project → Settings → Environment Variables
 
-The demo uses `claude-haiku-4-5` (cheapest model) and is rate-limited to 10 requests/min per IP.
-Without the key, the demo widget still renders but the send button returns a 502 error.
+The demo uses `gemini-2.5-flash` and is rate-limited to 10 requests/min per IP.
+Without the key, the demo widget still renders but the send button returns an error.
+
+The same key also powers the homepage assistant (`/api/home-ai`), the project cost
+estimator (`/api/estimate`), and the job radar's scoring and web-search passes.
 
 ### Content positioning strategy
 The page is written as a **knowledge resource + service showcase** — not a fake case study.
