@@ -107,16 +107,16 @@ See `.env.example` for the full list, including the Job Radar variables below.
 
 ## 🎯 Job Radar (automated contract-opportunity scan)
 
-A Vercel cron runs `/api/cron/job-scan` daily at 09:30 IST. It pulls postings from seven free job
+A Vercel cron runs `/api/cron/job-scan` once daily, between 09:30 and 10:29 IST (Hobby spreads
+invocations across the scheduled hour). It pulls postings from seven free job
 boards plus a Gemini web-search sweep, scores each against the profile in `lib/data.ts`, stores
 matches in the Supabase `job_leads` table, and emails a digest. Every match carries a reference URL
 and an apply route.
 
-Private dashboard at `/opportunities?k=<JOB_RADAR_DASHBOARD_TOKEN>` — mark leads applied or
-dismissed, or trigger a scan on demand.
+Private dashboard for marking leads applied or dismissed, or triggering a scan on demand — print
+its URL with `npm run job-radar:url`.
 
-Needs four extra env vars (`CRON_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`, `JOB_RADAR_EMAIL`,
-`JOB_RADAR_DASHBOARD_TOKEN`) and one new table.
+Needs two extra env vars (`CRON_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`) and one new table.
 
 **Full setup, schema, and tuning: [`docs/job-radar.md`](docs/job-radar.md)**
 

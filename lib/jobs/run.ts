@@ -4,6 +4,7 @@ import { prepare } from "./normalize";
 import { scoreJobs } from "./score";
 import { getKnownFingerprints, insertJobs, markEmailed } from "./store";
 import { sendDigest, sendFailureNotice } from "./email";
+import { dashboardToken } from "./auth";
 import type { ScanSummary } from "./types";
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -111,7 +112,7 @@ export async function runJobScan(): Promise<ScanSummary> {
 /* The digest links straight into the dashboard, token included — it is a
    private page and the mail already goes to the one person allowed to see it. */
 function dashboardUrl(): string | null {
-  const token = process.env.JOB_RADAR_DASHBOARD_TOKEN;
+  const token = dashboardToken();
   if (!token) return null;
 
   const base =

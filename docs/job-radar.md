@@ -95,20 +95,35 @@ alter table public.job_leads enable row level security;
 
 Add to `.env.local` and to the Vercel project settings:
 
+Only **two** new variables, both load-bearing:
+
 | Variable | Notes |
 |---|---|
-| `CRON_SECRET` | Vercel sends this automatically as `Authorization: Bearer …` on cron runs. Generate with `openssl rand -hex 32`. |
+| `CRON_SECRET` | Vercel sends this automatically as `Authorization: Bearer …` on cron runs — it is the [documented](https://vercel.com/docs/cron-jobs/manage-cron-jobs#securing-cron-jobs) way to secure a cron path, and Vercel does not generate it for you. Also seeds the dashboard token. Generate with `openssl rand -hex 32`. |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Settings → API → `service_role`. **Server-only — never import into a client component.** |
-| `JOB_RADAR_EMAIL` | Digest recipient. Falls back to `personalInfo.email`. |
-| `JOB_RADAR_DASHBOARD_TOKEN` | Gate for `/opportunities`. Minimum 16 chars or the dashboard stays closed. |
 
 Reused as-is: `GEMINI_API_KEY`, `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM`,
 `NEXT_PUBLIC_SUPABASE_URL`.
 
+**Why only two.** Two more were considered and deliberately not added, because every extra
+variable is another thing to set by hand in Vercel and another thing to get wrong:
+
+- *Digest recipient* — always `personalInfo.email` from `lib/data.ts`. A `JOB_RADAR_EMAIL`
+  override would have duplicated a value the repo already holds.
+- *Dashboard token* — derived as `sha256(CRON_SECRET + ":job-radar-dashboard")`, truncated to 32
+  hex chars. Deriving rather than reusing `CRON_SECRET` directly matters: this value travels in a
+  URL query string, and URLs leak into browser history, referrer headers and access logs. A
+  one-way hash spills nothing about the cron credential.
+
+Neither `CRON_SECRET` nor the service-role key can be dropped. Without the first, the scan
+endpoint is a public URL that burns Gemini quota, writes rows and sends mail to anyone who calls
+it. Without the second, nothing can reach the RLS-locked table.
+
 ### 3. Schedule
 
-`vercel.json` runs `/api/cron/job-scan` at `0 4 * * *` UTC — 09:30 IST, so the digest is waiting at
-the start of the working day.
+`vercel.json` runs `/api/cron/job-scan` at `0 4 * * *` UTC, so the digest is waiting at the start
+of the working day. On Hobby, Vercel may fire it anywhere inside the given hour to spread load, so
+expect it between **09:30 and 10:29 IST** rather than exactly 09:30.
 
 Vercel Hobby allows **two** cron jobs, each invoked roughly **once a day**, with a **60s** function
 ceiling. The second slot is free. On Pro, raise the frequency in `vercel.json` and the timeouts in
@@ -143,10 +158,23 @@ A quiet day and a broken job should never look alike.
 
 ### Dashboard access
 
+Print your dashboard URL:
+
+```bash
+npm run job-radar:url
+```
+
+Pass a base URL for production: `npm run job-radar:url -- https://kathanpatel.vercel.app`.
+Rotating `CRON_SECRET` changes this URL, since the token is derived from it.
+
 `middleware.ts` gates `/opportunities` on the `k` query parameter and rewrites a bad token to a
 real 404 — byte-identical to the response any unknown URL gets. This exists because `notFound()`
 alone protects the *content* but still answers 200, which tells a prober the path exists. The
 page's own check and the per-action checks both remain as inner layers.
+
+The derivation is implemented twice on purpose — `dashboardToken()` in `lib/jobs/auth.ts` uses
+`node:crypto`, and `middleware.ts` uses Web Crypto because the Edge runtime has no `node:crypto`.
+The salt and the 32-char slice must match; change them together.
 
 ---
 

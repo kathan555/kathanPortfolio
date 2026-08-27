@@ -149,7 +149,7 @@ export async function sendDigest(
 ): Promise<boolean> {
   const transporter = getTransporter();
   const from = process.env.SMTP_FROM ?? process.env.SMTP_USER;
-  const to = process.env.JOB_RADAR_EMAIL ?? personalInfo.email;
+  const to = personalInfo.email;
 
   if (!transporter || !from) {
     console.error("job-radar: SMTP is not configured — skipping digest");
@@ -186,7 +186,7 @@ export async function sendDigest(
 export async function sendFailureNotice(summary: ScanSummary, error: string): Promise<boolean> {
   const transporter = getTransporter();
   const from = process.env.SMTP_FROM ?? process.env.SMTP_USER;
-  const to = process.env.JOB_RADAR_EMAIL ?? personalInfo.email;
+  const to = personalInfo.email;
 
   if (!transporter || !from) {
     console.error("job-radar: SMTP is not configured — cannot send failure notice");

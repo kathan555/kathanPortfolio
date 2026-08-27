@@ -17,8 +17,23 @@ import { NextResponse, type NextRequest } from "next/server";
    Scoped by the matcher below to this one path, so it costs nothing elsewhere.
    ───────────────────────────────────────────────────────────────────────── */
 
+/* Mirrors dashboardToken() in lib/jobs/auth.ts. Duplicated rather than imported
+   because middleware runs on the Edge runtime, where node:crypto is not
+   available — this uses Web Crypto instead. The salt and the 32-char slice must
+   match the Node version exactly, so change the two together. */
+const SALT = ":job-radar-dashboard";
+
+async function dashboardToken(secret: string): Promise<string> {
+  const data = new TextEncoder().encode(secret + SALT);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("")
+    .slice(0, 32);
+}
+
 /* Constant-time compare. node:crypto's timingSafeEqual is not available in the
-   Edge runtime that middleware runs on, so this is the hand-rolled equivalent. */
+   Edge runtime, so this is the hand-rolled equivalent. */
 function safeEqual(a: string, b: string): boolean {
   if (a.length !== b.length) return false;
   let diff = 0;
@@ -26,17 +41,23 @@ function safeEqual(a: string, b: string): boolean {
   return diff === 0;
 }
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   /* GET only. Server actions POST back to this same URL and carry the token in
      the form body rather than the query string, and they each re-check it
      themselves — see app/opportunities/actions.ts. */
   if (req.method !== "GET") return NextResponse.next();
 
-  const expected = process.env.JOB_RADAR_DASHBOARD_TOKEN;
+  const secret = process.env.CRON_SECRET;
   const provided = req.nextUrl.searchParams.get("k");
 
-  /* No token configured means the dashboard is closed, not open to everyone. */
-  if (!expected || expected.length < 16 || !provided || !safeEqual(provided, expected)) {
+  /* No CRON_SECRET configured means the dashboard is closed, not open. */
+  const ok =
+    Boolean(secret) &&
+    secret!.length >= 16 &&
+    Boolean(provided) &&
+    safeEqual(provided!, await dashboardToken(secret!));
+
+  if (!ok) {
     /* Rewrite to a path with no route rather than returning a bare 404. Next
        then serves the same app/not-found.tsx body it serves for any unknown
        URL, so the response is byte-identical to one — an empty 404 would still
