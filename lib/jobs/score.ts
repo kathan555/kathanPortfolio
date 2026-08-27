@@ -6,7 +6,15 @@ import type { ApplyMethod, Engagement, Judgement, NormalizedJob, ScoredJob } fro
    ~30 round trips, which neither the free-tier quota nor the 60-second
    function budget can absorb. */
 
-const SCORE_TIMEOUT_MS = 22_000;
+/* Measured: a 30-job batch has come back in 11s, 13s and 21.9s on different
+   runs. That last one sat 79ms inside the old 22s limit, which is not margin —
+   it is luck. Widened, and the per-job excerpt trimmed below, since prompt size
+   is what drives the latency.
+
+   Worst case still fits the 60s Hobby ceiling: boards and web search run in
+   parallel (~20s, bounded by the web-search timeout), then 28s here, then ~5s
+   of database and mail. */
+const SCORE_TIMEOUT_MS = 28_000;
 
 const ENGAGEMENTS: Engagement[] = ["contract", "freelance", "fulltime", "unknown"];
 const APPLY_METHODS: ApplyMethod[] = ["form", "email", "thread-reply", "unknown"];
@@ -21,7 +29,7 @@ function buildPrompt(jobs: NormalizedJob[]): string {
         j.location ? `Location: ${j.location}` : null,
         j.compensation ? `Compensation: ${j.compensation}` : null,
         `Source: ${j.source}`,
-        `Description: ${j.descriptionExcerpt.slice(0, 700)}`,
+        `Description: ${j.descriptionExcerpt.slice(0, 500)}`,
       ]
         .filter(Boolean)
         .join("\n"),

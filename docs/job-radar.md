@@ -88,8 +88,19 @@ create index job_leads_status_idx on public.job_leads (status, created_at desc);
 alter table public.job_leads enable row level security;
 -- Intentionally NO policies. Unlike blog_posts / contact_submissions / blog_leads,
 -- this table holds private data: RLS with no policies blocks the anon key
--- entirely, and only the service-role key (which bypasses RLS) can reach it.
+-- entirely, and only the secret key (which bypasses RLS) can reach it.
 ```
+
+**Why no `TO anon` policy here.** The anon key is public by design — it ships in the browser
+bundle on every page load and is readable by anyone. `blog_posts` grants
+`FOR SELECT TO anon USING (published = true)` because published posts are *meant* to be world
+-readable, and that is the correct use of the pattern.
+
+`job_leads` needs SELECT (dedupe + dashboard), INSERT (new leads) and UPDATE (mark emailed,
+applied, dismissed). Granting those `TO anon` would grant them to the internet: anyone could read
+which companies are being targeted and what has been applied to, insert rows into the digest, or
+flip everything to dismissed. RLS would be working exactly as written — the policy would simply be
+handing a public role access to private data. Hence no policies, and a secret key server-side.
 
 ### 2. Environment variables
 
@@ -100,7 +111,7 @@ Only **two** new variables, both load-bearing:
 | Variable | Notes |
 |---|---|
 | `CRON_SECRET` | Vercel sends this automatically as `Authorization: Bearer …` on cron runs — it is the [documented](https://vercel.com/docs/cron-jobs/manage-cron-jobs#securing-cron-jobs) way to secure a cron path, and Vercel does not generate it for you. Also seeds the dashboard token. Generate with `openssl rand -hex 32`. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Settings → API → `service_role`. **Server-only — never import into a client component.** |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → **Settings → API Keys** → the **`sb_secret_…`** key. **Server-only — never import into a client component.** |
 
 Reused as-is: `GEMINI_API_KEY`, `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM`,
 `NEXT_PUBLIC_SUPABASE_URL`.
@@ -254,13 +265,23 @@ and are checked by nothing.
 
 From a real run against all sources:
 
-| Stage | Time |
-|---|---|
-| Boards + web search + link checks (all parallel) | ~12s |
-| Gemini scoring (30 postings, one call) | ~11–15s |
-| Supabase upsert + email | ~3s |
-| **Total** | **~26–30s** of the 60s ceiling |
+| Stage | Measured | Timeout |
+|---|---|---|
+| Boards + web search + link checks (all parallel) | 12–15s | 8s per board, 20s web search |
+| Gemini scoring (30 postings, one call) | 11–20s | 28s |
+| Supabase upsert + email | ~3–5s | — |
+| **Total** | **~35–40s** | 60s Hobby ceiling |
 
-A representative run: 551 postings fetched across 7 boards + 5 web-search leads, 549 new after
-dedupe, 25 through the prefilter, 25 scored. Headroom is deliberate — the Hobby ceiling is hard,
-and a timeout loses the whole run.
+A representative run: 550 postings across 7 boards plus 4 web-search leads, 549 new after dedupe,
+30 through the prefilter, 30 scored, 34.5s end to end excluding the database and mail.
+
+Scoring latency is the volatile part — the same 30-job batch has come back in 11s, 13s, 20s and
+21.9s across runs. That last one sat 79ms inside what used to be a 22s limit, which is luck rather
+than margin, so the limit is 28s and the per-job excerpt was trimmed to 500 characters (prompt size
+is what drives the latency). A timeout is survivable — scoring falls back to keyword ranking — but
+it costs the written reasoning, so it is worth avoiding.
+
+The grounded web search is the flakiest stage by some distance: across test runs it has returned
+usable results, timed out, and returned unparseable prose in roughly equal measure. Every outcome
+is non-fatal and recorded in the run summary's `notes`, so a bad day there costs a handful of extra
+leads, not the run.
