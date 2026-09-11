@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import EstimatorClient from '@/components/EstimatorClient';
+import { priceFromHours, fmtRange } from '@/lib/estimator-rates';
 import { fmtUSD } from '@/lib/utils';
 
 const PAGE_URL = "https://kathanpatel.vercel.app/free-project-cost-estimator";
@@ -67,11 +68,11 @@ export const metadata: Metadata = {
 const FAQS = [
   {
     q: "How much does custom software development cost?",
-    a: "It depends on scope and complexity. As a rough guide with a solo senior contractor: small internal tools run $3,000–$10,000, mid-size web applications $10,000–$40,000, and multi-module enterprise systems $50,000 and up. This estimator gives you a range tailored to your specific project instead of a generic bracket.",
+    a: "Cost follows effort, so the honest unit is hours. With a solo senior contractor: a single-purpose internal tool runs 60–90 hours, a mid-size web application 150–450 hours, and a multi-tenant or multi-module platform 400–600 hours and up. This estimator scopes the hours for your specific project and turns them into a cost range, instead of quoting you a generic bracket.",
   },
   {
     q: "How accurate is an AI-generated cost estimate?",
-    a: "It is a planning-stage ballpark, not a binding quote. The estimate is grounded in real contractor rate tiers and a six-phase delivery methodology, so the range is realistic for scoping and budgeting. Your estimate shows the hours and rate used for each phase. A precise quote always follows a scope conversation.",
+    a: "It is a planning-stage ballpark, not a binding quote. Its accuracy comes from what the AI is and isn't asked to do: it estimates working hours against calibration anchors from real projects, and never picks a price or does the arithmetic — every figure is calculated afterwards from a fixed rate card. It also tells you what it assumed to get there, so a wrong assumption is visible instead of buried in the total. A precise quote always follows a scope conversation.",
   },
   {
     q: "Is this project cost estimator really free?",
@@ -83,15 +84,19 @@ const FAQS = [
   },
   {
     q: "What information do I need to provide?",
-    a: "Just one description in your own words — what you want built, the features or problem to solve, and anything you already know about timeline or team. Optionally add your preferred tech stack and any budget you have in mind. One step, about a minute — no technical knowledge required.",
+    a: "One description in your own words — what you want built, the features or problem to solve, and anything you already know about users, timeline, or integrations. Optionally add your preferred tech stack and any budget you have in mind. Aim for a couple of real sentences: if the brief is too thin to scope, the estimator asks you five specific questions rather than inventing a number. One step, about a minute — no technical knowledge required.",
   },
   {
     q: "Does the estimate include design, testing, and deployment?",
-    a: "Yes. Every estimate is broken into six phases: Discovery & Planning, UI/UX Design, Core Development, Integrations & APIs, Testing & QA, and Deployment & Handover — each with its own hours, rate, and cost.",
+    a: "Yes. Every estimate is broken into six phases: Discovery & Planning, UI/UX Design, Core Development, Integrations & APIs, Testing & QA, and Deployment & Handover — each with its own hours, rate, and cost. Phases your project doesn't need are zeroed out rather than padded.",
+  },
+  {
+    q: "How long will my project take to build?",
+    a: "Every estimate includes an indicative timeline derived from the same hours as the cost — how many weeks the build takes at a full-time pace, and at a part-time pace. As a rough guide, 40 hours of work is one full-time week. Projects large enough to fill a dedicated month also show a monthly engagement option alongside the hourly figure.",
   },
   {
     q: "Why do I get a cost range instead of a single price?",
-    a: "The low end is the exact sum of all phase costs. The high end adds a 20% contingency for scope creep and revisions — the most common reason real projects exceed their initial budget.",
+    a: "The low end is the exact sum of all phase costs. The high end adds a contingency for scope creep and revisions — the most common reason real projects exceed their initial budget. That contingency scales with how much detail your brief carried: 15% when the scope is well specified, 25% when it isn't. Add detail and the range gets tighter.",
   },
   {
     q: "Can I hire you to build the project after estimating?",
@@ -99,18 +104,22 @@ const FAQS = [
   },
 ];
 
-// ─── Sample estimate — costs are hours × rate; range high = total + 20% ──────
+// ─── Sample estimate ──────────────────────────────────────────────────────────
+// Run through the real pricing engine rather than hardcoded, so the published
+// sample can never drift from what the tool actually returns. Rates are
+// deliberately not rendered here — see lib/estimator-rates.ts.
 
-const SAMPLE_ROWS = [
-  { phase: "Discovery & Planning",  hours: 12, rate: 45, cost: 540 },
-  { phase: "UI/UX Design",          hours: 24, rate: 45, cost: 1080 },
-  { phase: "Core Development",      hours: 90, rate: 55, cost: 4950 },
-  { phase: "Integrations & APIs",   hours: 30, rate: 65, cost: 1950 },
-  { phase: "Testing & QA",          hours: 24, rate: 45, cost: 1080 },
-  { phase: "Deployment & Handover", hours: 10, rate: 45, cost: 450 },
-];
-const SAMPLE_TOTAL = SAMPLE_ROWS.reduce((s, r) => s + r.cost, 0);
-const SAMPLE_HIGH  = Math.round(SAMPLE_TOTAL * 1.2);
+const SAMPLE = priceFromHours(
+  [
+    { phase: "Discovery & Planning",  hours: 12, tier: "standard"   },
+    { phase: "UI/UX Design",          hours: 24, tier: "standard"   },
+    { phase: "Core Development",      hours: 90, tier: "standard"   },
+    { phase: "Integrations & APIs",   hours: 30, tier: "specialist" },
+    { phase: "Testing & QA",          hours: 24, tier: "standard"   },
+    { phase: "Deployment & Handover", hours: 10, tier: "standard"   },
+  ],
+  "high",
+);
 
 // ─── Structured data ──────────────────────────────────────────────────────────
 
@@ -128,8 +137,11 @@ const webAppSchema = {
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   provider: { "@id": "https://kathanpatel.vercel.app/#person" },
   featureList: [
-    "AI-generated project cost range",
-    "Six-phase cost breakdown with hours and rates",
+    "AI-scoped working hours with a calculated cost range",
+    "Six-phase breakdown with hours, rate, and cost",
+    "Full-time and part-time delivery timeline",
+    "Hourly and monthly engagement options",
+    "Stated scope assumptions you can correct",
     "Project-specific risk analysis",
     "Recommended technology stack",
     "PDF estimate delivered by email",
@@ -211,13 +223,13 @@ export default function EstimatorPage() {
               },
               {
                 step: "2",
-                title: "AI builds your estimate",
-                desc: "The estimate is generated against real contractor rate tiers and a six-phase delivery methodology, so every number is grounded — not guessed.",
+                title: "AI scopes the hours",
+                desc: "The AI estimates working hours per phase against calibration anchors from real projects. It never picks a price — the cost is calculated from a fixed rate card afterwards, so the number is grounded, not guessed.",
               },
               {
                 step: "3",
                 title: "Get the full breakdown",
-                desc: "See your cost range, phase-by-phase breakdown, risks, and recommended stack on screen — and receive the same estimate as a PDF by email.",
+                desc: "See your cost range, hours, delivery timeline, phase-by-phase breakdown, assumptions, risks, and recommended stack on screen — and receive the same estimate as a PDF by email.",
               },
             ].map(({ step, title, desc }) => (
               <div key={step} className="glass-card rounded-2xl p-6">
@@ -244,16 +256,19 @@ export default function EstimatorPage() {
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="glass-card rounded-2xl p-6">
               <h3 className="font-display text-base font-semibold text-foreground mb-3">
-                Real contractor rate tiers
+                Hours first, never a guessed price
               </h3>
-              <ul className="text-sm text-muted-foreground leading-relaxed space-y-2">
-                <li><span className="text-foreground font-medium">Standard</span> — CRUD modules, forms, reports</li>
-                <li><span className="text-foreground font-medium">Complex</span> — architecture work: multi-tenancy, real-time features</li>
-                <li><span className="text-foreground font-medium">Specialist</span> — legal-tech integrations, AI features</li>
-              </ul>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                The AI estimates one thing: the working hours each phase needs,
+                calibrated against real projects with known hour counts. It never
+                picks a price and never does the arithmetic — every figure is
+                calculated from my actual rate card afterwards.
+              </p>
               <p className="text-xs text-muted-foreground/70 leading-relaxed mt-3 pt-3 border-t border-border/60">
-                Each phase is priced at the tier the work actually falls into, not a single
-                blended rate. Your estimate shows the exact figures used.
+                That is the difference between an estimate and a plausible-looking
+                number: a language model guessing hours <em>and</em> rates compounds
+                two errors into one total. Your estimate shows the exact rate applied
+                to each phase.
               </p>
             </div>
             <div className="glass-card rounded-2xl p-6">
@@ -268,16 +283,40 @@ export default function EstimatorPage() {
                 see where the money goes.
               </p>
             </div>
-            <div className="glass-card rounded-2xl p-6 sm:col-span-2">
+            <div className="glass-card rounded-2xl p-6">
               <h3 className="font-display text-base font-semibold text-foreground mb-3">
-                A range, not a fantasy number
+                A vague brief gets questions, not a number
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                The low end of your estimate is the exact sum of all phase costs.
-                The high end adds a 20% contingency for scope creep and revisions —
-                the most common reason software projects run over budget. If a
-                phase doesn&apos;t apply to your project, it&apos;s zeroed out
+                If your description could describe a two-week build or a six-month
+                one, the estimator says so and asks the five questions that would
+                actually narrow it — instead of quietly assuming a bigger project
+                and returning an inflated total.
+              </p>
+            </div>
+            <div className="glass-card rounded-2xl p-6">
+              <h3 className="font-display text-base font-semibold text-foreground mb-3">
+                A range that reflects what you told me
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                The low end is the exact sum of all phase costs. The high end adds
+                a contingency for scope creep and revisions — 15% on a detailed
+                brief, 25% on a thinner one. Add detail and the range tightens,
+                because it should. Phases that don&apos;t apply are zeroed out
                 rather than padded.
+              </p>
+            </div>
+            <div className="glass-card rounded-2xl p-6 sm:col-span-2">
+              <h3 className="font-display text-base font-semibold text-foreground mb-3">
+                Hours, timeline, and two ways to engage
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Because everything is derived from hours, you also get a calendar
+                timeline — how long the build takes at full-time versus part-time
+                pace. Longer projects come with a monthly engagement option
+                alongside the hourly figure, priced at a lower effective rate in
+                exchange for committed capacity. Both appear in your estimate and
+                in the PDF.
               </p>
             </div>
           </div>
@@ -298,29 +337,38 @@ export default function EstimatorPage() {
                 <tr className="text-left text-muted-foreground border-b border-border">
                   <th className="py-2.5 pr-4 font-medium">Phase</th>
                   <th className="py-2.5 pr-4 font-medium text-right">Hours</th>
-                  <th className="py-2.5 pr-4 font-medium text-right">Rate</th>
                   <th className="py-2.5 font-medium text-right">Cost</th>
                 </tr>
               </thead>
               <tbody>
-                {SAMPLE_ROWS.map((row) => (
+                {SAMPLE.breakdown.map((row) => (
                   <tr key={row.phase} className="border-b border-border/50">
                     <td className="py-2.5 pr-4 text-foreground">{row.phase}</td>
                     <td className="py-2.5 pr-4 text-right text-muted-foreground tabular-nums">{row.hours}</td>
-                    <td className="py-2.5 pr-4 text-right text-muted-foreground tabular-nums">${row.rate}/hr</td>
                     <td className="py-2.5 text-right text-foreground tabular-nums">{fmtUSD(row.cost)}</td>
                   </tr>
                 ))}
                 <tr>
-                  <td className="py-3 pr-4 font-semibold text-foreground" colSpan={3}>
-                    Estimated range (incl. 20% contingency)
+                  <td className="py-3 pr-4 font-semibold text-foreground">
+                    Estimated range
+                    <span className="block text-xs font-normal text-muted-foreground mt-0.5">
+                      incl. {Math.round(SAMPLE.buffer_pct * 100)}% contingency
+                    </span>
+                  </td>
+                  <td className="py-3 pr-4 text-right font-semibold text-foreground tabular-nums whitespace-nowrap">
+                    {fmtRange(SAMPLE.hours.low, SAMPLE.hours.high)}
                   </td>
                   <td className="py-3 text-right font-semibold text-blue-400 tabular-nums whitespace-nowrap">
-                    {fmtUSD(SAMPLE_TOTAL)} – {fmtUSD(SAMPLE_HIGH)}
+                    {fmtUSD(SAMPLE.hourly.low)} – {fmtUSD(SAMPLE.hourly.high)}
                   </td>
                 </tr>
               </tbody>
             </table>
+            <p className="text-xs text-muted-foreground/70 mt-4 pt-4 border-t border-border/60">
+              Indicative timeline: {fmtRange(SAMPLE.timeline.low.full_time_weeks, SAMPLE.timeline.high.full_time_weeks)} weeks
+              full-time, or {fmtRange(SAMPLE.timeline.low.part_time_weeks, SAMPLE.timeline.high.part_time_weeks)} weeks part-time.
+              Your own estimate shows the rate applied to each phase.
+            </p>
           </div>
         </section>
 

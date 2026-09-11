@@ -2,8 +2,10 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { Mail, CheckCircle, XCircle, Sparkles } from "lucide-react";
-import { estimatePDFBase64, type EstimateResult } from '@/lib/estimate-pdf';
+import { Mail, CheckCircle, XCircle, Sparkles, Clock, HelpCircle } from "lucide-react";
+import { estimatePDFBase64 } from '@/lib/estimate-pdf';
+import { fmtRange } from '@/lib/estimator-rates';
+import type { EstimateResult, NeedsDetailResult, EstimateApiResponse } from '@/lib/estimator-rates';
 import { fmtUSD } from '@/lib/utils';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -21,12 +23,20 @@ interface FormFields {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const DESC_MIN  = 30;
+// 150 chars is roughly two real sentences. Below that there is nothing to scope,
+// and the old 30-char floor let one-liners through to a confident-looking number.
+const DESC_MIN  = 150;
 const DESC_MAX  = 2000;
 const FIELD_MAX = 200;
 const EMAIL_RE  = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const EMPTY_FORM: FormFields = { description: '', techStack: '', budget: '', clientEmail: '' };
+
+const BUDGET_COPY: Record<string, string> = {
+  comfortable: 'Your stated budget covers this scope with room to spare.',
+  tight:       'Your stated budget lands inside the range, but with little margin for changes.',
+  short:       'Your stated budget sits below this scope — worth trimming features or phasing the build.',
+};
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -69,15 +79,16 @@ export default function EstimatorClient() {
   const [emailError,  setEmailError]  = useState('');
   const [sentToEmail, setSentToEmail] = useState('');
   const [estimate,    setEstimate]    = useState<EstimateResult | null>(null);
+  const [needsDetail, setNeedsDetail] = useState<NeedsDetailResult | null>(null);
 
   const resultRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to the result (or error) once it lands
+  // Scroll to the result (or error, or follow-up questions) once it lands
   useEffect(() => {
-    if (estimate || apiError) {
+    if (estimate || apiError || needsDetail) {
       resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }, [estimate, apiError]);
+  }, [estimate, apiError, needsDetail]);
 
   const setField = (key: keyof FormFields) => (value: string) => {
     setFields(prev => ({ ...prev, [key]: value }));
@@ -134,6 +145,7 @@ export default function EstimatorClient() {
     setLoading(true);
     setApiError('');
     setEstimate(null);
+    setNeedsDetail(null);
     setEmailStatus('idle');
 
     try {
@@ -146,6 +158,9 @@ export default function EstimatorClient() {
           description: answers.description,
           techStack:   answers.techStack,
           budget:      answers.budget,
+          // Used only if the brief turns out to be too thin to price, in which
+          // case the server mails the follow-up questions. Never sent to the AI.
+          clientEmail: answers.clientEmail,
         }),
       });
 
@@ -154,7 +169,16 @@ export default function EstimatorClient() {
         throw new Error((err as { error?: string }).error ?? `HTTP ${res.status}`);
       }
 
-      const result = (await res.json()) as EstimateResult;
+      const result = (await res.json()) as EstimateApiResponse;
+
+      // A brief too thin to scope comes back as questions, not a number. The
+      // form stays mounted with their text intact so they can expand in place.
+      if (result.status === 'needs_detail') {
+        setNeedsDetail(result);
+        setSentToEmail(answers.clientEmail);
+        return;
+      }
+
       setEstimate(result);
       await sendEmail(result, answers);
     } catch (e: unknown) {
@@ -180,10 +204,13 @@ export default function EstimatorClient() {
     setEmailError('');
     setSentToEmail('');
     setEstimate(null);
+    setNeedsDetail(null);
   };
 
   const descLen  = fields.description.length;
   const showForm = !estimate;
+  const rows     = estimate?.breakdown.filter(row => row.hours > 0) ?? [];
+  const hasSpecialist = rows.some(row => row.tier === 'specialist');
 
   // ─── Render ──────────────────────────────────────────────────────────────────
 
@@ -241,8 +268,8 @@ export default function EstimatorClient() {
                   {fieldErrors.description
                     ? <p className="text-xs text-red-400">{fieldErrors.description}</p>
                     : <p className="text-xs text-muted-foreground/60">Features, goals, users, timeline, integrations — the more detail, the sharper the estimate.</p>}
-                  <p className={`text-xs whitespace-nowrap transition-colors ${descLen >= DESC_MAX ? 'text-red-400' : 'text-muted-foreground/60'}`}>
-                    {descLen}/{DESC_MAX}
+                  <p className={`text-xs whitespace-nowrap transition-colors ${descLen >= DESC_MAX ? 'text-red-400' : descLen < DESC_MIN ? 'text-muted-foreground/60' : 'text-emerald-400'}`}>
+                    {descLen}/{DESC_MIN} min
                   </p>
                 </div>
               </div>
@@ -321,10 +348,10 @@ export default function EstimatorClient() {
                         />
                       ))}
                     </span>
-                    Analyzing your project & building the estimate...
+                    {needsDetail ? 'Re-estimating with your extra detail...' : 'Analyzing your project & building the estimate...'}
                   </>
                 ) : (
-                  <>Get My Free Estimate →</>
+                  <>{needsDetail ? 'Re-run My Estimate →' : 'Get My Free Estimate →'}</>
                 )}
               </button>
             </div>
@@ -347,6 +374,102 @@ export default function EstimatorClient() {
             </div>
           )}
 
+          {/* ── Brief too thin to scope ── */}
+          {needsDetail && !loading && (
+            <div className="glass-card rounded-2xl p-6 sm:p-8 border border-amber-500/20">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 flex-shrink-0">
+                  <HelpCircle className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-display text-base font-semibold text-foreground">
+                    I need a bit more to give you a real number
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    Your brief could describe a two-week build or a six-month one
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+                I&apos;d rather give you nothing than a confident-looking figure with
+                nothing behind it. Answer any of these in the form above and re-run —
+                each one measurably narrows the range.
+              </p>
+
+              {/* What the AI did manage to understand */}
+              {needsDetail.understanding && (
+                <div className="bg-background border border-border rounded-xl p-4 mb-6">
+                  <h4 className="font-display text-sm font-semibold text-foreground mb-2">
+                    What I understood so far
+                  </h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {needsDetail.understanding}
+                  </p>
+                </div>
+              )}
+
+              <h4 className="font-display text-sm font-semibold text-foreground mb-3">
+                What would let me give you a real number
+              </h4>
+
+              <ul className="flex flex-col gap-2.5 mb-8">
+                {needsDetail.clarifying_questions.map((question, i) => (
+                  <li key={question} className="text-sm text-foreground leading-relaxed flex gap-3">
+                    <span className="w-5 h-5 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-mono flex items-center justify-center flex-shrink-0 mt-0.5">
+                      {i + 1}
+                    </span>
+                    <span>{question}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* The rate card, shown instead of a fabricated total */}
+              <div className="border-t border-border pt-6">
+                <h4 className="font-display text-sm font-semibold text-foreground mb-1">
+                  In the meantime, here is how I bill
+                </h4>
+                <p className="text-xs text-muted-foreground mb-4">
+                  Whatever the scope turns out to be, it is priced from one of these two.
+                </p>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <div className="bg-background border border-border rounded-xl p-4">
+                    <p className="text-xs font-mono tracking-wide text-muted-foreground mb-1">HOURLY</p>
+                    <p className="font-display text-2xl font-bold text-blue-400 tabular-nums">
+                      ${needsDetail.engagement_options.hourly_rate}<span className="text-sm font-normal text-muted-foreground">/hr</span>
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
+                      Billed against logged hours. Best for smaller or open-ended work.
+                    </p>
+                  </div>
+                  <div className="bg-background border border-border rounded-xl p-4">
+                    <p className="text-xs font-mono tracking-wide text-muted-foreground mb-1">MONTHLY</p>
+                    <p className="font-display text-2xl font-bold text-blue-400 tabular-nums">
+                      {fmtUSD(needsDetail.engagement_options.monthly_rate)}<span className="text-sm font-normal text-muted-foreground">/mo</span>
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
+                      {needsDetail.engagement_options.hours_per_month}h of dedicated capacity —
+                      ${needsDetail.engagement_options.effective_hourly}/hr effective.
+                    </p>
+                  </div>
+                </div>
+                {needsDetail.emailed && (
+                  <p className="text-xs text-muted-foreground mt-4 flex items-center justify-center gap-1.5">
+                    <CheckCircle className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+                    Sent to <span className="text-foreground font-medium">{sentToEmail}</span> —
+                    reply to that email with more detail and I&apos;ll take it from there.
+                  </p>
+                )}
+                <p className="text-xs text-muted-foreground/70 mt-3 text-center">
+                  Prefer to just talk it through?{" "}
+                  <Link href="/contact" className="text-blue-400 hover:text-blue-300 underline underline-offset-2">
+                    Book a free 30-minute call
+                  </Link>.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* ── On-page estimate result ── */}
           {estimate && (
             <div className="glass-card rounded-2xl p-6 sm:p-8 border border-blue-500/20">
@@ -357,17 +480,74 @@ export default function EstimatorClient() {
                   ESTIMATED BUDGET RANGE
                 </p>
                 <p className="font-display text-3xl sm:text-4xl font-bold text-blue-400 tabular-nums">
-                  {fmtUSD(estimate.range_low)} – {fmtUSD(estimate.range_high)}
+                  {fmtUSD(estimate.hourly.low)} – {fmtUSD(estimate.hourly.high)}
+                </p>
+                <p className="text-sm text-muted-foreground mt-2 tabular-nums">
+                  {fmtRange(estimate.hours.low, estimate.hours.high)} working hours
+                  <span className="text-muted-foreground/60">
+                    {" "}· incl. {Math.round(estimate.buffer_pct * 100)}% contingency
+                  </span>
                 </p>
               </div>
+
+              {/* Timeline */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-8 mb-6 py-4 border-y border-border/60">
+                <div className="flex items-center gap-2 text-sm">
+                  <Clock className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                  <span className="text-muted-foreground">Full-time:</span>
+                  <span className="text-foreground font-medium tabular-nums">
+                    {fmtRange(estimate.timeline.low.full_time_weeks, estimate.timeline.high.full_time_weeks)} weeks
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Clock className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                  <span className="text-muted-foreground">Part-time:</span>
+                  <span className="text-foreground font-medium tabular-nums">
+                    {fmtRange(estimate.timeline.low.part_time_weeks, estimate.timeline.high.part_time_weeks)} weeks
+                  </span>
+                </div>
+              </div>
+
+              {/* Budget fit */}
+              {estimate.budget_fit && (
+                <div className={`rounded-xl px-4 py-3 mb-6 text-sm leading-relaxed border ${
+                  estimate.budget_fit.verdict === 'comfortable' ? 'bg-emerald-500/5 border-emerald-500/20 text-emerald-300'
+                  : estimate.budget_fit.verdict === 'tight'     ? 'bg-amber-500/5 border-amber-500/20 text-amber-300'
+                  :                                               'bg-red-500/5 border-red-500/20 text-red-300'
+                }`}>
+                  <span className="font-medium">Your budget of {fmtUSD(estimate.budget_fit.stated_usd)}:</span>{" "}
+                  {BUDGET_COPY[estimate.budget_fit.verdict]}
+                </div>
+              )}
 
               {/* Summary */}
               <p className="text-sm text-muted-foreground leading-relaxed text-center max-w-xl mx-auto mb-8">
                 {estimate.summary}
               </p>
 
+              {/* Monthly alternative */}
+              {estimate.monthly && (
+                <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-5 mb-8">
+                  <div className="flex flex-wrap items-baseline justify-between gap-2 mb-2">
+                    <h3 className="font-display text-sm font-semibold text-foreground">
+                      Alternative: monthly engagement
+                    </h3>
+                    <p className="text-sm font-semibold text-blue-400 tabular-nums">
+                      {fmtUSD(estimate.monthly.low)} – {fmtUSD(estimate.monthly.high)}
+                    </p>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    This project runs {fmtRange(estimate.monthly.months_low, estimate.monthly.months_high)} months
+                    of dedicated capacity. At {fmtUSD(estimate.monthly.rate)}/month
+                    ({estimate.monthly.hours_per_month}h/month, ${estimate.monthly.effective_hourly}/hr effective)
+                    you save <span className="text-emerald-400 font-medium">{fmtUSD(estimate.monthly.saving_vs_hourly)}</span>{" "}
+                    versus billing the same hours hourly.
+                  </p>
+                </div>
+              )}
+
               {/* Phase breakdown */}
-              <div className="overflow-x-auto mb-8">
+              <div className="overflow-x-auto mb-3">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="text-left text-muted-foreground border-b border-border">
@@ -378,17 +558,53 @@ export default function EstimatorClient() {
                     </tr>
                   </thead>
                   <tbody>
-                    {estimate.breakdown.filter(row => row.cost > 0).map(row => (
+                    {rows.map(row => (
                       <tr key={row.phase} className="border-b border-border/50">
-                        <td className="py-2.5 pr-4 text-foreground">{row.phase}</td>
+                        <td className="py-2.5 pr-4 text-foreground">
+                          {row.phase}
+                          {row.tier === 'specialist' && <span className="text-amber-400 ml-1">†</span>}
+                        </td>
                         <td className="py-2.5 pr-4 text-right text-muted-foreground tabular-nums">{row.hours}</td>
                         <td className="py-2.5 pr-4 text-right text-muted-foreground tabular-nums">${row.rate}/hr</td>
                         <td className="py-2.5 text-right text-foreground tabular-nums">{fmtUSD(row.cost)}</td>
                       </tr>
                     ))}
+                    <tr>
+                      <td className="py-3 pr-4 font-semibold text-foreground">Total</td>
+                      <td className="py-3 pr-4 text-right font-semibold text-foreground tabular-nums">{estimate.hours.low}</td>
+                      <td className="py-3 pr-4" />
+                      <td className="py-3 text-right font-semibold text-foreground tabular-nums">{fmtUSD(estimate.hourly.low)}</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
+
+              {hasSpecialist && (
+                <p className="text-xs text-muted-foreground/70 leading-relaxed mb-8">
+                  <span className="text-amber-400">†</span> Specialist work — AI/LLM integration,
+                  real-time or multi-tenant architecture, payment &amp; compliance integrations.
+                </p>
+              )}
+
+              {/* Scope assumptions */}
+              {estimate.scope_assumptions.length > 0 && (
+                <div className="mb-8">
+                  <h3 className="font-display text-sm font-semibold text-foreground mb-1">
+                    What This Estimate Assumes
+                  </h3>
+                  <p className="text-xs text-muted-foreground mb-3">
+                    If any of these is wrong, the number moves — tell me which and I&apos;ll re-scope.
+                  </p>
+                  <ul className="flex flex-col gap-2">
+                    {estimate.scope_assumptions.map(item => (
+                      <li key={item} className="text-sm text-muted-foreground leading-relaxed flex gap-2">
+                        <span className="text-blue-400 flex-shrink-0">·</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               {/* Risks */}
               {estimate.risks.length > 0 && (

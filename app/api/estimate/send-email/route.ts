@@ -1,30 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer";
-import { personalInfo } from "@/lib/data";
+import { getTransporter, fromEmail as resolveFrom, fromHeader, OWNER_EMAIL, SITE_URL } from "@/lib/mailer";
+import { isRateLimited, callerIp } from "@/lib/rate-limit";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function getTransporter() {
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-
-  if (!user || !pass) {
-    return null;
-  }
-
-  const port = Number(process.env.SMTP_PORT ?? 587);
-
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST ?? "smtp.gmail.com",
-    port,
-    secure: port === 465,
-    auth: { user, pass },
-  });
-}
+// This endpoint sends mail from the owner's own address to a caller-supplied
+// recipient, so it needs the same throttle as the estimator that feeds it —
+// otherwise it is an open relay for anyone who finds the route.
+const RATE_LIMIT  = 5;
+const RATE_WINDOW = 60_000;   // 1 minute
 
 export async function POST(req: NextRequest) {
+  if (isRateLimited('send-email', callerIp(req.headers), RATE_LIMIT, RATE_WINDOW)) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a minute and try again." },
+      { status: 429 },
+    );
+  }
+
   const transporter = getTransporter();
-  const fromEmail = process.env.SMTP_FROM ?? process.env.SMTP_USER;
+  const fromEmail   = resolveFrom();
 
   if (!transporter || !fromEmail) {
     return NextResponse.json(
@@ -61,14 +56,14 @@ export async function POST(req: NextRequest) {
 
   try {
     await transporter.sendMail({
-      from: `"Kathan N. Patel" <${fromEmail}>`,
+      from: fromHeader(fromEmail),
       to,
-      bcc: personalInfo.email,
+      bcc: OWNER_EMAIL,
       subject: "Your Project Cost Estimate — Kathan Patel",
       html: `
         <p>Hi,</p>
         <p>Thank you for using the project cost estimator on my portfolio. Your AI-generated estimate is attached as a PDF.</p>
-        <p>If you'd like a precise quote tailored to your requirements, reply to this email or <a href="https://kathanpatel.vercel.app/contact">book a call</a>.</p>
+        <p>If you'd like a precise quote tailored to your requirements, reply to this email or <a href="${SITE_URL}/contact">book a call</a>.</p>
         <p>Best regards,<br/>Kathan N. Patel<br/>Blazor & WPF Specialist</p>
       `,
       attachments: [

@@ -1,22 +1,12 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { fmtUSD } from "./utils";
+import { fmtRange } from "./estimator-rates";
+import type { EstimateResult, PricedPhase } from "./estimator-rates";
 
-export interface BreakdownRow {
-  phase: string;
-  hours: number;
-  rate: number;
-  cost: number;
-}
-
-export interface EstimateResult {
-  range_low: number;
-  range_high: number;
-  summary: string;
-  breakdown: BreakdownRow[];
-  risks: string[];
-  recommended_stack: string;
-}
+// Re-exported so callers keep importing the estimate shape from the module that
+// renders it; the numbers themselves are defined in ./estimator-rates.
+export type { EstimateResult, PricedPhase as BreakdownRow };
 
 type Answers = Record<string, string>;
 
@@ -26,7 +16,7 @@ export function buildEstimatePDF(result: EstimateResult, answers: Answers): jsPD
   const PH  = doc.internal.pageSize.getHeight();
   const ML  = 18;
   const MR  = PW - 18;
-  const totalBase = result.breakdown.reduce((s, r) => s + r.cost, 0);
+  const rows = result.breakdown.filter((r) => r.hours > 0);
 
   const C = {
     ink:      [15,  23,  42]  as [number, number, number],
@@ -69,6 +59,28 @@ export function buildEstimatePDF(result: EstimateResult, answers: Answers): jsPD
 
   let y = 0;
 
+  // The sections below are positioned by hand, so a long brief or a wide set of
+  // assumptions would otherwise run off the page. autoTable paginates itself.
+  const ensureSpace = (needed: number) => {
+    if (y + needed > PH - 18) {
+      doc.addPage();
+      y = 20;
+    }
+  };
+
+  const sectionHeading = (label: string, ruleWidth: number) => {
+    ensureSpace(16);
+    setFont("bold", 8, C.muted);
+    doc.setCharSpace(1.2);
+    doc.text(label, ML, y);
+    doc.setCharSpace(0);
+    y += 3;
+    doc.setDrawColor(...C.blue);
+    doc.setLineWidth(0.8);
+    doc.line(ML, y, ML + ruleWidth, y);
+    y += 5;
+  };
+
   doc.setFillColor(...C.headerBg);
   doc.rect(0, 0, PW, 38, "F");
 
@@ -93,22 +105,27 @@ export function buildEstimatePDF(result: EstimateResult, answers: Answers): jsPD
   doc.text("ESTIMATED PROJECT COST", PW / 2, y + 6, { align: "center" });
 
   setFont("bold", 20, C.blue);
-  doc.text(`${money(result.range_low)} – ${money(result.range_high)}`, PW / 2, y + 16, { align: "center" });
+  doc.text(`${money(result.hourly.low)} – ${money(result.hourly.high)}`, PW / 2, y + 16, { align: "center" });
 
   y += 27;
   setFont("normal", 7.5, C.muted);
-  doc.text("Includes 20% overhead for PM, QA & scope buffer", PW / 2, y, { align: "center" });
+  doc.text(
+    `${fmtRange(result.hours.low, result.hours.high)} working hours · includes ${Math.round(result.buffer_pct * 100)}% contingency for revisions & scope creep`,
+    PW / 2,
+    y,
+    { align: "center" },
+  );
+  y += 4.5;
+  doc.text(
+    `Indicative timeline: ${fmtRange(result.timeline.low.full_time_weeks, result.timeline.high.full_time_weeks)} weeks full-time, `
+      + `or ${fmtRange(result.timeline.low.part_time_weeks, result.timeline.high.part_time_weeks)} weeks part-time`,
+    PW / 2,
+    y,
+    { align: "center" },
+  );
   y += 10;
 
-  setFont("bold", 8, C.muted);
-  doc.setCharSpace(1.2);
-  doc.text("PROJECT DETAILS", ML, y);
-  doc.setCharSpace(0);
-  y += 3;
-  doc.setDrawColor(...C.blue);
-  doc.setLineWidth(0.8);
-  doc.line(ML, y, ML + 36, y);
-  y += 5;
+  sectionHeading("PROJECT DETAILS", 36);
 
   const details: [string, string][] = (
     [
@@ -143,43 +160,48 @@ export function buildEstimatePDF(result: EstimateResult, answers: Answers): jsPD
 
   y += 4;
 
-  setFont("bold", 8, C.muted);
-  doc.setCharSpace(1.2);
-  doc.text("AI SUMMARY", ML, y);
-  doc.setCharSpace(0);
-  y += 3;
-  doc.setDrawColor(...C.blue);
-  doc.setLineWidth(0.8);
-  doc.line(ML, y, ML + 28, y);
-  y += 5;
+  sectionHeading("AI SUMMARY", 28);
 
   setFont("normal", 8.5, C.ink);
-  const summaryLines = doc.splitTextToSize(result.summary, PW - 36);
+  const summaryLines = doc.splitTextToSize(result.summary, PW - 36) as string[];
+  ensureSpace(summaryLines.length * 4.8);
   doc.text(summaryLines, ML, y);
   y += summaryLines.length * 4.8 + 8;
 
-  setFont("bold", 8, C.muted);
-  doc.setCharSpace(1.2);
-  doc.text("COST BREAKDOWN", ML, y);
-  doc.setCharSpace(0);
-  y += 3;
-  doc.setDrawColor(...C.blue);
-  doc.setLineWidth(0.8);
-  doc.line(ML, y, ML + 38, y);
-  y += 4;
+  // What the AI assumed to reach these hours — printed so a wrong assumption is
+  // visible and correctable rather than buried inside the total.
+  if (result.scope_assumptions.length > 0) {
+    sectionHeading("SCOPE ASSUMPTIONS", 44);
+
+    setFont("normal", 8.5, C.ink);
+    result.scope_assumptions.forEach((item) => {
+      const lines = doc.splitTextToSize(item, PW - 42) as string[];
+      ensureSpace(lines.length * 4.6 + 2);
+      doc.text("•", ML, y);
+      doc.text(lines, ML + 4, y);
+      y += lines.length * 4.6 + 1.5;
+    });
+    y += 6;
+  }
+
+  sectionHeading("COST BREAKDOWN", 38);
+  y -= 1;
 
   autoTable(doc, {
     startY: y,
     margin: { left: ML, right: 18 },
     head: [["Phase", "Hours", "Rate", "Cost"]],
     body: [
-      ...result.breakdown.map((r) => [
-        r.phase,
+      ...rows.map((r) => [
+        r.tier === "specialist" ? `${r.phase} †` : r.phase,
         `${r.hours}h`,
         `$${r.rate}/hr`,
         money(r.cost),
       ]),
-      [{ content: "Base total", colSpan: 3, styles: { fontStyle: "bold" } }, money(totalBase)],
+      [
+        { content: `Total (${result.hours.low}h)`, colSpan: 3, styles: { fontStyle: "bold" } },
+        money(result.hourly.low),
+      ],
     ],
     headStyles: {
       fillColor:  C.headerBg,
@@ -200,16 +222,65 @@ export function buildEstimatePDF(result: EstimateResult, answers: Answers): jsPD
     tableLineWidth: 0.3,
   });
 
-  y = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10;
+  y = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 5;
+
+  if (rows.some((r) => r.tier === "specialist")) {
+    setFont("normal", 7, C.muted);
+    doc.text(
+      "† Specialist work — AI/LLM, real-time or multi-tenant architecture, payment & compliance integrations.",
+      ML,
+      y,
+    );
+    y += 5;
+  }
+  y += 5;
+
+  // Longer projects get the retainer option, where a committed month costs less
+  // per hour than billing the same work hourly.
+  if (result.monthly) {
+    ensureSpace(30);
+    doc.setFillColor(...C.blueBg);
+    doc.roundedRect(ML, y, PW - 36, 24, 3, 3, "F");
+
+    setFont("bold", 8.5, C.ink);
+    doc.text("Alternative: monthly engagement", ML + 5, y + 7);
+
+    setFont("normal", 8, C.muted);
+    doc.text(
+      `${fmtRange(result.monthly.months_low, result.monthly.months_high)} months at ${money(result.monthly.rate)}/month `
+        + `(${result.monthly.hours_per_month}h/month, $${result.monthly.effective_hourly}/hr effective)`,
+      ML + 5,
+      y + 13,
+    );
+
+    setFont("bold", 8, C.emerald);
+    doc.text(
+      `${money(result.monthly.low)} – ${money(result.monthly.high)} · saves ${money(result.monthly.saving_vs_hourly)} versus hourly`,
+      ML + 5,
+      y + 19,
+    );
+    y += 32;
+  }
+
+  if (result.risks.length > 0) {
+    sectionHeading("KEY RISKS", 26);
+
+    setFont("normal", 8.5, C.ink);
+    result.risks.forEach((risk) => {
+      const lines = doc.splitTextToSize(risk, PW - 42) as string[];
+      ensureSpace(lines.length * 4.6 + 2);
+      doc.text("•", ML, y);
+      doc.text(lines, ML + 4, y);
+      y += lines.length * 4.6 + 1.5;
+    });
+    y += 6;
+  }
 
   if (result.recommended_stack) {
-    setFont("bold", 8, C.muted);
-    doc.setCharSpace(1.2);
-    doc.text("RECOMMENDED STACK", ML, y);
-    doc.setCharSpace(0);
-    y += 8;
+    sectionHeading("RECOMMENDED STACK", 44);
     setFont("normal", 8.5, C.ink);
-    const stackLines = doc.splitTextToSize(result.recommended_stack, PW - 36);
+    const stackLines = doc.splitTextToSize(result.recommended_stack, PW - 36) as string[];
+    ensureSpace(stackLines.length * 4.8);
     doc.text(stackLines, ML, y);
   }
 
