@@ -1,6 +1,7 @@
 "use client";
 
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { DecodeText } from "@/components/DecodeText";
 import { summary } from "@/lib/data";
 
 const TECH_ROW_1 = [
@@ -59,7 +60,7 @@ export function HomeAboutSection() {
         <ScrollReveal>
           <div className="mb-12 max-w-3xl">
             <span className="font-mono text-blue-400 text-sm font-medium tracking-widest uppercase">
-              About Me
+              <DecodeText text="About Me" />
             </span>
             <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mt-2 mb-4 leading-tight">
               Building reliable software for real businesses
@@ -107,7 +108,7 @@ export function HomeAboutSection() {
             {HIGHLIGHTS.map((card) => (
               <div
                 key={card.title}
-                className="glass-card rounded-xl p-5 flex items-start gap-4 hover:border-blue-500/20 transition-all duration-200 group"
+                className="glass-card fx-spotlight relative rounded-xl p-5 flex items-start gap-4 hover:border-blue-500/20 transition-all duration-200 group"
               >
                 <span className="text-2xl">{card.icon}</span>
                 <div>

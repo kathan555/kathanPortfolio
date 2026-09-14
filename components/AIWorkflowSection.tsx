@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { DecodeText } from "@/components/DecodeText";
 import { aiWorkflow } from "@/lib/data";
 import {
   ClipboardList, BookOpen, Terminal, ShieldCheck,
@@ -105,7 +106,7 @@ export function AIWorkflowSection() {
         <ScrollReveal>
           <div className="mb-14 max-w-3xl">
             <span className="font-mono text-blue-400 text-sm font-medium tracking-widest uppercase">
-              {eyebrow}
+              <DecodeText text={eyebrow} />
             </span>
             <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mt-2 mb-4 leading-tight">
               {heading}
@@ -135,7 +136,10 @@ export function AIWorkflowSection() {
               reader works down the five steps. */}
           <ScrollReveal delay={0.15}>
             <div className="lg:sticky lg:top-28">
-              <div className="glass-card rounded-2xl p-6 border-blue-500/20">
+              <div
+                className="glass-card fx-holo fx-holo-live fx-spotlight relative rounded-2xl p-6 border-blue-500/20"
+                style={{ "--fx-holo-speed": "8s" } as React.CSSProperties}
+              >
                 <p className="font-mono text-[10px] text-blue-400 tracking-[0.25em] uppercase mb-1">
                   Proof
                 </p>

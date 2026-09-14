@@ -1,4 +1,5 @@
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { DecodeText } from "@/components/DecodeText";
 import { experiences } from "@/lib/data";
 import { Briefcase, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -10,7 +11,7 @@ export function ExperienceSection() {
         <ScrollReveal>
           <div className="mb-14">
             <span className="font-mono text-blue-400 text-sm font-medium tracking-wider uppercase">
-              Experience
+              <DecodeText text="Experience" />
             </span>
             <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mt-2">
               Career Journey
@@ -20,7 +21,9 @@ export function ExperienceSection() {
 
         <div className="relative">
           {/* Timeline vertical line */}
-          <div className="absolute left-6 top-4 bottom-4 w-px bg-gradient-to-b from-blue-500/60 via-rose-500/40 to-transparent hidden md:block" />
+          <div className="absolute left-6 top-4 bottom-4 w-px bg-gradient-to-b from-blue-500/60 via-rose-500/40 to-transparent hidden md:block">
+            <span className="fx-packet-y" />
+          </div>
 
           <div className="space-y-8">
             {experiences.map((exp, i) => (
@@ -30,12 +33,16 @@ export function ExperienceSection() {
                   <div className="hidden md:flex flex-col items-center shrink-0">
                     <div
                       className={cn(
-                        "w-12 h-12 rounded-xl border-2 flex items-center justify-center z-10 mt-1 transition-all",
+                        "relative w-12 h-12 rounded-xl border-2 flex items-center justify-center z-10 mt-1 transition-all",
                         exp.type === "current"
                           ? "bg-blue-500/20 border-blue-500/60 text-blue-400 shadow-lg shadow-blue-500/20"
                           : "bg-card border-border text-muted-foreground"
                       )}
                     >
+                      {/* Live-signal ping on the current role's node */}
+                      {exp.type === "current" && (
+                        <span aria-hidden className="absolute -inset-0.5 rounded-xl border-2 border-blue-500/50 animate-ping motion-reduce:hidden" style={{ animationDuration: "2.6s" }} />
+                      )}
                       <Briefcase className="w-5 h-5" />
                     </div>
                   </div>
@@ -43,7 +50,7 @@ export function ExperienceSection() {
                   {/* Card */}
                   <div
                     className={cn(
-                      "glass-card rounded-2xl p-6 flex-1 transition-all duration-300 hover:border-blue-500/20",
+                      "glass-card fx-spotlight relative rounded-2xl p-6 flex-1 transition-all duration-300 hover:border-blue-500/20",
                       exp.type === "current" && "border-blue-500/20 shadow-lg shadow-blue-500/5"
                     )}
                   >

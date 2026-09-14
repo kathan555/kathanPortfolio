@@ -3,6 +3,7 @@
 import { useState, type CSSProperties, type ReactNode } from "react";
 import Link from "next/link";
 import { ScrollReveal, StaggerChildren, staggerItem } from "@/components/ScrollReveal";
+import { DecodeText } from "@/components/DecodeText";
 import { skills } from "@/lib/data";
 import {
   Code2, Layers, Database, Monitor, Wrench, Zap,
@@ -195,7 +196,7 @@ function FeaturedCard({ skill }: { skill: FeaturedSkill }) {
       variants={staggerItem}
       whileHover={{ y: -4, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className="group relative glass-card rounded-2xl p-5 flex flex-col items-center gap-3 cursor-default overflow-hidden"
+      className="group relative glass-card fx-spotlight rounded-2xl p-5 flex flex-col items-center gap-3 cursor-default overflow-hidden"
       style={{ "--skill-glow": glow } as CSSProperties}
     >
       {/* Glow backdrop on hover */}
@@ -318,7 +319,7 @@ export function SkillsSection() {
         <ScrollReveal>
           <div className="mb-16">
             <span className="font-mono text-blue-400 text-sm font-medium tracking-widest uppercase">
-              Skills
+              <DecodeText text="Skills" />
             </span>
             <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold mt-2">
               Technical{" "}
@@ -379,7 +380,7 @@ export function SkillsSection() {
             <div className="grid sm:grid-cols-2 gap-4">
               {skills.map((category, i) => (
                 <ScrollReveal key={category.category} delay={i * 0.07}>
-                  <div className="glass-card rounded-2xl p-5 h-full hover:border-blue-500/20 transition-all duration-300 group">
+                  <div className="glass-card fx-spotlight relative rounded-2xl p-5 h-full hover:border-blue-500/20 transition-all duration-300 group">
                     {/* Header */}
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:bg-blue-500/20 transition-colors flex-shrink-0">

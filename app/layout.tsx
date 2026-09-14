@@ -6,6 +6,7 @@ import { ThemeProvider }      from "@/components/ThemeProvider";
 import { ScrollRestorer }       from "@/components/ScrollRestorer";
 import { NavigationProgress }   from "@/components/NavigationProgress";
 import { WhatsAppButton }        from "@/components/WhatsAppButton";
+import { PointerSpotlight }      from "@/components/PointerSpotlight";
 import { Navbar }             from "@/components/Navbar";
 import { Footer }             from "@/components/Footer";
 import { Toaster }            from "react-hot-toast";
@@ -204,7 +205,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* ── WhatsApp floating button ── */}
           <WhatsAppButton />
 
+          {/* ── Cursor-tracking glow for .fx-spotlight / .project-card ── */}
+          <PointerSpotlight />
+
           <div className="relative min-h-screen">
+            {/* Blueprint grid framing the top of every page. z-index -1 keeps
+                it under all in-flow content; it fades out by ~70% height. */}
+            <div aria-hidden className="fx-ambient-grid absolute inset-x-0 top-0 h-[min(100svh,960px)] -z-10" />
             <Navbar />
             <main>{children}</main>
             <Footer />

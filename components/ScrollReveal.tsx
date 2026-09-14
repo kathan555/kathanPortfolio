@@ -21,16 +21,23 @@ export function ScrollReveal({
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once, margin: "-50px" });
 
+  /* Content "materialises": it resolves from a soft blur as it rises in.
+     `transitionEnd` clears the filter afterwards — a leftover `blur(0px)`
+     would still make this wrapper the containing block for any `fixed`
+     descendant and the backdrop root for glass cards inside it. */
   const variants = {
     hidden: {
       opacity: 0,
       y: direction === "up" ? 30 : direction === "down" ? -30 : 0,
       x: direction === "left" ? 30 : direction === "right" ? -30 : 0,
+      filter: "blur(8px)",
     },
     visible: {
       opacity: 1,
       y: 0,
       x: 0,
+      filter: "blur(0px)",
+      transitionEnd: { filter: "none" },
     },
   };
 

@@ -67,6 +67,14 @@
   --divider-line:  rgb(var(--c-blue-500) / 0.40);
   --hero-wash-1:   rgb(var(--c-blue-500) / 0.13);
   --hero-wash-2:   rgb(var(--c-rose-500) / 0.11);
+
+  /* Futuristic layer (see "FX" block below). Same rule as above: light needs
+     heavier alpha for a grid line or glow to survive on a near-white ground. */
+  --fx-grid-line:  rgb(var(--c-blue-500) / 0.075);
+  --fx-grid-floor: rgb(var(--c-blue-500) / 0.20);
+  --fx-spot:       rgb(var(--c-blue-500) / 0.09);
+  --fx-scan:       rgb(var(--c-blue-400) / 0.55);
+  --fx-glow:       rgb(var(--c-blue-500) / 0.35);
 }
 
 .dark {
@@ -118,6 +126,12 @@
   --divider-line:  rgb(var(--c-blue-500) / 0.22);
   --hero-wash-1:   rgb(var(--c-blue-500) / 0.16);
   --hero-wash-2:   rgb(var(--c-rose-500) / 0.14);
+
+  --fx-grid-line:  rgb(var(--c-blue-500) / 0.06);
+  --fx-grid-floor: rgb(var(--c-blue-500) / 0.28);
+  --fx-spot:       rgb(var(--c-blue-500) / 0.14);
+  --fx-scan:       rgb(var(--c-blue-400) / 0.75);
+  --fx-glow:       rgb(var(--c-blue-500) / 0.5);
 }
 
 * { box-sizing: border-box; padding: 0; margin: 0; }
@@ -254,6 +268,296 @@ p, li, td, th, label, span:not(.font-mono):not(.font-display) {
 }
 @media (prefers-reduced-motion: reduce) {
   .section-glow::after { animation: none; }
+}
+
+/* ── FX: futuristic layer ─────────────────────────────────────────────────────
+   Everything here is opt-in by class and draws only from the theme tokens, so
+   both themes stay in step. Two rules the whole block follows:
+
+   • No `position` declarations on reusable classes. This file sits AFTER
+     @tailwind utilities, so a `position: relative` here would silently beat an
+     `absolute` / `fixed` utility on the same element. Call sites add
+     `relative` themselves. (.project-card is the one exception — it is never
+     positioned by a utility.)
+   • Every loop is switched off under prefers-reduced-motion at the bottom. */
+
+/* Animatable angle for the rotating holo rings. Without @property support the
+   ring simply renders static, which is an acceptable fallback. */
+@property --fx-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes fx-spin-angle { to { --fx-angle: 360deg; } }
+
+/* Ambient blueprint grid behind the top of every page (mounted once in the
+   root layout). Absolute rather than fixed, so it frames page headers and then
+   scrolls away instead of sitting behind long-form reading text. */
+.fx-ambient-grid {
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--fx-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--fx-grid-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+  background-position: center top;
+  -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 0%, #000 15%, transparent 78%);
+  mask-image: radial-gradient(ellipse 75% 70% at 50% 0%, #000 15%, transparent 78%);
+}
+
+/* Holo ring: a conic highlight that orbits an element's border. Painted by a
+   masked ::after so only the ring is drawn — safe on translucent glass cards.
+   `.fx-holo` reveals on hover; `.fx-holo-live` keeps it running.
+   Inset -1px lays the ring over a 1px border rather than just inside it —
+   which also means it is clipped away on an `overflow-hidden` element. */
+.fx-holo::after {
+  content: '';
+  position: absolute;
+  inset: var(--fx-holo-inset, -1px);
+  padding: var(--fx-holo-width, 1px);
+  border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--fx-angle),
+    transparent 0deg,
+    rgb(var(--c-blue-500)) 70deg,
+    rgb(var(--c-purple-400)) 110deg,
+    rgb(var(--c-rose-500)) 150deg,
+    transparent 210deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  /* Paused until visible: a custom-property animation ticks style on every
+     frame, so a grid of hover-only cards shouldn't pay for invisible rings. */
+  animation: fx-spin-angle var(--fx-holo-speed, 4.5s) linear infinite paused;
+}
+.fx-holo:hover::after,
+.fx-holo:focus-within::after,
+.fx-holo-live::after { opacity: 1; animation-play-state: running; }
+
+/* Cursor spotlight: a soft radial glow that tracks the pointer. Coordinates
+   are written to --mx / --my by <PointerSpotlight />. `isolation` gives the
+   z-index:-1 layer a stacking context to sit in — above the card's own
+   background, below its content. */
+.fx-spotlight { isolation: isolate; }
+.fx-spotlight::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), var(--fx-spot), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.fx-spotlight:hover::before { opacity: 1; }
+
+/* Project cards get both behaviours without touching every call site
+   (home Key Work, Independent Builds, and the /github grid share this class). */
+.project-card { position: relative; isolation: isolate; }
+.project-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), var(--fx-spot), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.project-card:hover::before { opacity: 1; }
+
+/* Light sweep across a primary button. Idles off-canvas for most of the cycle
+   so it reads as a periodic glint, not a constant shimmer. Needs
+   `relative overflow-hidden` on the button. */
+.fx-sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 25%, rgb(255 255 255 / 0.42) 50%, transparent 75%);
+  transform: translateX(-130%);
+  animation: fx-sheen 5s ease-in-out 1.5s infinite;
+}
+@keyframes fx-sheen {
+  0%, 70% { transform: translateX(-130%); }
+  100%    { transform: translateX(130%); }
+}
+
+/* A brand-coloured glint that passes through a solid-foreground heading. The
+   band uses the 400 shades, which clear AA as text in both themes, so the
+   heading never dips below readable mid-sweep. */
+.fx-text-sheen {
+  background: linear-gradient(
+    100deg,
+    hsl(var(--foreground)) 0%,
+    hsl(var(--foreground)) 40%,
+    rgb(var(--c-blue-400)) 47%,
+    rgb(var(--c-rose-400)) 53%,
+    hsl(var(--foreground)) 60%,
+    hsl(var(--foreground)) 100%
+  );
+  background-size: 250% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fx-text-sheen 8s ease-in-out 1.4s infinite;
+}
+@keyframes fx-text-sheen {
+  0%       { background-position: 100% 0; }
+  30%, 100% { background-position: 0% 0; }
+}
+
+/* Scanner line that sweeps down an image. Needs a `relative overflow-hidden`
+   parent. */
+.fx-scan {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 30%;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 0%, rgb(var(--c-blue-400) / 0.08) 70%, var(--fx-scan) 97%, transparent 100%);
+  transform: translateY(-100%);
+  animation: fx-scan 6s cubic-bezier(0.45, 0, 0.55, 1) 1.2s infinite;
+}
+@keyframes fx-scan {
+  0%        { transform: translateY(-100%); opacity: 0; }
+  8%        { opacity: 1; }
+  55%       { transform: translateY(340%);  opacity: 1; }
+  62%, 100% { transform: translateY(340%);  opacity: 0; }
+}
+
+/* Perspective grid floor for the hero. The plane is oversized and translated
+   (compositor-only) rather than animating background-position (repaint).
+   It sits ABOVE the hero's bottom fade, so its own mask does the fading at
+   both ends: soft into the next section, and out toward the horizon. At a
+   790px hero this projects to roughly the bottom 165px. */
+.fx-horizon {
+  position: absolute;
+  left: -50%;
+  right: -50%;
+  bottom: 0;
+  height: 70%;
+  overflow: hidden;
+  pointer-events: none;
+  transform: perspective(700px) rotateX(60deg);
+  transform-origin: 50% 100%;
+  -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 16%, #000 34%, transparent 88%);
+  mask-image: linear-gradient(to top, transparent 0%, #000 16%, #000 34%, transparent 88%);
+}
+.fx-horizon-plane {
+  position: absolute;
+  inset: -64px 0 0 0;
+  background-image:
+    linear-gradient(var(--fx-grid-floor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--fx-grid-floor) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position: center top;
+  animation: fx-grid-travel 2.8s linear infinite;
+}
+@keyframes fx-grid-travel { to { transform: translateY(64px); } }
+
+/* Data packet: a glowing pulse that travels along a 1px rule. `.fx-packet`
+   rides a horizontal line (ltr by default, `--rtl` to reverse), `.fx-packet-y`
+   runs down a vertical one. The track clips the pulse; the pulse is a
+   full-length layer translated by its own size, so no layout is animated. */
+.fx-packet,
+.fx-packet-y { position: absolute; overflow: hidden; pointer-events: none; }
+.fx-packet   { left: 0; right: 0; top: -4px; height: 9px; }
+.fx-packet-y { top: 0; bottom: 0; left: -4px; width: 9px; }
+
+.fx-packet::before,
+.fx-packet-y::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-image: radial-gradient(closest-side, rgb(var(--c-blue-400)) 0%, rgb(var(--c-blue-500) / 0.45) 45%, transparent 100%);
+}
+.fx-packet::before {
+  background-size: 80px 100%;
+  background-position: left center;
+  animation: fx-packet-ltr 4.2s cubic-bezier(0.55, 0, 0.35, 1) 1s infinite;
+}
+.fx-packet--rtl::before {
+  background-position: right center;
+  animation-name: fx-packet-rtl;
+}
+.fx-packet-y::before {
+  background-size: 100% 140px;
+  background-position: center top;
+  background-image: radial-gradient(closest-side, rgb(var(--c-rose-400)) 0%, rgb(var(--c-blue-500) / 0.45) 45%, transparent 100%);
+  animation: fx-packet-down 5.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+@keyframes fx-packet-ltr {
+  0%   { transform: translateX(-80px);             opacity: 1; }
+  80%  { transform: translateX(calc(100% - 80px)); opacity: 1; }
+  100% { transform: translateX(calc(100% - 80px)); opacity: 0; }
+}
+@keyframes fx-packet-rtl {
+  0%   { transform: translateX(80px);               opacity: 1; }
+  80%  { transform: translateX(calc(-100% + 80px)); opacity: 1; }
+  100% { transform: translateX(calc(-100% + 80px)); opacity: 0; }
+}
+@keyframes fx-packet-down {
+  0%   { transform: translateY(-140px); }
+  100% { transform: translateY(100%); }
+}
+
+/* Expanding signal rings behind the closing CTA. */
+.fx-ripple {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 260px;
+  height: 260px;
+  margin: -130px 0 0 -130px;
+  border-radius: 9999px;
+  border: 1px solid rgb(var(--c-blue-500) / 0.35);
+  pointer-events: none;
+  opacity: 0;
+  animation: fx-ripple 7.5s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+}
+@keyframes fx-ripple {
+  0%   { transform: scale(0.4); opacity: 0; }
+  15%  { opacity: 0.9; }
+  100% { transform: scale(3);   opacity: 0; }
+}
+
+/* Theme switch: a circular reveal from the toggle via the View Transitions
+   API (see ThemeToggle). Scoped to a class so it never touches route
+   transitions, and CSS transitions are paused so the new theme is captured
+   fully settled instead of mid-fade. */
+:root.fx-theme-reveal::view-transition-old(root),
+:root.fx-theme-reveal::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+:root.fx-theme-reveal *,
+:root.fx-theme-reveal *::before,
+:root.fx-theme-reveal *::after { transition: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-holo::after,
+  .fx-text-sheen,
+  .fx-horizon-plane { animation: none; }
+  .fx-sheen::after,
+  .fx-scan,
+  .fx-packet,
+  .fx-packet-y,
+  .fx-ripple { display: none; }
+}
+
+/* Windows High Contrast / forced colours: clipped-gradient text would render
+   invisible, so fall back to plain text. */
+@media (forced-colors: active) {
+  .fx-text-sheen { background: none; -webkit-text-fill-color: currentColor; }
 }
 
 @layer utilities {

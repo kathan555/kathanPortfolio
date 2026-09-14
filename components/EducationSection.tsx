@@ -1,4 +1,5 @@
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { DecodeText } from "@/components/DecodeText";
 import { education } from "@/lib/data";
 import { GraduationCap, Calendar, MapPin } from "lucide-react";
 
@@ -9,7 +10,7 @@ export function EducationSection() {
         <ScrollReveal>
           <div className="mb-14">
             <span className="font-mono text-blue-400 text-sm font-medium tracking-wider uppercase">
-              Education
+              <DecodeText text="Education" />
             </span>
             <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mt-2">
               Academic Background
@@ -20,7 +21,7 @@ export function EducationSection() {
         <div className="max-w-2xl">
           {education.map((edu, i) => (
             <ScrollReveal key={i} delay={0.1}>
-              <div className="glass-card rounded-2xl p-8 flex flex-col sm:flex-row items-start gap-6 hover:border-blue-500/20 transition-all duration-300">
+              <div className="glass-card fx-spotlight relative rounded-2xl p-8 flex flex-col sm:flex-row items-start gap-6 hover:border-blue-500/20 transition-all duration-300">
                 {/* Icon */}
                 <div className="w-16 h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
                   <GraduationCap className="w-8 h-8 text-blue-400" />

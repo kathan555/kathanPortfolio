@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import {
   Menu, X, ChevronDown,
   Github, PenLine, Calculator, Brain, Scale,
@@ -119,6 +119,10 @@ export function Navbar() {
   const pathname = usePathname();
   const navRef   = useRef<HTMLDivElement>(null);
 
+  // Page read-progress, sprung so the beam glides rather than ticks.
+  const { scrollYProgress } = useScroll();
+  const readProgress = useSpring(scrollYProgress, { stiffness: 160, damping: 28, mass: 0.3 });
+
   // Close dropdown on outside click
   useEffect(() => {
     function handleOutside(e: MouseEvent) {
@@ -171,6 +175,18 @@ export function Navbar() {
           : "bg-transparent"
       )}
     >
+      {/* Scroll-progress beam along the header's bottom edge — shown once the
+          header turns solid, so it never floats over the transparent hero. */}
+      <motion.div
+        aria-hidden
+        style={{ scaleX: readProgress, boxShadow: "0 0 12px var(--fx-glow)" }}
+        className={cn(
+          "absolute left-0 right-0 bottom-0 h-[2px] origin-left pointer-events-none",
+          "bg-gradient-to-r from-blue-500 via-purple-400 to-rose-500 transition-opacity duration-300",
+          scrolled ? "opacity-100" : "opacity-0"
+        )}
+      />
+
       <nav ref={navRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
 
@@ -291,7 +307,7 @@ export function Navbar() {
               <Link
                 href="/hire"
                 prefetch={true}
-                className="px-4 py-2 text-sm font-semibold bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all shadow-md shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-px whitespace-nowrap"
+                className="fx-sheen relative overflow-hidden px-4 py-2 text-sm font-semibold bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all shadow-md shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-px whitespace-nowrap"
               >
                 Hire Me
               </Link>

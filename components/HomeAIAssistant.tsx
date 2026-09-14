@@ -5,6 +5,7 @@ import { Send, Loader2, Bot, User, Sparkles, RotateCcw, ArrowRight } from "lucid
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { DecodeText } from "@/components/DecodeText";
 
 /* ─────────────────────────────────────────────────────────────────────────
    HomeAIAssistant
@@ -129,7 +130,7 @@ export function HomeAIAssistant() {
           >
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/[0.07] text-blue-400 text-xs font-mono font-semibold uppercase tracking-[0.18em]">
               <Sparkles className="w-3.5 h-3.5" />
-              Live AI · on this page
+              <DecodeText text="Live AI · on this page" />
             </span>
 
             <h2 className="font-display text-4xl sm:text-5xl font-bold mt-5 mb-4 leading-[1.05]">

@@ -71,17 +71,20 @@ export function ChapterDivider({ number, title, icon }: ChapterDividerProps) {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-5">
 
-          {/* Left line — draws left→right */}
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={inView ? { scaleX: 1 } : {}}
-            transition={{ duration: 0.95, ease: [0.25, 0.4, 0.25, 1], delay: 0.1 }}
-            className="flex-1 h-px origin-left"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent 0%, var(--divider-line) 100%)",
-            }}
-          />
+          {/* Left line — draws left→right, then carries pulses into the badge */}
+          <div className="relative flex-1 h-px">
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={inView ? { scaleX: 1 } : {}}
+              transition={{ duration: 0.95, ease: [0.25, 0.4, 0.25, 1], delay: 0.1 }}
+              className="absolute inset-0 origin-left"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent 0%, var(--divider-line) 100%)",
+              }}
+            />
+            {inView && <span className="fx-packet" />}
+          </div>
 
           {/* Centre badge */}
           <motion.div
@@ -95,12 +98,14 @@ export function ChapterDivider({ number, title, icon }: ChapterDividerProps) {
               damping: 18,
             }}
             className="
+              fx-holo fx-holo-live relative
               flex items-center gap-2.5
               px-4 py-2 rounded-xl
               border border-blue-500/20 bg-blue-500/[0.05]
               backdrop-blur-sm
               whitespace-nowrap
             "
+            style={{ "--fx-holo-speed": "7s" } as React.CSSProperties}
           >
             {/* Number */}
             <span className="font-mono text-[10px] text-blue-400/60 tracking-[0.3em] uppercase">
@@ -121,17 +126,20 @@ export function ChapterDivider({ number, title, icon }: ChapterDividerProps) {
             </span>
           </motion.div>
 
-          {/* Right line — draws right→left */}
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={inView ? { scaleX: 1 } : {}}
-            transition={{ duration: 0.95, ease: [0.25, 0.4, 0.25, 1], delay: 0.1 }}
-            className="flex-1 h-px origin-right"
-            style={{
-              background:
-                "linear-gradient(270deg, transparent 0%, var(--divider-line) 100%)",
-            }}
-          />
+          {/* Right line — draws right→left, pulses mirror the left side */}
+          <div className="relative flex-1 h-px">
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={inView ? { scaleX: 1 } : {}}
+              transition={{ duration: 0.95, ease: [0.25, 0.4, 0.25, 1], delay: 0.1 }}
+              className="absolute inset-0 origin-right"
+              style={{
+                background:
+                  "linear-gradient(270deg, transparent 0%, var(--divider-line) 100%)",
+              }}
+            />
+            {inView && <span className="fx-packet fx-packet--rtl" />}
+          </div>
         </div>
       </div>
     </div>

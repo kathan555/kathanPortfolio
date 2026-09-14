@@ -8,6 +8,8 @@ import { useEffect, useRef } from "react";
    between near neighbours, plus links to the cursor. Rendered on a <canvas>
    pinned behind the hero content.
 
+   • Signal pulses: a few glowing packets travel along live links at any one
+     time, so the network reads as "thinking" rather than just drifting.
    • Theme-aware: reads the `.dark` class on <html> and recolours live.
    • Perf: capped node count, pauses when the tab is hidden or the hero is
      scrolled out of view, and honours `prefers-reduced-motion` (draws one
@@ -15,6 +17,13 @@ import { useEffect, useRef } from "react";
    ───────────────────────────────────────────────────────────────────────── */
 
 type Node = { x: number; y: number; vx: number; vy: number };
+/** A pulse travelling from node `a` to node `b`; `t` runs 0 → 1. */
+type Packet = { a: number; b: number; t: number; speed: number };
+
+const MAX_PACKETS = 7;
+/** Per-link, per-frame chance of launching a packet. With ~200 live links this
+ *  launches a few per second, and MAX_PACKETS caps it. */
+const SPAWN_CHANCE = 0.0006;
 
 export function NeuralBackground({ className = "" }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -31,6 +40,7 @@ export function NeuralBackground({ className = "" }: { className?: string }) {
     let height = 0;
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
     let nodes: Node[] = [];
+    let packets: Packet[] = [];
     let raf = 0;
     let running = true;
 
@@ -51,6 +61,8 @@ export function NeuralBackground({ className = "" }: { className?: string }) {
         vx: (Math.random() - 0.5) * 0.28,
         vy: (Math.random() - 0.5) * 0.28,
       }));
+      // Packets index into `nodes`, so a reseed invalidates all of them.
+      packets = [];
     }
 
     function resize() {
@@ -64,15 +76,20 @@ export function NeuralBackground({ className = "" }: { className?: string }) {
       seed();
     }
 
-    function draw() {
+    const LINK_DIST = 130;
+    const MOUSE_DIST = 180;
+
+    /** `spawn` is false for one-off redraws (theme change, reduced motion) so
+     *  packets only launch while the loop is actually running. */
+    function draw(spawn = false) {
       const dark = isDark();
       // Palette — blue → teal. Lighter theme needs stronger alpha to read on white.
       const nodeColor = dark ? "96, 165, 250" : "37, 99, 235";
       const linkColor = dark ? "45, 212, 191" : "20, 130, 160";
+      // Packets use the rose accent so they separate from the blue/teal mesh.
+      const packetColor = dark ? "251, 113, 133" : "200, 30, 74";
       const nodeAlpha = dark ? 0.9 : 0.55;
       const linkBase = dark ? 0.55 : 0.4;
-      const LINK_DIST = 130;
-      const MOUSE_DIST = 180;
 
       ctx!.clearRect(0, 0, width, height);
 
@@ -92,6 +109,16 @@ export function NeuralBackground({ className = "" }: { className?: string }) {
             ctx!.moveTo(a.x, a.y);
             ctx!.lineTo(b.x, b.y);
             ctx!.stroke();
+
+            if (spawn && packets.length < MAX_PACKETS && Math.random() < SPAWN_CHANCE) {
+              const forward = Math.random() < 0.5;
+              packets.push({
+                a: forward ? i : j,
+                b: forward ? j : i,
+                t: 0,
+                speed: 0.011 + Math.random() * 0.009,
+              });
+            }
           }
         }
 
@@ -112,11 +139,48 @@ export function NeuralBackground({ className = "" }: { className?: string }) {
         }
       }
 
-      // Nodes.
+      // Nodes — the ones near the cursor swell slightly, as if activated.
       for (const n of nodes) {
+        let r = 1.6;
+        if (mouse.active) {
+          const d = Math.hypot(n.x - mouse.x, n.y - mouse.y);
+          if (d < MOUSE_DIST) r += (1 - d / MOUSE_DIST) * 1.6;
+        }
         ctx!.fillStyle = `rgba(${nodeColor}, ${nodeAlpha})`;
         ctx!.beginPath();
-        ctx!.arc(n.x, n.y, 1.6, 0, Math.PI * 2);
+        ctx!.arc(n.x, n.y, r, 0, Math.PI * 2);
+        ctx!.fill();
+      }
+
+      // Packets — a lit segment of the link plus a haloed head. A packet dies
+      // when it arrives, or early if its two nodes drift out of link range.
+      for (let k = packets.length - 1; k >= 0; k--) {
+        const p = packets[k];
+        const a = nodes[p.a];
+        const b = nodes[p.b];
+        if (!a || !b || p.t >= 1 || Math.hypot(a.x - b.x, a.y - b.y) > LINK_DIST) {
+          packets.splice(k, 1);
+          continue;
+        }
+        const x = a.x + (b.x - a.x) * p.t;
+        const y = a.y + (b.y - a.y) * p.t;
+        const fade = Math.sin(Math.PI * p.t); // ease in and out along the link
+
+        ctx!.strokeStyle = `rgba(${packetColor}, ${0.35 * fade})`;
+        ctx!.lineWidth = 1.2;
+        ctx!.beginPath();
+        ctx!.moveTo(a.x, a.y);
+        ctx!.lineTo(x, y);
+        ctx!.stroke();
+
+        ctx!.fillStyle = `rgba(${packetColor}, ${0.16 * fade})`;
+        ctx!.beginPath();
+        ctx!.arc(x, y, 6, 0, Math.PI * 2);
+        ctx!.fill();
+
+        ctx!.fillStyle = `rgba(${packetColor}, ${0.95 * fade})`;
+        ctx!.beginPath();
+        ctx!.arc(x, y, 2, 0, Math.PI * 2);
         ctx!.fill();
       }
     }
@@ -128,7 +192,8 @@ export function NeuralBackground({ className = "" }: { className?: string }) {
         if (n.x < 0 || n.x > width) n.vx *= -1;
         if (n.y < 0 || n.y > height) n.vy *= -1;
       }
-      draw();
+      for (const p of packets) p.t += p.speed;
+      draw(true);
       if (running) raf = requestAnimationFrame(step);
     }
 

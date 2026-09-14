@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { projects } from "@/lib/data";
 import { Calendar, TrendingUp, Sparkles, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DecodeText } from "@/components/DecodeText";
 
 const domainColors: Record<string, string> = {
   blue:   "bg-blue-500/10   border-blue-500/25   text-blue-400",
@@ -55,9 +56,9 @@ function ProjectCard({
     >
       <div
         className={cn(
-          "project-card glass-card rounded-2xl p-6 h-full flex flex-col group",
+          "project-card fx-holo glass-card rounded-2xl p-6 h-full flex flex-col group",
           featured
-            ? "border-blue-500/30 shadow-lg shadow-blue-500/10 md:p-8"
+            ? "fx-holo-live border-blue-500/30 shadow-lg shadow-blue-500/10 md:p-8"
             : "border-blue-500/10"
         )}
       >
@@ -190,7 +191,7 @@ export function ProjectsSection() {
           className="mb-14"
         >
           <span className="font-mono text-blue-400 text-sm font-medium tracking-wider uppercase">
-            Projects
+            <DecodeText text="Projects" />
           </span>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mt-2">
             Key Work

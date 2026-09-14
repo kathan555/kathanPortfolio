@@ -10,6 +10,7 @@ import { EducationSection }   from "@/components/EducationSection";
 import { SectionProgress }    from "@/components/SectionProgress";
 import { ChapterDivider }     from "@/components/ChapterDivider";
 import { ScrollReveal }       from "@/components/ScrollReveal";
+import { DecodeText }         from "@/components/DecodeText";
 import Link                   from "next/link";
 import { ArrowRight, Calculator } from "lucide-react";
 
@@ -96,10 +97,19 @@ export default function Home() {
           <div className="w-[600px] h-[600px] rounded-full bg-blue-500/5 blur-3xl" />
         </div>
 
+        {/* Signal rings radiating from behind the heading */}
+        <div aria-hidden className="absolute inset-0 pointer-events-none">
+          {/* Inline delays: a utility would lose to the `animation` shorthand,
+              which globals.css declares after the utilities layer. */}
+          <span className="fx-ripple" />
+          <span className="fx-ripple" style={{ animationDelay: "2.5s" }} />
+          <span className="fx-ripple" style={{ animationDelay: "5s" }} />
+        </div>
+
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <ScrollReveal>
             <span className="font-mono text-blue-400 text-xs tracking-[0.3em] uppercase">
-              Ready to build?
+              <DecodeText text="Ready to build?" />
             </span>
 
             {/* Deliberately not ".NET Expert" — that framing filters out every
@@ -120,7 +130,7 @@ export default function Home() {
                 href="/hire"
                 prefetch={true}
                 className="
-                  group inline-flex items-center gap-2
+                  fx-sheen group relative overflow-hidden inline-flex items-center gap-2
                   px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white
                   font-semibold text-lg rounded-xl
                   transition-all shadow-xl shadow-blue-500/25 hover:-translate-y-0.5

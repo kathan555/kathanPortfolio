@@ -8,6 +8,7 @@ import { Github, Linkedin, Mail, MapPin, Briefcase, Sparkles } from "lucide-reac
 import { personalInfo } from "@/lib/data";
 import { NeuralBackground } from "@/components/NeuralBackground";
 import { HeroCommandBar } from "@/components/HeroCommandBar";
+import { DecodeText } from "@/components/DecodeText";
 
 const TILT_MAX = 14;
 const SPRING = { stiffness: 280, damping: 22, mass: 0.6 };
@@ -120,10 +121,14 @@ function PortraitFrame() {
           aria-hidden
         />
 
-        {/* Outer frame */}
+        {/* Outer frame — the holo ring orbits its edge */}
         <div
-          className="relative rounded-2xl p-[5px] bg-gradient-to-br from-blue-500/25 via-border/80 to-rose-500/20 shadow-lg"
-          style={{ transform: "translateZ(0px)" }}
+          className="fx-holo fx-holo-live relative rounded-2xl p-[5px] bg-gradient-to-br from-blue-500/25 via-border/80 to-rose-500/20 shadow-lg"
+          style={{
+            transform: "translateZ(0px)",
+            "--fx-holo-width": "1.5px",
+            "--fx-holo-speed": "6s",
+          } as React.CSSProperties}
         >
           <div className="rounded-[11px] p-3 sm:p-3.5 bg-muted/30 dark:bg-muted/20 border border-border/60">
             <div
@@ -147,6 +152,9 @@ function PortraitFrame() {
                 className="absolute inset-y-0 w-[45%] bg-gradient-to-r from-transparent via-white/35 to-transparent skew-x-12 pointer-events-none mix-blend-overlay"
                 style={{ x: springShineX, z: 28 }}
               />
+
+              {/* Periodic scanner sweep */}
+              <div aria-hidden className="fx-scan" />
             </div>
           </div>
         </div>
@@ -214,6 +222,11 @@ export function HeroSection() {
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent"
       />
+      {/* Perspective grid floor receding toward the horizon. After the fade
+          on purpose — beneath it, the fade would erase it; it masks itself. */}
+      <div aria-hidden className="fx-horizon">
+        <div className="fx-horizon-plane" />
+      </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid lg:grid-cols-[1fr_auto] gap-12 xl:gap-20 items-center">
@@ -240,13 +253,20 @@ export function HeroSection() {
             </motion.div>
 
             <motion.h1 variants={item} className="font-display text-6xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-4 leading-[0.95]">
-              <span className="text-foreground">Kathan N. Patel</span>
+              <span className="text-foreground fx-text-sheen">Kathan N. Patel</span>
             </motion.h1>
 
             <motion.h2 variants={item} className="flex items-center gap-3 mb-4">
               <Briefcase className="w-5 h-5 text-blue-400 shrink-0" />
               <span className="font-mono text-blue-400 text-lg font-medium">
-                AI &amp; .NET Developer | Blazor · WPF · ASP.NET Core
+                {/* Delay matches this item's slot in the hero stagger, so the
+                    decode plays as the line fades in rather than before. */}
+                <DecodeText
+                  trigger="mount"
+                  delay={650}
+                  duration={1100}
+                  text="AI & .NET Developer | Blazor · WPF · ASP.NET Core"
+                />
               </span>
             </motion.h2>
 
@@ -276,7 +296,7 @@ export function HeroSection() {
             <motion.div variants={item} className="mb-10">
               <Link
                 href="/contact"
-                className="group inline-flex items-center gap-2 px-7 py-3.5 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-all shadow-xl shadow-blue-500/30 hover:shadow-blue-500/45 hover:-translate-y-0.5"
+                className="fx-sheen group relative overflow-hidden inline-flex items-center gap-2 px-7 py-3.5 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-all shadow-xl shadow-blue-500/30 hover:shadow-blue-500/45 hover:-translate-y-0.5"
               >
                 Get In Touch
               </Link>

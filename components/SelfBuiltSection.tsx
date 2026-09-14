@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { selfBuilt } from "@/lib/data";
 import { Github, ExternalLink, Sparkles, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DecodeText } from "@/components/DecodeText";
 
 /* ─────────────────────────────────────────────────────────────────────────
    Independent Builds
@@ -41,7 +42,7 @@ function BuildCard({ project, index }: { project: typeof selfBuilt[0]; index: nu
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.55, delay: (index % 3) * 0.08, ease: [0.25, 0.4, 0.25, 1] }}
     >
-      <div className="project-card glass-card rounded-2xl p-6 h-full flex flex-col border-blue-500/10 group">
+      <div className="project-card fx-holo glass-card rounded-2xl p-6 h-full flex flex-col border-blue-500/10 group">
         {/* Header — domain badge + "Solo build" chip */}
         <div className="flex items-start justify-between gap-2 mb-4">
           <span
@@ -154,7 +155,7 @@ export function SelfBuiltSection() {
           className="mb-14 max-w-2xl"
         >
           <span className="font-mono text-blue-400 text-sm font-medium tracking-wider uppercase">
-            Independent Builds
+            <DecodeText text="Independent Builds" />
           </span>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mt-2">
             What I ship on my own
