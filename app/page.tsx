@@ -12,7 +12,15 @@ import { ChapterDivider }     from "@/components/ChapterDivider";
 import { ScrollReveal }       from "@/components/ScrollReveal";
 import { DecodeText }         from "@/components/DecodeText";
 import Link                   from "next/link";
+import type { Metadata }      from "next";
 import { ArrowRight, Calculator } from "lucide-react";
+
+/* Title and description come from the root layout's defaults. */
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+};
 
 /* ─────────────────────────────────────────────────────────────────────────
    Home Page

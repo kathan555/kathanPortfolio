@@ -6,6 +6,7 @@ import { ShareButtons } from "@/components/ShareButtons";
 import { LeadCapturePopup } from "@/components/LeadCapturePopup";
 import { HireMePoster, HireMeInlineCard } from "@/components/HireMePoster";
 import { getAllSlugs, getPostBySlug, getAllPosts, type ContentBlock } from "@/lib/blog";
+import { jsonLd } from "@/lib/utils";
 
 export const revalidate = 60;
 
@@ -111,10 +112,13 @@ function BlockRenderer({ block }: { block: ContentBlock }) {
     case "image":
       return (
         <figure className="my-6">
+          {/* Lazy, or React 19 preloads every in-article image in <head>. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={block.url}
             alt={block.alt ?? block.caption ?? ""}
+            loading="lazy"
+            decoding="async"
             className="w-full rounded-xl object-cover border border-border"
           />
           {block.caption && (
@@ -272,9 +276,11 @@ function PostCTA({ audience }: { audience: PostAudience }) {
         <p className="font-mono text-blue-400 text-xs tracking-[0.25em] uppercase mb-2">
           {cta.eyebrow}
         </p>
-        <h2 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-3">
+        {/* Not a heading: a CTA title in the post's H2 outline reads to search
+            engines as a section of the article. */}
+        <p className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-3">
           {cta.title}
-        </h2>
+        </p>
         <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-6 max-w-xl">
           {cta.body}
         </p>
@@ -356,11 +362,11 @@ export default async function BlogPostPage({ params }: Props) {
     <div className="relative min-h-screen pt-28 pb-20 min-[1440px]:pl-60">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(articleSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -423,11 +429,14 @@ export default async function BlogPostPage({ params }: Props) {
             </header>
 
             {/* Cover image */}
+            {/* The cover is the post's LCP element — the one image that should
+                jump the queue, while everything below it loads lazily. */}
             {post.cover_image && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={post.cover_image}
                 alt={post.title}
+                fetchPriority="high"
                 className="w-full rounded-2xl object-cover border border-border mb-10 max-h-96"
               />
             )}
@@ -532,6 +541,8 @@ function RelatedPostsList({ posts }: { posts: RelatedPost[] }) {
                 <img
                   src={p.cover_image}
                   alt={p.title}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>

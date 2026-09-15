@@ -115,13 +115,15 @@ export function HireMePoster() {
                 </div>
 
                 {/* Headline */}
-                <h3 className="px-1 font-display text-[19px] font-bold leading-snug text-foreground">
+                {/* <p>, not a heading — this card sits beside every blog post
+                    and would otherwise add itself to the article's outline. */}
+                <p className="px-1 font-display text-[19px] font-bold leading-snug text-foreground">
                   Hire me — or just{" "}
                   <span className="bg-gradient-to-r from-blue-500 to-rose-400 bg-clip-text text-transparent">
                     refer me
                   </span>
                   .
-                </h3>
+                </p>
 
                 {/* Sub */}
                 <p className="text-[13px] leading-relaxed text-muted-foreground">
@@ -189,13 +191,13 @@ export function HireMeInlineCard() {
             </div>
 
             <div className="min-w-0 flex-1">
-              <h3 className="font-display text-lg font-bold leading-snug text-foreground sm:text-xl">
+              <p className="font-display text-lg font-bold leading-snug text-foreground sm:text-xl">
                 Hire me — or just{" "}
                 <span className="bg-gradient-to-r from-blue-500 to-rose-400 bg-clip-text text-transparent">
                   refer me
                 </span>
                 .
-              </h3>
+              </p>
               <p className="mt-0.5 text-[13px] leading-relaxed text-muted-foreground">
                 Whoever you are, there&apos;s a way to help:
               </p>

@@ -5,7 +5,7 @@ import {
   MessageSquare, Code2, AlertTriangle, CheckCircle2, Link2,
 } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { cn } from "@/lib/utils";
+import { cn, jsonLd } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Clio & Lawmatics Integration Developer — Law Firm Automation in .NET",
@@ -312,25 +312,35 @@ export default function LegalTechIntegrationPage() {
     <div className="min-h-screen pt-28 pb-20">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(serviceSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }}
       />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── Hero ── */}
-        <ScrollReveal>
+        <div className="fx-rise">
           <div className="mb-16 max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/8 text-blue-400 text-xs font-semibold mb-5">
-              <Scale className="w-3.5 h-3.5" />
-              Legal Tech Integration
-            </div>
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold mt-2 mb-5 leading-tight">
-              Stop typing the same client into{" "}
-              <span className="gradient-text">three systems</span>
+            {/* The pill is part of the H1, so the heading carries what the page
+                is about ("Clio & Lawmatics Integration") as well as the hook —
+                on its own, the hook never named a product. Inline fontWeight
+                because globals.css resets bare <span> weights to 400. */}
+            <h1 className="mb-5">
+              <span
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/8 text-blue-400 text-xs mb-5"
+                style={{ fontWeight: 600 }}
+              >
+                <Scale aria-hidden className="w-3.5 h-3.5" />
+                Clio &amp; Lawmatics Integration
+              </span>
+              <span className="sr-only">: </span>
+              <span className="block font-display text-4xl sm:text-5xl md:text-6xl font-extrabold mt-2 leading-tight">
+                Stop typing the same client into{" "}
+                <span className="gradient-text">three systems</span>
+              </span>
             </h1>
             <p className="text-muted-foreground text-lg leading-relaxed mb-4">
               Most firms don&apos;t have a software problem — they have a{" "}
@@ -361,7 +371,7 @@ export default function LegalTechIntegrationPage() {
               </Link>
             </div>
           </div>
-        </ScrollReveal>
+        </div>
 
         {/* ── The problem ── */}
         <ScrollReveal>

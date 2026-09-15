@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import EstimatorClient from '@/components/EstimatorClient';
 import { priceFromHours, fmtRange } from '@/lib/estimator-rates';
-import { fmtUSD } from '@/lib/utils';
+import { fmtUSD, jsonLd } from '@/lib/utils';
 
 const PAGE_URL = "https://kathanpatel.vercel.app/free-project-cost-estimator";
 
@@ -172,15 +172,15 @@ export default function EstimatorPage() {
     <div className="min-h-screen pt-28 pb-20">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(webAppSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }}
       />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

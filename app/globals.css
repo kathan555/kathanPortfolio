@@ -530,6 +530,25 @@ p, li, td, th, label, span:not(.font-mono):not(.font-display) {
   100% { transform: scale(3);   opacity: 0; }
 }
 
+/* Above-the-fold entrance. Pure CSS on purpose: the framer-motion version
+   server-rendered heroes at opacity:0 and only revealed them after JS hydrated,
+   so on a slow phone the H1 and intro sat invisible for seconds — bad for LCP,
+   and invisible to anything that doesn't run JS. This runs from the first paint
+   with no JS at all.
+
+   • Starts at 0.5 opacity, never 0. Chrome skips opacity:0 elements as LCP
+     candidates, so a fade from zero would still delay LCP by the stagger.
+   • `backwards`, not `both`: a filled transform left in effect after the
+     animation makes the element a containing block for `fixed` descendants
+     (the same trap ScrollReveal's transitionEnd avoids).
+   • Stagger with an inline `animation-delay`. */
+.fx-rise {
+  animation: fx-rise 0.7s cubic-bezier(0.25, 0.4, 0.25, 1) backwards;
+}
+@keyframes fx-rise {
+  from { opacity: 0.5; transform: translateY(14px); }
+}
+
 /* Theme switch: a circular reveal from the toggle via the View Transitions
    API (see ThemeToggle). Scoped to a class so it never touches route
    transitions, and CSS transitions are paused so the new theme is captured
@@ -546,7 +565,8 @@ p, li, td, th, label, span:not(.font-mono):not(.font-display) {
 @media (prefers-reduced-motion: reduce) {
   .fx-holo::after,
   .fx-text-sheen,
-  .fx-horizon-plane { animation: none; }
+  .fx-horizon-plane,
+  .fx-rise { animation: none; }
   .fx-sheen::after,
   .fx-scan,
   .fx-packet,

@@ -9,10 +9,12 @@ import { useInView, useReducedMotion } from "framer-motion";
    in left to right. Meant for monospace eyebrows and labels, where every
    glyph is the same width, so the scramble never shifts the layout.
 
-   • The server renders the final text, so crawlers and no-JS visitors see
-     the real label, and there is no hydration mismatch.
-   • Screen readers get the final text once via a visually-hidden copy; the
-     animated copy is aria-hidden so they never hear the noise.
+   • The real text is the only text in the HTML. The scramble is an aria-hidden
+     overlay that exists only while decoding, drawn over the real text (made
+     transparent, not removed, so it stays in the accessibility tree). An
+     earlier version kept a visually-hidden copy beside the animated one, so
+     every label — including the homepage H1 — appeared twice to crawlers.
+   • The server renders the final text, so there is no hydration mismatch.
    • Reduced motion: the text simply renders as-is.
    ───────────────────────────────────────────────────────────────────────── */
 
@@ -41,7 +43,8 @@ export function DecodeText({
   const ref     = useRef<HTMLSpanElement>(null);
   const inView  = useInView(ref, { once: true, margin: "-40px" });
   const reduce  = useReducedMotion();
-  const [display, setDisplay] = useState(text);
+  /** The scrambled overlay while decoding; null at rest. */
+  const [scramble, setScramble] = useState<string | null>(null);
 
   const active = trigger === "mount" || inView;
 
@@ -63,9 +66,12 @@ export function DecodeText({
           ? ch
           : GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
       }
-      setDisplay(out);
-
-      if (progress < 1) raf = requestAnimationFrame(tick);
+      if (progress < 1) {
+        setScramble(out);
+        raf = requestAnimationFrame(tick);
+      } else {
+        setScramble(null);
+      }
     };
 
     const timer = window.setTimeout(() => {
@@ -75,18 +81,24 @@ export function DecodeText({
     return () => {
       window.clearTimeout(timer);
       if (raf) cancelAnimationFrame(raf);
-      setDisplay(text);
+      setScramble(null);
     };
   }, [active, reduce, text, delay, duration]);
 
+  /* fontWeight: inherit on every span — globals.css resets bare <span> weights
+     to 400, which would otherwise override the parent label's font-medium.
+     inline-block gives the overlay a box to fill; glyphs are monospace, so the
+     scramble wraps exactly like the real text underneath it. */
   return (
-    <>
-      <span className="sr-only">{text}</span>
-      {/* fontWeight: inherit — globals.css resets bare <span> weights to 400,
-          which would otherwise override the parent label's font-medium. */}
-      <span ref={ref} aria-hidden style={{ fontWeight: "inherit" }}>
-        {display}
+    <span ref={ref} className="relative inline-block" style={{ fontWeight: "inherit" }}>
+      <span style={{ fontWeight: "inherit", color: scramble === null ? undefined : "transparent" }}>
+        {text}
       </span>
-    </>
+      {scramble !== null && (
+        <span aria-hidden className="absolute inset-0" style={{ fontWeight: "inherit" }}>
+          {scramble}
+        </span>
+      )}
+    </span>
   );
 }

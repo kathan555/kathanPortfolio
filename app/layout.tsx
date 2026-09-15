@@ -10,18 +10,29 @@ import { PointerSpotlight }      from "@/components/PointerSpotlight";
 import { Navbar }             from "@/components/Navbar";
 import { Footer }             from "@/components/Footer";
 import { Toaster }            from "react-hot-toast";
+import { jsonLd }             from "@/lib/utils";
 
-const playfair      = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair", weight: ["400","500","600","700","800","900"], style: ["normal","italic"] });
-const lato          = Lato({ subsets: ["latin"], variable: "--font-lato", weight: ["300","400","700","900"], style: ["normal","italic"] });
+/* Every face listed here is preloaded on every page, so list only what's used.
+   Playfair is a variable font — one file covers 400–900 — and nothing sets it
+   in italic. Lato is static, one file per weight × style: 300 (no font-light)
+   and 900 (every font-black is on font-display) were never used, and its few
+   italic spots (blog captions/quotes, one legal-tech note) take the browser's
+   synthesized slant. This cut the homepage from 11 font files to 4. */
+const playfair      = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair", weight: ["400","500","600","700","800","900"], style: ["normal"] });
+const lato          = Lato({ subsets: ["latin"], variable: "--font-lato", weight: ["400","700"], style: ["normal"] });
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono", weight: ["400","500"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://kathanpatel.vercel.app"),
-  alternates: {
-    canonical: "/",
-  },
+  /* No `alternates.canonical` here on purpose. Metadata is inherited, so a
+     canonical of "/" at the root was stamped onto every page that didn't set
+     its own — /github was live telling Google it was a duplicate of the
+     homepage. Each page declares its own canonical instead (home: app/page.tsx). */
   title: {
-    default:  "Kathan N. Patel — Freelance AI & .NET Developer | Blazor, WPF, ASP.NET Core",
+    /* Google cuts titles at ~60 characters. The old 80-char default was
+       truncated to "Blazor ..." on every name search, so the stack list is
+       gone and the searched-for phrase sits whole inside the visible part. */
+    default:  "Kathan N. Patel — Freelance AI & .NET Developer (8+ Years)",
     template: "%s | Kathan N. Patel",
   },
   description:
@@ -53,10 +64,10 @@ export const metadata: Metadata = {
     type:        "website",
     locale:      "en_US",
     url:         "https://kathanpatel.vercel.app",
-    title:       "Kathan N. Patel — Freelance AI & .NET Developer | Blazor · WPF · ASP.NET Core",
+    title:       "Kathan N. Patel — Freelance AI & .NET Developer (8+ Years)",
     description: "Freelance AI & .NET developer, 8+ years. AI integration for production .NET apps, plus Blazor, WPF and ASP.NET Core. Remote-friendly.",
     siteName:    "Kathan N. Patel",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Kathan N. Patel — Freelance .NET Developer" }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Kathan N. Patel — Freelance AI & .NET Developer" }],
   },
   twitter: {
     card:        "summary_large_image",
@@ -67,9 +78,10 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large" } },
   manifest: "/site.webmanifest",
   icons: {
+    /* Every URL here must exist in public/ — /icon-32x32.png never did and
+       served a 404 page to every browser and crawler that asked for it. */
     icon: [
       { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon-32x32.png", type: "image/png", sizes: "32x32" },
       { url: "/icon-192x192.png", type: "image/png", sizes: "192x192" },
     ],
     apple: [
@@ -88,7 +100,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           id="schema-person"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+            __html: jsonLd({
               "@context": "https://schema.org",
               "@graph": [
                 {
@@ -101,7 +113,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   "url": "https://kathanpatel.vercel.app",
                   "email": "patel.kathan555@gmail.com",
                   "telephone": "+917600410895",
-                  "image": "https://kathanpatel.vercel.app/og-image.png",
+                  /* A real headshot, not the OG banner — this is the image Google
+                     can attach to the person entity on name searches. */
+                  "image": "https://kathanpatel.vercel.app/SelfImage.jpg",
                   "address": {
                     "@type": "PostalAddress",
                     "addressLocality": "Ahmedabad",
@@ -179,15 +193,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   "name": "Kathan N. Patel — Freelance AI & .NET Developer",
                   "url": "https://kathanpatel.vercel.app",
                   "author": { "@id": "https://kathanpatel.vercel.app/#person" },
-                  "description": "Portfolio and hiring page for Kathan N. Patel, freelance AI & .NET Technical Lead with 8+ years of experience.",
-                  "potentialAction": {
-                    "@type": "SearchAction",
-                    "target": {
-                      "@type": "EntryPoint",
-                      "urlTemplate": "https://kathanpatel.vercel.app/blog?q={search_term_string}"
-                    },
-                    "query-input": "required name=search_term_string"
-                  }
+                  /* No SearchAction: /blog has no ?q= search to point it at, and
+                     Google retired the sitelinks search box it fed in 2024. */
+                  "description": "Portfolio and hiring page for Kathan N. Patel, freelance AI & .NET Technical Lead with 8+ years of experience."
                 }
               ]
             })

@@ -34,7 +34,7 @@ const AIDemoWidget = dynamic(
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "AI Integration for .NET Apps - Hire a .NET AI Developer.",
+  title: "AI Integration for .NET Apps — Hire a .NET AI Developer",
   description:
     "Hire a specialist .NET developer for Azure OpenAI, Semantic Kernel & RAG integration in Blazor and ASP.NET Core. Real C# code, live AI demo, production architecture. Serving clients in the US, UK, UAE, Australia, and worldwide.",
   keywords: [
@@ -263,7 +263,7 @@ export default function AIIntegrationPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── Hero ── */}
-        <ScrollReveal>
+        <div className="fx-rise">
           <div className="mb-16 max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/8 text-blue-400 text-xs font-semibold mb-5">
               <Brain className="w-3.5 h-3.5" />
@@ -283,7 +283,7 @@ export default function AIIntegrationPage() {
               inside this portfolio, built with the exact same patterns described here.
             </p>
           </div>
-        </ScrollReveal>
+        </div>
 
         {/* ── Live Demo ── */}
         <ScrollReveal delay={0.1}>

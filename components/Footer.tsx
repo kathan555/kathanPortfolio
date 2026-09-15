@@ -28,12 +28,14 @@ export function Footer() {
           {/* ── Brand ── */}
           <div>
             <Link href="/" className="inline-flex items-center gap-2 mb-6 group">
-              <h3 className="font-display text-xl font-bold">
+              {/* A logo, not a heading — as an <h3> it put "Kathan." into the
+                  heading outline of every page on the site. */}
+              <span className="font-display text-xl font-bold">
                 Kathan<span className="text-blue-400">.</span>
-              </h3>
+              </span>
               {personalInfo.availableForWork && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-rose-500/30 bg-rose-500/8 text-rose-400 text-[10px] font-semibold">
-                  <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-emerald-500/35 bg-emerald-500/8 text-emerald-500 text-[10px] font-semibold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   Available
                 </span>
               )}
@@ -144,8 +146,8 @@ export function Footer() {
             © {currentYear} Kathan N. Patel. All rights reserved.
           </p>
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
-            <span className="text-rose-400 font-medium">Available for new projects</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-emerald-500 font-medium">Available for new projects</span>
             <span className="mx-1.5">·</span>
             <Link href="/hire" className="hover:text-blue-400 transition-colors">
               Hire Me →

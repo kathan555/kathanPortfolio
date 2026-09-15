@@ -342,8 +342,8 @@ export function Navbar() {
 
               {personalInfo.availableForWork && (
                 <div className="flex items-center gap-2 px-3 py-2 mb-1">
-                  <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse shrink-0" />
-                  <span className="text-xs text-rose-400 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                  <span className="text-xs text-emerald-500 font-medium">
                     Available for freelance / contract work
                   </span>
                 </div>

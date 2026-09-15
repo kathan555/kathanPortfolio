@@ -5,9 +5,10 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 import { getAllPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
-  title: "Blog",
+  /* Most posts are about AI in .NET now; "Blog" alone told search engines nothing. */
+  title: ".NET & AI Development Blog",
   description:
-    "Kathan Patel's blog on .NET, architecture, and engineering leadership for teams in the USA, UK, UAE, and Europe.",
+    "Practical guides on .NET, Blazor, and adding AI to real software — Claude, Gemini, GPT-4o, OCR, and legal tech automation — by Kathan N. Patel.",
   alternates: {
     canonical: "/blog",
   },
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
     ".NET development UAE",
   ],
   openGraph: {
-    title: "Blog | Kathan N. Patel",
+    title: ".NET & AI Development Blog | Kathan N. Patel",
     description:
       "Insights on .NET, Blazor, ASP.NET Core, and software architecture for global engineering teams.",
     url: "https://kathanpatel.vercel.app/blog",
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Blog | Kathan N. Patel",
+    title: ".NET & AI Development Blog | Kathan N. Patel",
     description:
       "Insights on .NET, Blazor, ASP.NET Core, and software architecture for global engineering teams.",
   },
@@ -68,20 +69,20 @@ export default async function BlogPage() {
     <div className="min-h-screen pt-28 pb-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <ScrollReveal>
+        <div className="fx-rise">
           <div className="mb-14">
             <span className="font-mono text-blue-400 text-sm font-medium tracking-wider uppercase">
               Writing
             </span>
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold mt-2 mb-4">
-              The <span className="gradient-text">Blog</span>
+              .NET &amp; AI <span className="gradient-text">Blog</span>
             </h1>
             <p className="text-muted-foreground text-lg max-w-xl">
-              Thoughts on .NET, architecture, engineering leadership, and the things I learn
-              building complex systems.
+              Practical notes on .NET, adding AI to real software, architecture, and the things
+              I learn building complex systems.
             </p>
           </div>
-        </ScrollReveal>
+        </div>
 
         {/* Empty state */}
         {posts.length === 0 ? (
@@ -120,10 +121,14 @@ export default async function BlogPage() {
                     {/* Cover image */}
                     {post.cover_image && (
                       <div className="md:w-60 shrink-0 overflow-hidden">
+                        {/* Only the first card can be above the fold; the rest
+                            are lazy so React 19 doesn't preload every cover. */}
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={post.cover_image}
                           alt={post.title}
+                          loading={i === 0 ? "eager" : "lazy"}
+                          decoding="async"
                           className="w-full h-48 md:h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       </div>

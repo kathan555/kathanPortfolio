@@ -13,14 +13,8 @@ import { DecodeText } from "@/components/DecodeText";
 const TILT_MAX = 14;
 const SPRING = { stiffness: 280, damping: 22, mass: 0.6 };
 
-const container = {
-  hidden: { opacity: 0 },
-  show:   { opacity: 1, transition: { staggerChildren: 0.11, delayChildren: 0.3 } },
-};
-const item = {
-  hidden: { opacity: 0, y: 30 },
-  show:   { opacity: 1, y: 0,  transition: { duration: 0.65, ease: [0.25, 0.4, 0.25, 1] } },
-};
+/** Stagger slot for the hero's .fx-rise entrance (see globals.css). */
+const rise = (step: number): React.CSSProperties => ({ animationDelay: `${step * 70}ms` });
 
 function PortraitFrame() {
   const frameRef = useRef<HTMLDivElement>(null);
@@ -231,9 +225,11 @@ export function HeroSection() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid lg:grid-cols-[1fr_auto] gap-12 xl:gap-20 items-center">
 
-          <motion.div variants={container} initial="hidden" animate="show" className="max-w-2xl">
+          {/* Entrance is CSS (.fx-rise), not framer-motion variants: those
+              server-rendered this whole column at opacity:0 until hydration. */}
+          <div className="max-w-2xl">
 
-            <motion.div variants={item} className="mb-6 flex flex-wrap items-center gap-3">
+            <div className="fx-rise mb-6 flex flex-wrap items-center gap-3" style={rise(0)}>
               <span className="inline-flex items-center gap-2 px-3 py-2 sm:px-4 rounded-full border border-emerald-500/40 bg-emerald-500/8 text-emerald-500 text-xs sm:text-sm font-semibold">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 {personalInfo.availableForWork
@@ -250,27 +246,33 @@ export function HeroSection() {
                 <Sparkles className="w-3.5 h-3.5" />
                 AI-Native
               </span>
-            </motion.div>
+            </div>
 
-            <motion.h1 variants={item} className="font-display text-6xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-4 leading-[0.95]">
-              <span className="text-foreground fx-text-sheen">Kathan N. Patel</span>
-            </motion.h1>
-
-            <motion.h2 variants={item} className="flex items-center gap-3 mb-4">
-              <Briefcase className="w-5 h-5 text-blue-400 shrink-0" />
-              <span className="font-mono text-blue-400 text-lg font-medium">
-                {/* Delay matches this item's slot in the hero stagger, so the
-                    decode plays as the line fades in rather than before. */}
-                <DecodeText
-                  trigger="mount"
-                  delay={650}
-                  duration={1100}
-                  text="AI & .NET Developer | Blazor · WPF · ASP.NET Core"
-                />
+            {/* Name and role are one H1, so the page's main heading reads
+                "Kathan N. Patel — Freelance AI & .NET Developer" rather than a
+                bare name. The role line used to be a separate H2, which left
+                the searched-for phrase out of the H1 entirely. The sr-only dash
+                keeps the two parts from running together as one word when the
+                heading is read as text. Looks identical to the old H1 + H2. */}
+            <h1 className="fx-rise mb-4" style={rise(1)}>
+              <span className="block font-display text-6xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[0.95] mb-4">
+                <span className="text-foreground fx-text-sheen">Kathan N. Patel</span>
               </span>
-            </motion.h2>
+              <span className="sr-only"> — </span>
+              <span className="flex items-center gap-3">
+                <Briefcase aria-hidden className="w-5 h-5 text-blue-400 shrink-0" />
+                <span className="font-mono text-blue-400 text-lg font-medium">
+                  <DecodeText
+                    trigger="mount"
+                    delay={100}
+                    duration={1100}
+                    text="Freelance AI & .NET Developer"
+                  />
+                </span>
+              </span>
+            </h1>
 
-            <motion.div variants={item} className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-8">
+            <div className="fx-rise flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-8" style={rise(2)}>
               <span className="flex items-center gap-1.5">
                 <MapPin className="w-4 h-4" />
                 Ahmedabad, India
@@ -279,30 +281,30 @@ export function HeroSection() {
               <span className="text-blue-400 font-semibold">8+ Years Experience</span>
               <span className="w-px h-4 bg-border hidden sm:block" />
               <span className="hidden sm:inline">WPF · Blazor · ASP.NET Core · .NET 9</span>
-            </motion.div>
+            </div>
 
-            <motion.p variants={item} className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl mb-10">
+            <p className="fx-rise text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl mb-10" style={rise(3)}>
               I build <span className="text-foreground font-semibold">production-grade applications with AI built in</span> —
               Blazor, WPF and ASP.NET Core for teams in legal tech, healthcare, and
               enterprise | available to start{" "}
               <span className="text-emerald-500 font-semibold">{personalInfo.availableFrom.toLowerCase()}</span>.
-            </motion.p>
+            </p>
 
             {/* ── AI command bar — the interactive hero centrepiece ── */}
-            <motion.div variants={item} className="mb-8">
+            <div className="fx-rise mb-8" style={rise(4)}>
               <HeroCommandBar />
-            </motion.div>
+            </div>
 
-            <motion.div variants={item} className="mb-10">
+            <div className="fx-rise mb-10" style={rise(5)}>
               <Link
                 href="/contact"
                 className="fx-sheen group relative overflow-hidden inline-flex items-center gap-2 px-7 py-3.5 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-all shadow-xl shadow-blue-500/30 hover:shadow-blue-500/45 hover:-translate-y-0.5"
               >
                 Get In Touch
               </Link>
-            </motion.div>
+            </div>
 
-            <motion.div variants={item} className="flex items-center gap-3">
+            <div className="fx-rise flex items-center gap-3" style={rise(6)}>
               {[
                 { href: personalInfo.github,            icon: <Github   className="w-5 h-5" />, label: "GitHub" },
                 { href: personalInfo.linkedin,          icon: <Linkedin className="w-5 h-5" />, label: "LinkedIn" },
@@ -319,17 +321,14 @@ export function HeroSection() {
                   {icon}
                 </a>
               ))}
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45, duration: 0.75, ease: [0.25, 0.4, 0.25, 1] }}
-            className="flex justify-center lg:justify-end pb-6"
-          >
+          {/* The portrait is the LCP element on desktop, so it gets the same
+              JS-free entrance rather than waiting on hydration to appear. */}
+          <div className="fx-rise flex justify-center lg:justify-end pb-6" style={rise(3)}>
             <PortraitFrame />
-          </motion.div>
+          </div>
         </div>
       </div>
 

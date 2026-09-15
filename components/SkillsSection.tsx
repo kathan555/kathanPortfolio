@@ -21,55 +21,55 @@ type SkillMeta = {
 
 const SKILL_META: Record<string, SkillMeta> = {
   /* Frontend */
-  "React":         { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",               glow: "#00D8FF" },
-  "Next.js":       { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg",             glow: "#512BD4" },
-  "TypeScript":    { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",     glow: "#3178C6" },
-  "JavaScript":    { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg",     glow: "#F7DF1E" },
-  "Tailwind CSS":  { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",   glow: "#38BDF8" },
-  "HTML5":         { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg",               glow: "#E34F26" },
-  "CSS3":          { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg",                 glow: "#1572B6" },
-  "Vite":          { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg",             glow: "#646CFF" },
-  "Figma":         { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg",               glow: "#F24943" },
+  "React":         { src: "/icons/skills/react.svg",              glow: "#00D8FF" },
+  "Next.js":       { src: "/icons/skills/nextjs.svg",             glow: "#512BD4" },
+  "TypeScript":    { src: "/icons/skills/typescript.svg",         glow: "#3178C6" },
+  "JavaScript":    { src: "/icons/skills/javascript.svg",         glow: "#F7DF1E" },
+  "Tailwind CSS":  { src: "/icons/skills/tailwindcss.svg",        glow: "#38BDF8" },
+  "HTML5":         { src: "/icons/skills/html5.svg",              glow: "#E34F26" },
+  "CSS3":          { src: "/icons/skills/css3.svg",               glow: "#1572B6" },
+  "Vite":          { src: "/icons/skills/vitejs.svg",             glow: "#646CFF" },
+  "Figma":         { src: "/icons/skills/figma.svg",              glow: "#F24943" },
   /* .NET / Backend */
-  "C#":            { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg",             glow: "#9B4F96" },
-  ".NET 9":        { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dotnetcore/dotnetcore-original.svg",     glow: "#512BD4" },
-  ".NET":          { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dotnetcore/dotnetcore-original.svg",     glow: "#512BD4" },
-  "ASP.NET Core":  { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dotnetcore/dotnetcore-original.svg",     glow: "#512BD4" },
-  "Blazor":        { src: "https://cdn.simpleicons.org/blazor/512BD4",                                                        glow: "#512BD4" },
-  "WPF":           { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/windows8/windows8-original.svg",         glow: "#0078D7" },
-  "Node.js":       { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",             glow: "#68A063" },
-  "Swagger":       { src: "https://cdn.simpleicons.org/swagger/85EA2D",                                                       glow: "#85EA2D" },
-  "SignalR":       { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dotnetcore/dotnetcore-original.svg",     glow: "#512BD4" },
+  "C#":            { src: "/icons/skills/csharp.svg",             glow: "#9B4F96" },
+  ".NET 9":        { src: "/icons/skills/dotnetcore.svg",         glow: "#512BD4" },
+  ".NET":          { src: "/icons/skills/dotnetcore.svg",         glow: "#512BD4" },
+  "ASP.NET Core":  { src: "/icons/skills/dotnetcore.svg",         glow: "#512BD4" },
+  "Blazor":        { src: "/icons/skills/blazor.svg",             glow: "#512BD4" },
+  "WPF":           { src: "/icons/skills/windows8.svg",           glow: "#0078D7" },
+  "Node.js":       { src: "/icons/skills/nodejs.svg",             glow: "#68A063" },
+  "Swagger":       { src: "/icons/skills/swagger.svg",            glow: "#85EA2D" },
+  "SignalR":       { src: "/icons/skills/dotnetcore.svg",         glow: "#512BD4" },
   /* Database */
-  "PostgreSQL":    { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",     glow: "#336791" },
-  "SQLite":        { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sqlite/sqlite-original.svg",             glow: "#0F80CC" },
-  "MSSQL":         { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/microsoftsqlserver/microsoftsqlserver-original.svg", glow: "#CC2935" },
-  "SQL Server":    { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/microsoftsqlserver/microsoftsqlserver-original.svg", glow: "#CC2935" },
-  "MySQL":         { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg",               glow: "#4479A1" },
-  "Prisma":        { src: "https://cdn.simpleicons.org/prisma/ffffff",                                                        glow: "#a8b3cf", invert: false },
-  "Redis":         { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/redis/redis-original.svg",               glow: "#DC382D" },
+  "PostgreSQL":    { src: "/icons/skills/postgresql.svg",         glow: "#336791" },
+  "SQLite":        { src: "/icons/skills/sqlite.svg",             glow: "#0F80CC" },
+  "MSSQL":         { src: "/icons/skills/microsoftsqlserver.svg", glow: "#CC2935" },
+  "SQL Server":    { src: "/icons/skills/microsoftsqlserver.svg", glow: "#CC2935" },
+  "MySQL":         { src: "/icons/skills/mysql.svg",              glow: "#4479A1" },
+  "Prisma":        { src: "/icons/skills/prisma.svg",             glow: "#a8b3cf", invert: false },
+  "Redis":         { src: "/icons/skills/redis.svg",              glow: "#DC382D" },
   /* Tools */
-  "Git":           { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg",                   glow: "#F05029" },
-  "Docker":        { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg",             glow: "#2496ED" },
-  "GitHub":        { src: "https://cdn.simpleicons.org/github/ffffff", glow: "#ffffff" },
-  "Azure":         { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/azure/azure-original.svg",               glow: "#0089D6" },
-  "VS Code":       { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg",             glow: "#007ACC" },
-  "Postman":       { src: "https://cdn.simpleicons.org/postman/FF6C37",                                                       glow: "#FF6C37" },
+  "Git":           { src: "/icons/skills/git.svg",                glow: "#F05029" },
+  "Docker":        { src: "/icons/skills/docker.svg",             glow: "#2496ED" },
+  "GitHub":        { src: "/icons/skills/github.svg",             glow: "#ffffff" },
+  "Azure":         { src: "/icons/skills/azure.svg",              glow: "#0089D6" },
+  "VS Code":       { src: "/icons/skills/vscode.svg",             glow: "#007ACC" },
+  "Postman":       { src: "/icons/skills/postman.svg",            glow: "#FF6C37" },
   "Hangfire":      { glow: "#60a5fa" },
   "REST APIs":     { glow: "#22c55e" },
   "OAuth 2.0":     { glow: "#a78bfa" },
   "JWT":           { glow: "#fb923c" },
   "Linq":          { glow: "#512BD4" },
-  "EF Core":       { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dotnetcore/dotnetcore-original.svg",     glow: "#512BD4" },
+  "EF Core":       { src: "/icons/skills/dotnetcore.svg",         glow: "#512BD4" },
   /* Aliases from lib/data.ts */
-  "jQuery":        { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jquery/jquery-original.svg",             glow: "#0769AD" },
-  "Blazor Server": { src: "https://cdn.simpleicons.org/blazor/512BD4",                                                        glow: "#512BD4" },
-  ".NET Core 6/9": { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dotnetcore/dotnetcore-original.svg",     glow: "#512BD4" },
-  "MS-SQL":        { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/microsoftsqlserver/microsoftsqlserver-original.svg", glow: "#CC2935" },
-  "HTML/CSS":      { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg",               glow: "#E34F26" },
+  "jQuery":        { src: "/icons/skills/jquery.svg",             glow: "#0769AD" },
+  "Blazor Server": { src: "/icons/skills/blazor.svg",             glow: "#512BD4" },
+  ".NET Core 6/9": { src: "/icons/skills/dotnetcore.svg",         glow: "#512BD4" },
+  "MS-SQL":        { src: "/icons/skills/microsoftsqlserver.svg", glow: "#CC2935" },
+  "HTML/CSS":      { src: "/icons/skills/html5.svg",              glow: "#E34F26" },
   "XAML":          { glow: "#0078D7" },
-  "React.js":      { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",               glow: "#00D8FF" },
-  "Razor Pages":   { src: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dotnetcore/dotnetcore-original.svg",     glow: "#512BD4" },
+  "React.js":      { src: "/icons/skills/react.svg",              glow: "#00D8FF" },
+  "Razor Pages":   { src: "/icons/skills/dotnetcore.svg",         glow: "#512BD4" },
   "LINQ":          { glow: "#512BD4" },
   "SourceTree":    { glow: "#205081" },
   "Telerik":       { glow: "#5ce500" },
@@ -80,8 +80,8 @@ const SKILL_META: Record<string, SkillMeta> = {
   "ABP.io":        { glow: "#512BD4" },
   /* AI stack. No OpenAI entry: Simple Icons removed the mark and devicon 403s,
      so any URL here would render an empty tile. Azure below covers Azure OpenAI. */
-  "Gemini":        { src: "https://cdn.simpleicons.org/googlegemini/8E75B2",                                                 glow: "#8E75B2" },
-  "Anthropic":     { src: "https://cdn.simpleicons.org/anthropic/D4A27F",                                                    glow: "#D4A27F" },
+  "Gemini":        { src: "/icons/skills/googlegemini.svg",       glow: "#8E75B2" },
+  "Anthropic":     { src: "/icons/skills/anthropic.svg",          glow: "#D4A27F" },
 };
 
 /* ─── Featured stack ────────────────────────────────────────────────────────
@@ -153,10 +153,15 @@ const iconMap: Record<string, ReactNode> = {
 
 /* ─── SkillLogo ─────────────────────────────────────────────────────────── */
 
-/* Logos come from third-party CDNs, so a mark being pulled or renamed upstream
-   is a real failure mode. Previously an errored image was just hidden, leaving
-   an empty tile with no clue what it was; now it falls back to the same
-   initials treatment used when no logo is configured at all. */
+/* Logos are self-hosted in public/icons/skills (devicon, MIT; Simple Icons,
+   CC0). They used to hotlink devicon@latest and cdn.simpleicons.org, which cost
+   two extra origins and let an upstream rename silently break a tile. An errored
+   image still falls back to the initials treatment used when no logo is
+   configured at all.
+
+   loading="lazy" matters beyond the obvious: React 19 emits a
+   <link rel="preload"> for every server-rendered <img> that isn't lazy, so
+   without it ~20 logos were preloaded in <head>, ahead of the hero portrait. */
 function SkillLogo({ name, size = 28 }: { name: string; size?: number }) {
   const [failed, setFailed] = useState(false);
   const meta = SKILL_META[name];
@@ -178,6 +183,8 @@ function SkillLogo({ name, size = 28 }: { name: string; size?: number }) {
       alt={name}
       width={size}
       height={size}
+      loading="lazy"
+      decoding="async"
       style={meta.invert ? { filter: "brightness(0) invert(1)" } : undefined}
       className="object-contain"
       onError={() => setFailed(true)}
@@ -322,7 +329,7 @@ export function SkillsSection() {
               <DecodeText text="Skills" />
             </span>
             <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold mt-2">
-              Technical{" "}
+              AI &amp; .NET{" "}
               <span
                 style={{
                   /* Theme-aware: the literal hexes here were dark-mode blues
@@ -336,7 +343,7 @@ export function SkillsSection() {
                   animation: "skills-shimmer 4s linear infinite",
                 }}
               >
-                Arsenal
+                Tech Stack
               </span>
             </h2>
             <p className="text-muted-foreground mt-3 max-w-xl text-lg">

@@ -7,13 +7,18 @@ import {
 } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { services, process, personalInfo } from "@/lib/data";
+import { jsonLd } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Hire a Freelance .NET Developer - Free Quote & Availability.",
+  /* /hire is the commercial page for "freelance AI & .NET developer" searches;
+     /contact deliberately does not reuse this title, so the two don't compete. */
+  title: "Hire a Freelance AI & .NET Developer — Free Quote",
   description:
-    "Hire a freelance .NET Technical Lead. Free discovery call, fixed-price quotes against your scope, and retainer options. Blazor, ASP.NET Core, WPF, and AI integration. Serving clients in the US, UK, UAE, Australia, and worldwide.",
+    "Hire a freelance AI & .NET developer with 8+ years' experience. Free discovery call, fixed-price quotes against your scope, and retainer options. AI integration, Blazor, ASP.NET Core, and WPF. Clients in the US, UK, UAE, Australia, and worldwide.",
   keywords: [
     // Core hire intent
+    "hire freelance AI developer",
+    "freelance AI .NET developer",
     "hire freelance .NET developer",
     "hire .NET Technical Lead",
     "hire Blazor developer",
@@ -74,9 +79,9 @@ export const metadata: Metadata = {
     canonical: "https://kathanpatel.vercel.app/hire",
   },
   openGraph: {
-    title: "Hire a Freelance .NET Developer — Free Quote & Availability | Kathan N. Patel",
+    title: "Hire a Freelance AI & .NET Developer — Free Quote | Kathan N. Patel",
     description:
-      "Free discovery call, fixed-price quotes against your scope, retainer options. Blazor, ASP.NET Core, WPF, and AI integration. Serving clients in the US, UK, UAE, Australia, and worldwide.",
+      "Free discovery call, fixed-price quotes against your scope, retainer options. AI integration, Blazor, ASP.NET Core, and WPF. Serving clients in the US, UK, UAE, Australia, and worldwide.",
     url: "https://kathanpatel.vercel.app/hire",
     siteName: "Kathan N. Patel",
     type: "website",
@@ -86,15 +91,15 @@ export const metadata: Metadata = {
         url: "https://kathanpatel.vercel.app/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Hire a Freelance .NET Developer — Kathan N. Patel",
+        alt: "Hire a Freelance AI & .NET Developer — Kathan N. Patel",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hire a Freelance .NET Developer — Free Quote & Availability | Kathan N. Patel",
+    title: "Hire a Freelance AI & .NET Developer — Free Quote | Kathan N. Patel",
     description:
-      "Free discovery call, fixed-price quotes, retainer options. Blazor, ASP.NET Core, WPF & AI integration. US, UK, UAE, Australia & worldwide.",
+      "Free discovery call, fixed-price quotes, retainer options. AI integration, Blazor, ASP.NET Core & WPF. US, UK, UAE, Australia & worldwide.",
     images: ["https://kathanpatel.vercel.app/og-image.png"],
   },
 };
@@ -252,28 +257,29 @@ export default function HirePage() {
     <div className="min-h-screen pt-28 pb-20">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── Hero ── */}
-        <ScrollReveal>
+        <div className="fx-rise">
           <div className="mb-16 max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-rose-500/40 bg-rose-500/8 text-rose-400 text-sm font-semibold mb-6">
-              <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse" />
+            {/* Emerald, like every availability badge — rose reads as "unavailable". */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/40 bg-emerald-500/8 text-emerald-500 text-sm font-semibold mb-6">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               {personalInfo.availableForWork
                 ? `Available — ${personalInfo.availableFrom}`
                 : "Currently Engaged · Open to Discussions"}
             </div>
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold mt-2 mb-5 leading-tight">
-              Let&apos;s Build Something{" "}
-              <span className="gradient-text">Together</span>
+              Hire a Freelance{" "}
+              <span className="gradient-text">AI &amp; .NET Developer</span>
             </h1>
             <p className="text-muted-foreground text-lg leading-relaxed mb-8 max-w-2xl">
-              I&apos;m a freelance .NET Technical Lead with 8+ years of experience. I work with startups and
-              growing businesses to build Blazor web apps, WPF desktop tools, and production-grade APIs —
-              on time, within budget, and with clean code you can maintain.
+              I&apos;m a freelance AI &amp; .NET Technical Lead with 8+ years of experience. I work with startups and
+              growing businesses to add AI to their products and build Blazor web apps, WPF desktop tools, and
+              production-grade APIs — on time, within budget, and with clean code you can maintain.
             </p>
             <div className="flex flex-wrap gap-4">
               <a
@@ -292,7 +298,7 @@ export default function HirePage() {
               </Link>
             </div>
           </div>
-        </ScrollReveal>
+        </div>
 
         {/* ═══════════════════════════════════════════════════════════════════ */}
         {/* ── HOW PRICING WORKS ── */}

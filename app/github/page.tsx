@@ -6,6 +6,9 @@ import { getRepos, langColors } from "@/lib/github";
 export const metadata: Metadata = {
   title: "GitHub Showcase",
   description: "Live showcase of Kathan Patel's open-source GitHub repositories.",
+  alternates: {
+    canonical: "/github",
+  },
 };
 
 export default async function GithubPage() {
@@ -16,7 +19,7 @@ export default async function GithubPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
-        <ScrollReveal>
+        <div className="fx-rise">
           <div className="mb-14">
             <span className="font-mono text-blue-400 text-sm font-medium tracking-wider uppercase">
               Open Source
@@ -43,7 +46,7 @@ export default async function GithubPage() {
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
-        </ScrollReveal>
+        </div>
 
         {/* Empty / error state */}
         {repos.length === 0 ? (

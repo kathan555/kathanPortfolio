@@ -17,8 +17,11 @@ export const personalInfo = {
   calendarBookingUrl: "https://cal.com/kathanpatel9/30min",
 };
 
+/* Google uses this About paragraph, not the meta description, as the homepage
+   snippet on name searches, and shows roughly the first 155 characters. Keep
+   the opening sentence as the pitch. */
 export const summary =
-  "I'm a freelance .NET Technical Lead with 8+ years of experience building production-grade web and desktop applications across fintech, legal tech, healthcare, and e-commerce. I specialise in Blazor, ASP.NET Core, and WPF — turning complex business requirements into clean, scalable software, and running an AI-assisted build process that compresses delivery without putting unreviewed code into production. Remote-friendly, deadline-driven, and available for contract work right now.";
+  "I'm a freelance AI & .NET developer and Technical Lead with 8+ years of experience. I add AI to production software — Gemini, Azure OpenAI, RAG — and build Blazor, ASP.NET Core, and WPF applications across fintech, legal tech, healthcare, and e-commerce, turning complex business requirements into clean, scalable software. My AI-assisted build process compresses delivery without putting unreviewed code into production. Remote-friendly, deadline-driven, and available for contract work right now.";
 
 export const education = [
   {
@@ -404,35 +407,6 @@ export const selfBuilt = [
     tags: ["WPF", ".NET 9", "C#", "MVVM"],
     repo: "https://github.com/kathan555/ExcelDynamicViewer",
     demo: null,
-  },
-];
-
-// ── Testimonials (point 7) ────────────────────────────────────────────────────
-// Replace placeholder quotes with real ones from colleagues/managers/clients
-export const testimonials = [
-  {
-    id: 1,
-    quote:
-      "Kathan delivered a complete Blazor migration ahead of schedule without a single regression. His attention to architecture and clean code made the handover effortless.",
-    name: "Client / Manager Name",
-    role: "CTO, Digip Technologies",
-    initials: "DT",
-  },
-  {
-    id: 2,
-    quote:
-      "Working with Kathan on the trading platform was exceptional. He understood the performance constraints from day one and consistently produced a UI that felt instant.",
-    name: "Client / Colleague Name",
-    role: "Project Manager, King & Shaxson",
-    initials: "KS",
-  },
-  {
-    id: 3,
-    quote:
-      "Kathan's ability to translate our legal workflow into an automated system saved us weeks of manual effort every month. Highly recommended for complex integrations.",
-    name: "Client / Stakeholder Name",
-    role: "Operations Lead, North City Law",
-    initials: "NC",
   },
 ];
 

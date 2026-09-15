@@ -23,13 +23,13 @@ async function getBlogPosts(): Promise<{ slug: string; publishedAt: string | nul
    here" and suppressed recrawling. Bump the relevant date when a page's
    content actually changes. */
 const LAST_MODIFIED = {
-  home:          new Date("2026-08-25"),  // AI-assisted delivery section added
-  hire:          new Date("2025-04-01"),
-  contact:       new Date("2025-04-01"),
+  home:          new Date("2026-09-15"),  // Title, hero role line and About copy retargeted at "freelance AI & .NET developer"
+  hire:          new Date("2026-09-15"),  // H1, title and intro retargeted at "freelance AI & .NET developer"
+  contact:       new Date("2026-09-15"),  // Title no longer duplicates /hire
   aiIntegration: new Date("2025-04-01"),
-  legalTech:     new Date("2026-08-20"),
+  legalTech:     new Date("2026-09-15"),  // H1 now names Clio & Lawmatics
   estimator:     new Date("2026-06-11"),
-  github:        new Date("2025-03-01"),
+  github:        new Date("2026-09-15"),  // Canonical fixed — was pointing at the homepage
 } as const;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
