@@ -24,12 +24,13 @@ async function getBlogPosts(): Promise<{ slug: string; publishedAt: string | nul
    content actually changes. */
 const LAST_MODIFIED = {
   home:          new Date("2026-09-15"),  // Title, hero role line and About copy retargeted at "freelance AI & .NET developer"
-  hire:          new Date("2026-09-15"),  // H1, title and intro retargeted at "freelance AI & .NET developer"
+  hire:          new Date("2026-09-25"),  // "Connect your AI" MCP block added
   contact:       new Date("2026-09-15"),  // Title no longer duplicates /hire
   aiIntegration: new Date("2025-04-01"),
   legalTech:     new Date("2026-09-15"),  // H1 now names Clio & Lawmatics
   estimator:     new Date("2026-06-11"),
   github:        new Date("2026-09-15"),  // Canonical fixed — was pointing at the homepage
+  xray:          new Date("2026-09-25"),  // Page launched
 } as const;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -48,6 +49,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/ai-integration`,              lastModified: LAST_MODIFIED.aiIntegration, changeFrequency: "monthly", priority: 0.85 },
     { url: `${BASE}/legal-tech-integration`,      lastModified: LAST_MODIFIED.legalTech,     changeFrequency: "monthly", priority: 0.85 },
     { url: `${BASE}/free-project-cost-estimator`, lastModified: LAST_MODIFIED.estimator,     changeFrequency: "monthly", priority: 0.85 },
+    { url: `${BASE}/legacy-code-xray`,            lastModified: LAST_MODIFIED.xray,          changeFrequency: "monthly", priority: 0.85 },
     { url: `${BASE}/blog`,                        lastModified: newestPost ? new Date(newestPost) : LAST_MODIFIED.home, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/github`,                      lastModified: LAST_MODIFIED.github,        changeFrequency: "weekly",  priority: 0.7  },
   ];

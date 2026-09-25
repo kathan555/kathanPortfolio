@@ -6,6 +6,7 @@ const moreLinks = [
   { label: "GitHub Showcase", href: "/github"         },
   { label: "Blog",            href: "/blog"           },
   { label: "Cost Estimator",  href: "/free-project-cost-estimator"      },
+  { label: "Code X-ray",      href: "/legacy-code-xray"                 },
   { label: "AI Integration",  href: "/ai-integration" },
   { label: "Legal Tech",      href: "/legal-tech-integration" },
 ];

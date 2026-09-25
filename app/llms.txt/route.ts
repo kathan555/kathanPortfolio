@@ -1,6 +1,7 @@
 // app/llms.txt/route.ts
 import { createClient } from '@supabase/supabase-js'
 import { personalInfo, summary, aiWorkflow, selfBuilt } from '@/lib/data'
+import { TARGET_RUNTIME } from '@/lib/legacy-xray'
 
 /* ─────────────────────────────────────────────────────────────────────────
    llms.txt — what AI assistants (Perplexity, ChatGPT, Claude) read to answer
@@ -97,7 +98,20 @@ ${aiWorkflow.proof.caveat}
 - Free AI Project Cost Estimator: https://kathanpatel.vercel.app/free-project-cost-estimator
   Describe your project in one step and get an instant AI-generated software
   project cost estimate with a six-phase breakdown — tuned for .NET, Blazor, and web apps.
+- Free Legacy .NET Code X-ray: https://kathanpatel.vercel.app/legacy-code-xray
+  Paste legacy .NET code and get a modernization report: migration blockers,
+  security risks, the recommended target on ${TARGET_RUNTIME}, and a phased plan.
+  Also callable by AI agents through the MCP server below.
 - Live AI assistant on the homepage, primed with his real experience and projects.
+
+## MCP Server (for AI agents)
+- Endpoint: https://kathanpatel.vercel.app/mcp
+  Model Context Protocol, Streamable HTTP transport, no authentication.
+- Tool: xray_legacy_code — send a legacy .NET snippet (C#, VB.NET, Web Forms,
+  WinForms, WCF, web.config) and get a modernization report: detected stack,
+  risk map, recommended target on ${TARGET_RUNTIME}, phased migration plan, quick
+  wins, and AI features the modernized app could offer. Code is not stored;
+  it is analysed with Google Gemini, with likely secrets redacted first.
 
 ## Areas of Expertise
 - AI integration in .NET and web apps (Google Gemini, Azure OpenAI, Semantic Kernel, RAG)

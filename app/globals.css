@@ -592,6 +592,10 @@ p, li, td, th, label, span:not(.font-mono):not(.font-display) {
   mask-image: radial-gradient(closest-side, #000 52%, transparent 100%);
 }
 .art--right { right: -9%; }
+/* Centred heroes (e.g. /legacy-code-xray): push the art further out so its
+   focal point clears the headline instead of sitting behind it. */
+.art-layer--edge .art--right { right: -22%; }
+.art-layer--edge .art--left  { left: -22%; }
 .art--left  { left: -9%; transform: scaleX(-1); }
 /* Labels flip back so mirrored art never reads backwards. */
 .art--left .art-text {

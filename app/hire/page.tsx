@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { SectionArt } from "@/components/SectionArt";
+import { ConnectYourAI } from "@/components/ConnectYourAI";
 import { services, process, personalInfo } from "@/lib/data";
 import { jsonLd } from "@/lib/utils";
 
@@ -264,7 +265,7 @@ export default function HirePage() {
       <SectionArt variant="circuit" side="right" at="0%" />
       <SectionArt variant="orbit"   side="left"  at="20%" />
       <SectionArt variant="neural"  side="right" at="39%" />
-      <SectionArt variant="waves"   side="left"  at="54%" />
+      <SectionArt variant="waves"   side="left"  at="47%" />
       <SectionArt variant="orbit"   side="right" at="90%" />
       <script
         type="application/ld+json"
@@ -605,6 +606,28 @@ export default function HirePage() {
               </div>
             </ScrollReveal>
           ))}
+        </div>
+
+        {/* ── Connect your AI ──
+            The MCP server as proof of the AI-integration pitch: a buyer can
+            wire it into their own assistant before ever booking a call. */}
+        <ScrollReveal>
+          <span className="font-mono text-blue-400 text-sm font-medium tracking-wider uppercase">
+            For AI agents
+          </span>
+          <h2 className="font-display text-2xl sm:text-3xl font-bold mt-2 mb-3">
+            Connect Your AI
+          </h2>
+          <p className="text-muted-foreground max-w-2xl mb-8">
+            Planning a .NET migration? Point your assistant at my{" "}
+            <Link href="/legacy-code-xray" className="text-blue-400 hover:text-blue-300 underline underline-offset-2">
+              Legacy Code X-ray
+            </Link>{" "}
+            and get a modernization report on your own code before we ever talk.
+          </p>
+        </ScrollReveal>
+        <div className="mb-20">
+          <ConnectYourAI />
         </div>
 
         {/* ── FAQ ── */}
