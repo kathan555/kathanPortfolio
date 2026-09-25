@@ -6,6 +6,7 @@ import {
   Shield, Zap, AlertCircle, X, HelpCircle,
 } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { SectionArt } from "@/components/SectionArt";
 import { services, process, personalInfo } from "@/lib/data";
 import { jsonLd } from "@/lib/utils";
 
@@ -254,7 +255,17 @@ export default function HirePage() {
   const mailtoLink = `mailto:${personalInfo.email}?subject=Freelance%20Inquiry%20%E2%80%94%20Let%E2%80%99s%20Work%20Together&body=Hi%20Kathan%2C%0A%0AI%E2%80%99m%20interested%20in%20hiring%20you%20for%20a%20project.%0A%0AProject%20details%3A%0A-%20Type%3A%20%0A-%20Timeline%3A%20%0A-%20Budget%3A%20%0A-%20Description%3A%20%0A%0ALooking%20forward%20to%20connecting!`;
 
   return (
-    <div className="min-h-screen pt-28 pb-20">
+    <div className="relative min-h-screen pt-28 pb-20">
+      {/* Background art, alternating sides down the page. Offsets are a share
+          of this wrapper's height (footer excluded) — each section starts
+          within ~3% of the same share at 375, 1024 and 1440px wide. FAQ is
+          left clear: it is reading text.
+          Hero · Pricing · What I Build · What You Get · Final CTA */}
+      <SectionArt variant="circuit" side="right" at="0%" />
+      <SectionArt variant="orbit"   side="left"  at="20%" />
+      <SectionArt variant="neural"  side="right" at="39%" />
+      <SectionArt variant="waves"   side="left"  at="54%" />
+      <SectionArt variant="orbit"   side="right" at="90%" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }}

@@ -10,6 +10,7 @@ import { EducationSection }   from "@/components/EducationSection";
 import { SectionProgress }    from "@/components/SectionProgress";
 import { ChapterDivider }     from "@/components/ChapterDivider";
 import { ScrollReveal }       from "@/components/ScrollReveal";
+import { SectionArt }         from "@/components/SectionArt";
 import { DecodeText }         from "@/components/DecodeText";
 import Link                   from "next/link";
 import type { Metadata }      from "next";
@@ -58,12 +59,16 @@ export default function Home() {
           "AI-enabled" impression lands immediately, and the hero command bar
           feeds questions into it. */}
       <div className="section-band section-glow">
+        <SectionArt variant="circuit" side="right" />
         <HomeAIAssistant />
       </div>
 
       {/* ── 01 — SKILLS (plain) ── */}
-      <ChapterDivider number="01" title="Technical Skills" icon="code" />
-      <SkillsSection />
+      <div className="relative isolate">
+        <SectionArt variant="waves" side="left" />
+        <ChapterDivider number="01" title="Technical Skills" icon="code" />
+        <SkillsSection />
+      </div>
 
       {/* ── 02 — HOW I BUILD (banded) ──
           The AI-assisted delivery method. Placed straight after Skills because
@@ -71,27 +76,36 @@ export default function Home() {
           buyer, and because everything below (per-project AI notes, the solo
           builds) reads as evidence for the claims made here. */}
       <div className="section-band section-glow">
+        <SectionArt variant="neural" side="left" />
         <ChapterDivider number="02" title="How I Build" icon="workflow" />
         <AIWorkflowSection />
       </div>
 
       {/* ── 03 — EXPERIENCE (plain) ── */}
-      <ChapterDivider number="03" title="Career Journey" icon="briefcase" />
-      <ExperienceSection />
+      <div className="relative isolate">
+        <SectionArt variant="hex" side="right" />
+        <ChapterDivider number="03" title="Career Journey" icon="briefcase" />
+        <ExperienceSection />
+      </div>
 
       {/* ── 04 — PROJECTS (banded) ── */}
       <div className="section-band section-glow">
+        <SectionArt variant="circuit" side="left" />
         <ChapterDivider number="04" title="Key Work" icon="folder" />
         <ProjectsSection />
       </div>
 
       {/* ── 05 — INDEPENDENT BUILDS (plain) ──
           Solo, self-shipped products — the counterpart to client "Key Work". */}
-      <ChapterDivider number="05" title="Independent Builds" icon="sparkles" />
-      <SelfBuiltSection />
+      <div className="relative isolate">
+        <SectionArt variant="orbit" side="right" />
+        <ChapterDivider number="05" title="Independent Builds" icon="sparkles" />
+        <SelfBuiltSection />
+      </div>
 
       {/* ── 06 — EDUCATION (banded) ── */}
       <div className="section-band section-glow">
+        <SectionArt variant="waves" side="right" />
         <ChapterDivider number="06" title="Academic Background" icon="graduation" />
         <EducationSection />
       </div>

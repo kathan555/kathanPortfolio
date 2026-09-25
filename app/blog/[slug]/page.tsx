@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Calendar, Tag, Clock, ArrowRight } from "lucide-react";
 import { ShareButtons } from "@/components/ShareButtons";
+import { SectionArt } from "@/components/SectionArt";
 import { LeadCapturePopup } from "@/components/LeadCapturePopup";
 import { HireMePoster, HireMeInlineCard } from "@/components/HireMePoster";
 import { getAllSlugs, getPostBySlug, getAllPosts, type ContentBlock } from "@/lib/blog";
@@ -360,6 +361,10 @@ export default async function BlogPostPage({ params }: Props) {
        left-4), shifting the centred content right so the article is never
        covered. */
     <div className="relative min-h-screen pt-28 pb-20 min-[1440px]:pl-60">
+      {/* Art frames the header and the closing section only — never the
+          middle of the article, where it would sit behind body text. */}
+      <SectionArt variant="hex"   side="right" at="0%" />
+      <SectionArt variant="waves" side="left"  at="84%" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLd(articleSchema) }}

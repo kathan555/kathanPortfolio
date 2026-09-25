@@ -562,7 +562,102 @@ p, li, td, th, label, span:not(.font-mono):not(.font-display) {
 :root.fx-theme-reveal *::before,
 :root.fx-theme-reveal *::after { transition: none !important; }
 
+/* ── Section art ──────────────────────────────────────────────────────────────
+   Layer + motion for <SectionArt />. The SVGs paint themselves from the theme
+   tokens; this block only places them, fades their edges and animates them.
+   Light needs the higher opacity for thin strokes to survive on near-white. */
+:root, .light { --art-opacity: 0.55; }
+.dark         { --art-opacity: 0.5; }
+
+.art-layer {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  /* Seven animated, masked SVGs down one page: skip every one that is off
+     screen, and keep the visible one's per-frame repaint inside its own layer
+     instead of invalidating the section content above it. */
+  content-visibility: auto;
+  contain: strict;
+}
+.art {
+  will-change: transform;
+  position: absolute;
+  top: 4%;
+  width: clamp(300px, 44vw, 640px);
+  height: auto;
+  opacity: var(--art-opacity);
+  -webkit-mask-image: radial-gradient(closest-side, #000 52%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 52%, transparent 100%);
+}
+.art--right { right: -9%; }
+.art--left  { left: -9%; transform: scaleX(-1); }
+/* Labels flip back so mirrored art never reads backwards. */
+.art--left .art-text {
+  transform: scaleX(-1);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+/* Contours are a wide band, not a centred motif: fade the ends, not a circle. */
+.art--waves {
+  top: auto;
+  bottom: 2%;
+  width: clamp(520px, 70vw, 1100px);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+}
+/* Thin, low-alpha contours sink into the dark ground faster than the others. */
+.dark .art--waves { opacity: calc(var(--art-opacity) * 1.4); }
+.art--waves.art--right { right: -12%; }
+.art--waves.art--left  { left: -12%; }
+/* On a phone the art would sit directly behind body text — keep it a hint. */
+@media (max-width: 767px) {
+  .art { opacity: calc(var(--art-opacity) * 0.55); width: 88vw; top: 0; }
+  .art--waves { width: 150vw; }
+}
+
+.art-flow {
+  stroke-dasharray: 14 520;
+  animation: art-flow 7s linear infinite;
+}
+.art-flow--long {
+  stroke-dasharray: 40 1100;
+  animation: art-flow-long 12s linear infinite;
+}
+@keyframes art-flow { to { stroke-dashoffset: -534; } }
+@keyframes art-flow-long { to { stroke-dashoffset: -1140; } }
+
+.art-march { animation: art-march 2.4s linear infinite; }
+@keyframes art-march { to { stroke-dashoffset: -20; } }
+
+.art-spin {
+  transform-box: view-box;
+  transform-origin: 300px 300px;
+  animation: art-spin 60s linear infinite;
+}
+.art-spin--rev { animation-direction: reverse; }
+@keyframes art-spin { to { transform: rotate(360deg); } }
+
+.art-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: art-pulse 4s ease-in-out infinite;
+}
+@keyframes art-pulse {
+  0%, 100% { opacity: 1;    transform: scale(1); }
+  50%      { opacity: 0.45; transform: scale(0.82); }
+}
+
+.art-drift { animation: art-drift 16s ease-in-out infinite alternate; }
+@keyframes art-drift { to { transform: translate(-24px, 8px); } }
+
 @media (prefers-reduced-motion: reduce) {
+  .art-flow { display: none; }
+  .art-march,
+  .art-spin,
+  .art-pulse,
+  .art-drift { animation: none; }
   .fx-holo::after,
   .fx-text-sheen,
   .fx-horizon-plane,

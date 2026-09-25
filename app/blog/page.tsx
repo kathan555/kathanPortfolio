@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Calendar, Tag, ArrowRight, PenLine, Clock } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { SectionArt } from "@/components/SectionArt";
 import { getAllPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
@@ -66,7 +67,9 @@ export default async function BlogPage() {
   const posts = await getAllPosts();
 
   return (
-    <div className="min-h-screen pt-28 pb-20">
+    <div className="relative min-h-screen pt-28 pb-20">
+      <SectionArt variant="circuit" side="right" at="0%" />
+      <SectionArt variant="hex"     side="left"  at="45%" />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="fx-rise">
