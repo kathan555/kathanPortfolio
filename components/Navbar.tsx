@@ -6,35 +6,73 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import {
   Menu, X, ChevronDown,
-  Github, PenLine, Calculator, Brain, Scale,
+  Github, PenLine, Calculator, Brain, Scale, ScanSearch, Mail, FileDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { personalInfo } from "@/lib/data";
 
 // ── Nav structure ─────────────────────────────────────────────────────────────
-// Skills / Experience / Education / Projects now scroll to homepage anchors.
-// The 4 standalone route files can be safely deleted.
-const navLinks = [
+// The pages a first-time visitor is most likely to want sit in the bar itself:
+// the core service, the two free tools, and the blog. Everything used to live
+// under "More", which hid all of them behind a click. "More" now holds only
+// the niche pages.
+type NavChild = {
+  label: string; href: string; icon: React.ReactNode; desc: string; badge?: string;
+  /** A file to download (the resume), not a page to route to. */
+  download?: boolean;
+};
+type NavLink  = NavChild & { children: NavChild[] | null };
+
+const navLinks: NavLink[] = [
+  { label: "AI Integration", href: "/ai-integration",              icon: <Brain      className="w-4 h-4" />, desc: ".NET + AI showcase & demo",        children: null },
+  { label: "Code X-ray",     href: "/legacy-code-xray",            icon: <ScanSearch className="w-4 h-4" />, desc: "Legacy .NET modernization report", children: null, badge: "New" },
+  { label: "Cost Estimator", href: "/free-project-cost-estimator", icon: <Calculator className="w-4 h-4" />, desc: "Project cost calculator",          children: null },
+  { label: "Blog",           href: "/blog",                        icon: <PenLine    className="w-4 h-4" />, desc: "Thoughts & tutorials",             children: null },
   {
     label: "More",
     href:  "#",
+    icon:  null,
+    desc:  "",
     children: [
-      { label: "GitHub Showcase", href: "/github",         icon: <Github     className="w-4 h-4" />, desc: "Open-source repositories"   },
-      { label: "Blog",            href: "/blog",           icon: <PenLine    className="w-4 h-4" />, desc: "Thoughts & tutorials"        },
-      { label: "Cost Estimator",  href: "/free-project-cost-estimator",      icon: <Calculator className="w-4 h-4" />, desc: "Project cost calculator"     },
-      { label: "AI Integration",  href: "/ai-integration", icon: <Brain      className="w-4 h-4" />, desc: ".NET + AI showcase & demo"   },
-      { label: "Legal Tech",      href: "/legal-tech-integration", icon: <Scale className="w-4 h-4" />, desc: "Clio & Lawmatics integrations" },
+      { label: "Resume",          href: "/Kathan_Patel_Resume.pdf", icon: <FileDown className="w-4 h-4" />, desc: "Download PDF", download: true },
+      { label: "GitHub Showcase", href: "/github",                  icon: <Github   className="w-4 h-4" />, desc: "Open-source repositories"      },
+      { label: "Legal Tech",      href: "/legal-tech-integration",  icon: <Scale    className="w-4 h-4" />, desc: "Clio & Lawmatics integrations" },
     ],
   },
-  {
-    label:    "Contact",
-    href:     "/contact",
-    children: null,
-  },
+  { label: "Contact", href: "/contact", icon: <Mail className="w-4 h-4" />, desc: "Email, call or book a chat", children: null },
 ];
 
-type NavChild = { label: string; href: string; icon: React.ReactNode; desc: string };
+/** Section roots count as active on their sub-pages too (/blog → a post). */
+function isActivePath(pathname: string, href: string) {
+  if (href.startsWith("/#")) return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+function NewBadge({ text, className }: { text: string; className?: string }) {
+  return (
+    <span className={cn("ml-1.5 px-1.5 py-px rounded-md bg-rose-500/10 border border-rose-500/25 text-rose-400 font-mono text-[10px] font-bold uppercase tracking-wide leading-none", className)}>
+      {text}
+    </span>
+  );
+}
+
+/** Pages route client-side through <Link>; a download must be a plain
+ *  <a download> so the browser saves the file instead of navigating. */
+function NavItemLink({ item, className, children }: {
+  item: NavChild;
+  className: string;
+  children: React.ReactNode;
+}) {
+  if (item.download) {
+    return <a href={item.href} download className={className}>{children}</a>;
+  }
+  return (
+    <Link href={item.href} prefetch={!item.href.startsWith("/#")} className={className}>
+      {children}
+    </Link>
+  );
+}
 
 // ── Dropdown panel component ───────────────────────────────────────────────────
 function DropdownPanel({
@@ -53,25 +91,19 @@ function DropdownPanel({
       exit={{    opacity: 0, y: 8,  scale: 0.97 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
       className={cn(
-        "absolute top-full mt-2 w-64 glass-card rounded-2xl overflow-hidden",
+        "absolute top-full mt-2 w-72 glass-card rounded-2xl overflow-hidden",
         "shadow-2xl shadow-blue-500/10 border border-blue-500/15",
         align === "right" ? "right-0" : "left-0"
       )}
     >
       <div className="p-1.5 flex flex-col gap-0.5">
         {items.map((child) => {
-          // Anchor links (/#section) are "active" when we're on the home page.
-          // Regular routes are active when pathname starts with that href.
-          const isAnchor = child.href.startsWith("/#");
-          const active   = isAnchor
-            ? pathname === "/"
-            : pathname.startsWith(child.href);
+          const active = isActivePath(pathname, child.href);
 
           return (
-            <Link
+            <NavItemLink
               key={child.href}
-              href={child.href}
-              prefetch={!isAnchor}
+              item={child}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 group",
                 active
@@ -101,7 +133,7 @@ function DropdownPanel({
                   {child.desc}
                 </p>
               </div>
-            </Link>
+            </NavItemLink>
           );
         })}
       </div>
@@ -157,10 +189,7 @@ export function Navbar() {
   }
 
   function anyChildActive(children: NavChild[]) {
-    return children.some((c) => {
-      if (c.href.startsWith("/#")) return pathname === "/";
-      return pathname.startsWith(c.href);
-    });
+    return children.some((c) => isActivePath(pathname, c.href));
   }
 
   return (
@@ -237,7 +266,11 @@ export function Navbar() {
           </Link>
 
           {/* ── Desktop Nav ── */}
-          <div className="hidden md:flex items-center gap-0.5">
+          {/* lg, not md: six links plus the actions need ~950px. Between lg
+              and xl the padding tightens and the "New" badge hides, which
+              leaves ~40px spare at 1024px; tablets get the burger menu, which
+              lists the same pages. */}
+          <div className="hidden lg:flex items-center gap-0.5">
 
             {navLinks.map((link) => {
               if (!link.children) {
@@ -247,13 +280,14 @@ export function Navbar() {
                     href={link.href}
                     prefetch={true}
                     className={cn(
-                      "px-3.5 py-2 text-sm font-semibold rounded-lg transition-all duration-200 border border-transparent",
-                      pathname === link.href
+                      "flex items-center px-2.5 xl:px-3 py-2 text-sm font-semibold rounded-lg transition-all duration-200 border border-transparent whitespace-nowrap",
+                      isActivePath(pathname, link.href)
                         ? "text-blue-600 bg-blue-500/10 border-blue-500/20"
                         : "text-foreground hover:text-blue-600 hover:bg-blue-50 hover:border-blue-200/60"
                     )}
                   >
                     {link.label}
+                    {link.badge && <NewBadge text={link.badge} className="hidden xl:inline-block" />}
                   </Link>
                 );
               }
@@ -266,7 +300,7 @@ export function Navbar() {
                   <button
                     onClick={() => toggleDesktopDropdown(link.label)}
                     className={cn(
-                      "flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-lg transition-all duration-200",
+                      "flex items-center gap-1.5 px-2.5 xl:px-3 py-2 text-sm font-semibold rounded-lg transition-all duration-200",
                       isOpen || isActive
                         ? "text-blue-600 bg-blue-500/10 border-blue-500/20"
                         : "text-foreground hover:text-blue-600 hover:bg-blue-50 hover:border-blue-200/60"
@@ -292,18 +326,8 @@ export function Navbar() {
             })}
 
             {/* ── Right-side actions ── */}
-            <div className="flex items-center gap-2 ml-3 pl-3 border-l border-border/60">
+            <div className="flex items-center gap-2 ml-2 pl-2 xl:ml-3 xl:pl-3 border-l border-border/60">
               <ThemeToggle />
-              <a
-                href="/Kathan_Patel_Resume.pdf"
-                download
-                className="px-3 py-2 text-sm font-medium border border-border text-muted-foreground rounded-lg hover:border-blue-500/30 hover:text-foreground transition-all flex items-center gap-1.5"
-              >
-                Resume
-                <svg className="w-3 h-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-              </a>
               <Link
                 href="/hire"
                 prefetch={true}
@@ -315,7 +339,7 @@ export function Navbar() {
           </div>
 
           {/* ── Mobile: theme + burger ── */}
-          <div className="md:hidden flex items-center gap-2">
+          <div className="lg:hidden flex items-center gap-2">
             <ThemeToggle />
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -336,7 +360,7 @@ export function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{    opacity: 0, height: 0    }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="md:hidden bg-background/97 backdrop-blur-xl border-b border-blue-500/10 overflow-hidden"
+            className="lg:hidden bg-background/95 backdrop-blur-xl border-b border-blue-500/10 overflow-hidden"
           >
             <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-1">
 
@@ -359,19 +383,34 @@ export function Navbar() {
 
               {navLinks.map((link) => {
                 if (!link.children) {
+                  const active = isActivePath(pathname, link.href);
                   return (
                     <Link
                       key={link.label}
                       href={link.href}
                       prefetch={true}
                       className={cn(
-                        "block px-4 py-3 text-sm font-medium rounded-xl transition-colors",
-                        pathname === link.href
+                        "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-colors",
+                        active
                           ? "text-blue-400 bg-blue-500/8"
                           : "text-muted-foreground hover:text-foreground hover:bg-blue-500/5"
                       )}
                     >
-                      {link.label}
+                      {link.icon && (
+                        <span className={cn(
+                          "w-7 h-7 rounded-lg flex items-center justify-center shrink-0",
+                          active ? "bg-blue-500/20 text-blue-400" : "bg-muted/60 text-muted-foreground"
+                        )}>
+                          {link.icon}
+                        </span>
+                      )}
+                      <div className={link.icon ? undefined : "px-1"}>
+                        <p className="text-sm font-medium leading-tight flex items-center">
+                          {link.label}
+                          {link.badge && <NewBadge text={link.badge} />}
+                        </p>
+                        {link.desc && <p className="text-xs text-muted-foreground leading-tight">{link.desc}</p>}
+                      </div>
                     </Link>
                   );
                 }
@@ -408,15 +447,11 @@ export function Navbar() {
                         >
                           <div className="pl-3 pr-1 pb-1 pt-0.5 flex flex-col gap-0.5">
                             {link.children.map((child) => {
-                              const isAnchor    = child.href.startsWith("/#");
-                              const childActive = isAnchor
-                                ? pathname === "/"
-                                : pathname.startsWith(child.href);
+                              const childActive = isActivePath(pathname, child.href);
                               return (
-                                <Link
+                                <NavItemLink
                                   key={child.href}
-                                  href={child.href}
-                                  prefetch={!isAnchor}
+                                  item={child}
                                   className={cn(
                                     "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors",
                                     childActive
@@ -436,7 +471,7 @@ export function Navbar() {
                                     <p className="text-sm font-medium leading-tight">{child.label}</p>
                                     <p className="text-xs text-muted-foreground leading-tight">{child.desc}</p>
                                   </div>
-                                </Link>
+                                </NavItemLink>
                               );
                             })}
                           </div>
@@ -446,14 +481,6 @@ export function Navbar() {
                   </div>
                 );
               })}
-
-              <a
-                href="/Kathan_Patel_Resume.pdf"
-                download
-                className="block px-4 py-3 text-sm font-medium text-muted-foreground hover:bg-blue-500/5 rounded-xl transition-colors mt-1 border border-border hover:border-blue-500/20"
-              >
-                Download Resume ↓
-              </a>
             </div>
           </motion.div>
         )}
