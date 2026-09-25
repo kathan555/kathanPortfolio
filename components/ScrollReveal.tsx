@@ -1,7 +1,14 @@
-"use client";
+/* ─────────────────────────────────────────────────────────────────────────
+   ScrollReveal / StaggerChildren
+   These used to fade, rise and un-blur their content the first time it
+   scrolled into view. The effect ran once per page load, so it only ever
+   showed on the first pass down a page — where it read as content still
+   loading, and the animated `filter: blur()` re-rasterised whole sections
+   (glass cards included) on every frame, which is what made scrolling lag.
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+   Both are now plain wrappers so the ~60 call sites keep working unchanged.
+   `delay`, `direction` and `once` are still accepted and ignored.
+   ───────────────────────────────────────────────────────────────────────── */
 
 interface ScrollRevealProps {
   children: React.ReactNode;
@@ -11,48 +18,8 @@ interface ScrollRevealProps {
   once?: boolean;
 }
 
-export function ScrollReveal({
-  children,
-  delay = 0,
-  direction = "up",
-  className = "",
-  once = true,
-}: ScrollRevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once, margin: "-50px" });
-
-  /* Content "materialises": it resolves from a soft blur as it rises in.
-     `transitionEnd` clears the filter afterwards — a leftover `blur(0px)`
-     would still make this wrapper the containing block for any `fixed`
-     descendant and the backdrop root for glass cards inside it. */
-  const variants = {
-    hidden: {
-      opacity: 0,
-      y: direction === "up" ? 30 : direction === "down" ? -30 : 0,
-      x: direction === "left" ? 30 : direction === "right" ? -30 : 0,
-      filter: "blur(8px)",
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      x: 0,
-      filter: "blur(0px)",
-      transitionEnd: { filter: "none" },
-    },
-  };
-
-  return (
-    <motion.div
-      ref={ref}
-      variants={variants}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      transition={{ duration: 0.6, delay, ease: [0.25, 0.4, 0.25, 1] }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
+export function ScrollReveal({ children, className = "" }: ScrollRevealProps) {
+  return <div className={className}>{children}</div>;
 }
 
 interface StaggerChildrenProps {
@@ -61,33 +28,6 @@ interface StaggerChildrenProps {
   staggerDelay?: number;
 }
 
-export function StaggerChildren({
-  children,
-  className = "",
-  staggerDelay = 0.1,
-}: StaggerChildrenProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      variants={{
-        visible: {
-          transition: { staggerChildren: staggerDelay },
-        },
-        hidden: {},
-      }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
+export function StaggerChildren({ children, className = "" }: StaggerChildrenProps) {
+  return <div className={className}>{children}</div>;
 }
-
-export const staggerItem = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.4, 0.25, 1] } },
-};

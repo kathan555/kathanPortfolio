@@ -1,7 +1,5 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
 import { selfBuilt } from "@/lib/data";
 import { Github, ExternalLink, Sparkles, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -31,17 +29,9 @@ const dotColors: Record<string, string> = {
   green:  "bg-green-400",
 };
 
-function BuildCard({ project, index }: { project: typeof selfBuilt[0]; index: number }) {
-  const ref    = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-
+function BuildCard({ project }: { project: typeof selfBuilt[0] }) {
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.55, delay: (index % 3) * 0.08, ease: [0.25, 0.4, 0.25, 1] }}
-    >
+    <div>
       <div className="project-card fx-holo glass-card rounded-2xl p-6 h-full flex flex-col border-blue-500/10 group">
         {/* Header — domain badge + "Solo build" chip */}
         <div className="flex items-start justify-between gap-2 mb-4">
@@ -134,26 +124,17 @@ function BuildCard({ project, index }: { project: typeof selfBuilt[0]; index: nu
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
 export function SelfBuiltSection() {
-  const headerRef    = useRef<HTMLDivElement>(null);
-  const headerInView = useInView(headerRef, { once: true, margin: "-60px" });
-
   return (
     <section id="builds" className="py-24 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/[0.02] to-transparent pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          ref={headerRef}
-          initial={{ opacity: 0, y: 24 }}
-          animate={headerInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mb-14 max-w-2xl"
-        >
+        <div className="mb-14 max-w-2xl">
           <span className="font-mono text-blue-400 text-sm font-medium tracking-wider uppercase">
             <DecodeText text="Independent Builds" />
           </span>
@@ -166,11 +147,11 @@ export function SelfBuiltSection() {
             live AI assistant) put AI directly in the product. It&apos;s the clearest look at how I
             work when I own every decision — from architecture to the last commit.
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {selfBuilt.map((project, i) => (
-            <BuildCard key={project.id} project={project} index={i} />
+          {selfBuilt.map((project) => (
+            <BuildCard key={project.id} project={project} />
           ))}
         </div>
       </div>

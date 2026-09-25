@@ -2,7 +2,7 @@
 
 import { useState, type CSSProperties, type ReactNode } from "react";
 import Link from "next/link";
-import { ScrollReveal, StaggerChildren, staggerItem } from "@/components/ScrollReveal";
+import { ScrollReveal, StaggerChildren } from "@/components/ScrollReveal";
 import { DecodeText } from "@/components/DecodeText";
 import { skills } from "@/lib/data";
 import {
@@ -200,7 +200,6 @@ function FeaturedCard({ skill }: { skill: FeaturedSkill }) {
 
   return (
     <motion.div
-      variants={staggerItem}
       whileHover={{ y: -4, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       className="group relative glass-card fx-spotlight rounded-2xl p-5 flex flex-col items-center gap-3 cursor-default overflow-hidden"
@@ -259,7 +258,6 @@ function SkillBadge({ skill }: { skill: string }) {
 
   return (
     <motion.span
-      variants={staggerItem}
       whileHover={{ scale: 1.05 }}
       className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border transition-all duration-200 cursor-default"
       style={{

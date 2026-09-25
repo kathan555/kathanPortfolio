@@ -122,12 +122,7 @@ export function HomeAIAssistant() {
         <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-14 items-center">
 
           {/* ── Left: pitch ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6 }}
-          >
+          <div>
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/[0.07] text-blue-400 text-xs font-mono font-semibold uppercase tracking-[0.18em]">
               <Sparkles className="w-3.5 h-3.5" />
               <DecodeText text="Live AI · on this page" />
@@ -166,16 +161,10 @@ export function HomeAIAssistant() {
               See how I build AI into .NET apps
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
-          </motion.div>
+          </div>
 
           {/* ── Right: the live chat card ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="relative"
-          >
+          <div className="relative">
             {/* Breathing halo */}
             <div className="pointer-events-none absolute -inset-2 rounded-[1.75rem] bg-gradient-to-b from-blue-500/40 via-rose-500/20 to-transparent blur-2xl animate-glow-pulse motion-reduce:animate-none" />
 
@@ -331,7 +320,7 @@ export function HomeAIAssistant() {
 
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

@@ -1,7 +1,5 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
 import {
   Clock, CheckCircle, Code2, Users,
   Zap, Globe, ArrowRight,
@@ -93,23 +91,9 @@ const colorMap: Record<string, string> = {
   orange: "bg-orange-500/10 border-orange-500/20 text-orange-400",
 };
 
-function StatCard({
-  stat, delay,
-}: {
-  stat: typeof stats[0];
-  delay: number;
-}) {
-  const ref    = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-
+function StatCard({ stat }: { stat: typeof stats[0] }) {
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 28 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.55, delay, ease: [0.25, 0.4, 0.25, 1] }}
-      className="glass-card rounded-2xl p-6 flex flex-col gap-4 hover:border-blue-500/20 transition-all duration-300 group"
-    >
+    <div className="glass-card rounded-2xl p-6 flex flex-col gap-4 hover:border-blue-500/20 transition-all duration-300 group">
       <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${colorMap[stat.color]}`}>
         {stat.icon}
       </div>
@@ -120,20 +104,11 @@ function StatCard({
         <p className="font-display font-bold text-foreground text-sm">{stat.label}</p>
         <p className="text-xs text-muted-foreground mt-1">{stat.sub}</p>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
 export function TrustSection() {
-  const headerRef    = useRef<HTMLDivElement>(null);
-  const headerInView = useInView(headerRef, { once: true, margin: "-60px" });
-
-  const principlesRef    = useRef<HTMLDivElement>(null);
-  const principlesInView = useInView(principlesRef, { once: true, margin: "-60px" });
-
-  const timelineRef    = useRef<HTMLDivElement>(null);
-  const timelineInView = useInView(timelineRef, { once: true, margin: "-60px" });
-
   return (
     <section id="trust" className="py-24 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/[0.02] to-transparent pointer-events-none" />
@@ -141,13 +116,7 @@ export function TrustSection() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── Header ── */}
-        <motion.div
-          ref={headerRef}
-          initial={{ opacity: 0, y: 24 }}
-          animate={headerInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mb-14"
-        >
+        <div className="mb-14">
           <span className="font-mono text-blue-400 text-sm font-medium tracking-wider uppercase">
             Track Record
           </span>
@@ -158,23 +127,17 @@ export function TrustSection() {
             No fluff — just the actual career numbers and the working principles
             every client experiences firsthand.
           </p>
-        </motion.div>
+        </div>
 
         {/* ── Stats grid ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-16">
-          {stats.map((stat, i) => (
-            <StatCard key={stat.label} stat={stat} delay={i * 0.08} />
+          {stats.map((stat) => (
+            <StatCard key={stat.label} stat={stat} />
           ))}
         </div>
 
         {/* ── Career timeline strip ── */}
-        <motion.div
-          ref={timelineRef}
-          initial={{ opacity: 0, y: 20 }}
-          animate={timelineInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55 }}
-          className="glass-card rounded-2xl p-5 sm:p-6 mb-16"
-        >
+        <div className="glass-card rounded-2xl p-5 sm:p-6 mb-16">
           <div className="flex items-center gap-2 mb-5">
             <Globe className="w-4 h-4 text-blue-400" />
             <span className="font-display font-semibold text-sm text-foreground">
@@ -208,16 +171,10 @@ export function TrustSection() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* ── Working principles ── */}
-        <motion.div
-          ref={principlesRef}
-          initial={{ opacity: 0, y: 20 }}
-          animate={principlesInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55 }}
-          className="mb-14"
-        >
+        <div className="mb-14">
           <div className="flex items-center gap-2 mb-6">
             <Zap className="w-4 h-4 text-blue-400" />
             <h3 className="font-display font-bold text-foreground">
@@ -226,12 +183,9 @@ export function TrustSection() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {principles.map((p, i) => (
-              <motion.div
+            {principles.map((p) => (
+              <div
                 key={p.title}
-                initial={{ opacity: 0, y: 16 }}
-                animate={principlesInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.45, delay: i * 0.07 }}
                 className="glass-card rounded-2xl p-5 flex items-start gap-4 hover:border-blue-500/20 transition-all duration-200"
               >
                 <span className="text-2xl shrink-0">{p.icon}</span>
@@ -241,18 +195,13 @@ export function TrustSection() {
                   </h4>
                   <p className="text-xs text-muted-foreground leading-relaxed">{p.desc}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* ── "Currently building towards" note ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={principlesInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="glass-card rounded-2xl p-6 sm:p-8 border-blue-500/20 flex flex-col sm:flex-row items-start sm:items-center gap-5"
-        >
+        <div className="glass-card rounded-2xl p-6 sm:p-8 border-blue-500/20 flex flex-col sm:flex-row items-start sm:items-center gap-5">
           <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0 text-2xl">
             🌱
           </div>
@@ -274,7 +223,7 @@ export function TrustSection() {
             Let&apos;s Talk
             <ArrowRight className="w-4 h-4" />
           </Link>
-        </motion.div>
+        </div>
 
       </div>
     </section>

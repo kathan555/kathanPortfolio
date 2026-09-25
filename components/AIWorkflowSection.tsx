@@ -2,7 +2,6 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { DecodeText } from "@/components/DecodeText";
 import { aiWorkflow } from "@/lib/data";
@@ -148,13 +147,9 @@ export function AIWorkflowSection() {
                 </p>
 
                 <div className="space-y-5">
-                  {proof.stats.map((stat, i) => (
-                    <motion.div
+                  {proof.stats.map((stat) => (
+                    <div
                       key={stat.unit}
-                      initial={{ opacity: 0, y: 12 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-40px" }}
-                      transition={{ duration: 0.5, delay: 0.1 + i * 0.1 }}
                       className="pb-5 border-b border-border/50 last:border-0 last:pb-0"
                     >
                       <div className="flex items-baseline gap-2">
@@ -168,7 +163,7 @@ export function AIWorkflowSection() {
                       <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
                         {stat.note}
                       </p>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
 

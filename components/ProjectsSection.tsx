@@ -1,7 +1,5 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
 import { projects } from "@/lib/data";
 import { Calendar, TrendingUp, Sparkles, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -36,24 +34,13 @@ const resultColors: Record<string, string> = {
    document; one card breaking the rhythm gives the eye somewhere to land. */
 function ProjectCard({
   project,
-  index,
   featured = false,
 }: {
   project: typeof projects[0];
-  index: number;
   featured?: boolean;
 }) {
-  const ref    = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.55, delay: (index % 3) * 0.08, ease: [0.25, 0.4, 0.25, 1] }}
-      className={cn(featured && "md:col-span-2")}
-    >
+    <div className={cn(featured && "md:col-span-2")}>
       <div
         className={cn(
           "project-card fx-holo glass-card rounded-2xl p-6 h-full flex flex-col group",
@@ -170,26 +157,17 @@ function ProjectCard({
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
 export function ProjectsSection() {
-  const headerRef    = useRef<HTMLDivElement>(null);
-  const headerInView = useInView(headerRef, { once: true, margin: "-60px" });
-
   return (
     <section id="projects" className="py-24 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-rose-500/[0.02] to-transparent pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          ref={headerRef}
-          initial={{ opacity: 0, y: 24 }}
-          animate={headerInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mb-14"
-        >
+        <div className="mb-14">
           <span className="font-mono text-blue-400 text-sm font-medium tracking-wider uppercase">
             <DecodeText text="Projects" />
           </span>
@@ -201,11 +179,11 @@ export function ProjectsSection() {
             with measurable outcomes for each client, and an honest note on where AI
             helped and where it deliberately did not.
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
           {projects.map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} featured={i === 0} />
+            <ProjectCard key={project.id} project={project} featured={i === 0} />
           ))}
         </div>
       </div>
