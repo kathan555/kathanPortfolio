@@ -1,3 +1,4 @@
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { personalInfo } from "@/lib/data";
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -32,6 +33,44 @@ export type XrayResult =
   | { ok: true; report: XrayReport; markdown: string; redactions: number }
   /** `input`: the caller can fix it. `unavailable`: Gemini is busy or down. */
   | { ok: false; error: string; reason: "input" | "unavailable" };
+
+// ── Report signing ───────────────────────────────────────────────────────────
+// /api/xray/email mails a report from Kathan's address to an address the
+// visitor types. If it trusted the report the browser posts back, anyone could
+// send arbitrary text under his name. So every report is HMAC-signed when it is
+// generated, and the email route only sends reports that verify and are recent.
+// No report is stored anywhere — the signature is what makes that possible.
+const REPORT_TTL_MS = 2 * 60 * 60_000; // 2 hours
+
+function signingKey(): Buffer | null {
+  // A dedicated secret if one is set, otherwise derived from one that already
+  // exists server-side. Either way it never reaches the browser.
+  const secret = process.env.XRAY_SIGNING_SECRET ?? process.env.GEMINI_API_KEY;
+  return secret ? createHash("sha256").update(`legacy-xray-report:${secret}`).digest() : null;
+}
+
+const mac = (key: Buffer, issuedAt: number, redactions: number, report: XrayReport) =>
+  createHmac("sha256", key).update(`${issuedAt}.${redactions}.${JSON.stringify(report)}`).digest("base64url");
+
+/** `<issuedAt>.<mac>`, or null when no key is configured (emailing then off). */
+export function signReport(report: XrayReport, redactions: number): string | null {
+  const key = signingKey();
+  if (!key) return null;
+  const issuedAt = Date.now();
+  return `${issuedAt}.${mac(key, issuedAt, redactions, report)}`;
+}
+
+export function verifyReport(report: XrayReport, redactions: number, token: string): "ok" | "expired" | "invalid" {
+  const key = signingKey();
+  const [iat, sig] = typeof token === "string" ? token.split(".") : [];
+  const issuedAt = Number(iat);
+  if (!key || !sig || !Number.isFinite(issuedAt)) return "invalid";
+
+  const expected = Buffer.from(mac(key, issuedAt, redactions, report));
+  const given = Buffer.from(sig);
+  if (expected.length !== given.length || !timingSafeEqual(expected, given)) return "invalid";
+  return Date.now() - issuedAt > REPORT_TTL_MS ? "expired" : "ok";
+}
 
 // ── Rate limiting ────────────────────────────────────────────────────────────
 // Shared by /mcp and /api/xray so the daily cap covers both — it is what

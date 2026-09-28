@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
-  xrayLegacyCode, xrayInputError, checkXrayRate, type XrayLanguage,
+  xrayLegacyCode, xrayInputError, checkXrayRate, signReport, type XrayLanguage,
 } from "@/lib/legacy-xray";
 
 /* Backs the /legacy-code-xray page. Same engine and rate budget as the MCP
@@ -39,6 +39,8 @@ export async function POST(req: NextRequest) {
       report: result.report,
       markdown: result.markdown,
       redactions: result.redactions,
+      // Lets /api/xray/email prove this report came from here, unaltered.
+      token: signReport(result.report, result.redactions),
     });
   } catch {
     // Never log the error object: it can carry the submitted code.

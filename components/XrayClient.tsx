@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ScanSearch, ShieldCheck, AlertTriangle, Target, Zap, Sparkles, Calendar, ArrowRight, RotateCcw,
+  Mail, CheckCircle2,
 } from "lucide-react";
 import Link from "next/link";
 import { CopyButton } from "@/components/CopyButton";
@@ -82,7 +83,9 @@ public partial class Orders : System.Web.UI.Page
     }
 }`;
 
-type Result = { report: XrayReport; markdown: string; redactions: number };
+/** `token` is the server's signature over the report — /api/xray/email only
+ *  mails reports that carry one. Null when signing isn't configured. */
+type Result = { report: XrayReport; markdown: string; redactions: number; token: string | null };
 
 const INPUT_CLASS =
   "w-full bg-background border border-border focus:border-blue-500/50 rounded-xl px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors disabled:opacity-60";
@@ -290,7 +293,16 @@ function Report({ result, onReset }: { result: Result; onReset: () => void }) {
               {detected.language} · <span className="capitalize">{detected.confidence}</span> confidence
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
+            {result.token && (
+              <button
+                type="button"
+                onClick={() => document.getElementById("xray-email")?.scrollIntoView({ behavior: "smooth", block: "center" })}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold transition-colors"
+              >
+                <Mail className="w-3.5 h-3.5" /> Email me this
+              </button>
+            )}
             <CopyButton text={markdown} label="Copy as Markdown" />
             <button
               type="button"
@@ -419,6 +431,8 @@ function Report({ result, onReset }: { result: Result; onReset: () => void }) {
         </>
       )}
 
+      {result.token && <EmailReport result={result} />}
+
       {/* CTA */}
       <div className="glass-card rounded-2xl p-6 sm:p-8 relative overflow-hidden border-blue-500/20">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-rose-500/5 pointer-events-none" />
@@ -450,6 +464,118 @@ function Report({ result, onReset }: { result: Result; onReset: () => void }) {
         </div>
       </div>
     </div>
+  );
+}
+
+/* "Email me this report": the lead-capture step. The report and its signature
+   go back to the server unchanged; the server re-verifies them and builds the
+   email and PDF itself, so nothing typed here can change what gets sent. */
+function EmailReport({ result }: { result: Result }) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
+  const [wantsCall, setWantsCall] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [error, setError] = useState("");
+
+  const send = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (status === "sending") return;
+    setStatus("sending");
+    setError("");
+    try {
+      const res = await fetch("/api/xray/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name, email, company, wantsCall,
+          report: result.report, redactions: result.redactions, token: result.token,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error((data as { error?: string }).error ?? "Couldn't send the email. Please try again.");
+      setStatus("sent");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Couldn't send the email. Please try again.");
+      setStatus("idle");
+    }
+  };
+
+  if (status === "sent") {
+    return (
+      <div id="xray-email" className="glass-card rounded-2xl p-6 sm:p-8 border-emerald-500/30 flex items-start gap-4" role="status">
+        <CheckCircle2 className="w-6 h-6 text-emerald-500 shrink-0 mt-0.5" />
+        <div>
+          <p className="font-display text-lg font-bold text-foreground">Sent to {email}</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            The report and a PDF copy are on their way. Check your spam folder if it isn&apos;t there in a minute.
+            {wantsCall && " I'll be in touch about the call."}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <form id="xray-email" onSubmit={send} className="glass-card rounded-2xl p-6 sm:p-8 scroll-mt-28">
+      <SectionTitle icon={<Mail className="w-4 h-4" />} title="Email me this report" />
+      <p className="text-sm text-muted-foreground -mt-2 mb-5">
+        Get the full report plus a PDF you can forward to your team.
+      </p>
+
+      <div className="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="xr-name" className="block text-sm font-medium text-foreground mb-1.5">Name</label>
+          <input id="xr-name" required maxLength={80} autoComplete="name" value={name}
+            onChange={(e) => setName(e.target.value)} disabled={status === "sending"} className={INPUT_CLASS} />
+        </div>
+        <div>
+          <label htmlFor="xr-email" className="block text-sm font-medium text-foreground mb-1.5">Work email</label>
+          <input id="xr-email" type="email" required maxLength={200} autoComplete="email" value={email}
+            onChange={(e) => setEmail(e.target.value)} disabled={status === "sending"}
+            placeholder="you@company.com" className={INPUT_CLASS} />
+        </div>
+        <div className="sm:col-span-2">
+          <label htmlFor="xr-company" className="block text-sm font-medium text-foreground mb-1.5">
+            Company <span className="text-muted-foreground font-normal">(optional)</span>
+          </label>
+          <input id="xr-company" maxLength={120} autoComplete="organization" value={company}
+            onChange={(e) => setCompany(e.target.value)} disabled={status === "sending"} className={INPUT_CLASS} />
+        </div>
+      </div>
+
+      <label className="flex items-start gap-3 mt-5 cursor-pointer">
+        <input type="checkbox" checked={wantsCall} onChange={(e) => setWantsCall(e.target.checked)}
+          disabled={status === "sending"} className="mt-1 w-4 h-4 accent-blue-500 shrink-0" />
+        <span className="text-sm text-foreground">
+          I&apos;d like a free 30-minute call about this migration
+        </span>
+      </label>
+
+      {error && (
+        <p role="alert" className="text-sm text-rose-400 rounded-xl border border-rose-500/25 bg-rose-500/[0.06] px-4 py-3 mt-5">
+          {error}
+        </p>
+      )}
+
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mt-6">
+        <button
+          type="submit"
+          disabled={status === "sending"}
+          className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 disabled:opacity-60 text-white font-semibold rounded-xl text-sm shadow-lg shadow-blue-500/25 transition-colors"
+        >
+          <Mail className="w-4 h-4" />
+          {status === "sending" ? "Sending…" : "Email me the report"}
+        </button>
+        <p className="text-xs text-muted-foreground leading-relaxed flex gap-2">
+          <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+          <span>
+            You get the report, never your code. Kathan gets your name, email and a summary of the
+            findings so he can follow up. No newsletter.
+          </span>
+        </p>
+      </div>
+    </form>
   );
 }
 
