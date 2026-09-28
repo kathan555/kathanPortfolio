@@ -291,7 +291,9 @@ function normalize(raw: unknown): XrayReport | null {
       framework: clean(detected.framework, 120) || "Unknown",
       language: clean(detected.language, 60) || "Unknown",
       confidence: pick(detected.confidence, ["high", "medium", "low"] as const, "low"),
-      signals: cleanList(detected.signals, 5, 160),
+      // Signals are fragments, joined with "; " in the Markdown. The model
+      // ends them with a full stop, which rendered as ".;".
+      signals: cleanList(detected.signals, 5, 160).map((s) => s.replace(/[\s.;,]+$/, "")),
     },
     risks: (Array.isArray(r.risks) ? r.risks : [])
       .map((x) => {

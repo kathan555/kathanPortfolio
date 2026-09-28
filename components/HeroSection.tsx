@@ -280,7 +280,7 @@ export function HeroSection() {
               <span className="w-px h-4 bg-border" />
               <span className="text-blue-400 font-semibold">8+ Years Experience</span>
               <span className="w-px h-4 bg-border hidden sm:block" />
-              <span className="hidden sm:inline">WPF · Blazor · ASP.NET Core · .NET 9</span>
+              <span className="hidden sm:inline">WPF · Blazor · ASP.NET Core · .NET 10</span>
             </div>
 
             <p className="fx-rise text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl mb-10" style={rise(3)}>

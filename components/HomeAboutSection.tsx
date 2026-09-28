@@ -6,9 +6,9 @@ import { summary } from "@/lib/data";
 
 const TECH_ROW_1 = [
   "Next.js", "React", "TypeScript", "Tailwind CSS",
-  ".NET 9", "C#", "Blazor", "ASP.NET Core", "WPF",
+  ".NET 10", "C#", "Blazor", "ASP.NET Core", "WPF",
   "Next.js", "React", "TypeScript", "Tailwind CSS",
-  ".NET 9", "C#", "Blazor", "ASP.NET Core", "WPF",
+  ".NET 10", "C#", "Blazor", "ASP.NET Core", "WPF",
 ];
 const TECH_ROW_2 = [
   "MS-SQL", "PostgreSQL", "Hangfire", "OAuth 2.0", "JWT",

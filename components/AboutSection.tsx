@@ -16,9 +16,9 @@ const ROLES = [
 
 const TECH_ROW_1 = [
   "Next.js", "React", "TypeScript", "Tailwind CSS", "Vite",
-  ".NET 9", "C#", "Blazor", "ASP.NET Core", "WPF",
+  ".NET 10", "C#", "Blazor", "ASP.NET Core", "WPF",
   "Next.js", "React", "TypeScript", "Tailwind CSS", "Vite",
-  ".NET 9", "C#", "Blazor", "ASP.NET Core", "WPF",
+  ".NET 10", "C#", "Blazor", "ASP.NET Core", "WPF",
 ];
 const TECH_ROW_2 = [
   "Prisma", "PostgreSQL", "SQLite", "MSSQL", "Hangfire",

@@ -13,7 +13,7 @@ const stats = [
     value:   8,
     suffix:  "+",
     label:   "Years of .NET experience",
-    sub:     "Since 2018 — .NET Framework through .NET 9",
+    sub:     "Since 2018 — .NET Framework through .NET 10",
     icon:    <Clock     className="w-5 h-5" />,
     color:   "blue",
   },

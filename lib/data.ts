@@ -433,8 +433,8 @@ export const services = [
   {
     icon: "☁️",
     title: "Legacy .NET Migration",
-    desc: "Modernise your old WinForms, .NET Framework 4.x, or WebForms app to .NET 8/9 with Blazor or ASP.NET Core — without breaking what already works.",
-    tags: [".NET Migration", "Blazor", "ASP.NET Core", ".NET 9"],
+    desc: "Modernise your old WinForms, .NET Framework 4.x, or WebForms app to .NET 10 (LTS) with Blazor or ASP.NET Core — without breaking what already works.",
+    tags: [".NET Migration", "Blazor", "ASP.NET Core", ".NET 10"],
   },
   {
     icon: "🏗️",

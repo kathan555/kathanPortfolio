@@ -32,7 +32,7 @@ const SKILL_META: Record<string, SkillMeta> = {
   "Figma":         { src: "/icons/skills/figma.svg",              glow: "#F24943" },
   /* .NET / Backend */
   "C#":            { src: "/icons/skills/csharp.svg",             glow: "#9B4F96" },
-  ".NET 9":        { src: "/icons/skills/dotnetcore.svg",         glow: "#512BD4" },
+  ".NET 10":       { src: "/icons/skills/dotnetcore.svg",         glow: "#512BD4" },
   ".NET":          { src: "/icons/skills/dotnetcore.svg",         glow: "#512BD4" },
   "ASP.NET Core":  { src: "/icons/skills/dotnetcore.svg",         glow: "#512BD4" },
   "Blazor":        { src: "/icons/skills/blazor.svg",             glow: "#512BD4" },
@@ -93,7 +93,7 @@ const SKILL_META: Record<string, SkillMeta> = {
 
 const FEATURED = [
   { name: "C#" },
-  { name: ".NET 9" },
+  { name: ".NET 10" },
   { name: "Blazor" },
   { name: "React" },
   { name: "Next.js" },
