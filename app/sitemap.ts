@@ -2,6 +2,10 @@ import type { MetadataRoute } from "next";
 
 const BASE = "https://kathanpatel.vercel.app";
 
+/* Regenerate hourly. Without this the sitemap is built once per deploy, so posts
+   published in Supabase stay out of it until the next push. */
+export const revalidate = 3600;
+
 async function getBlogPosts(): Promise<{ slug: string; publishedAt: string | null }[]> {
   try {
     const { getAllPostsMeta } = await import("@/lib/blog");
